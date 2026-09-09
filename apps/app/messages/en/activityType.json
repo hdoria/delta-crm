@@ -1,0 +1,9 @@
+{
+	"NOTE": "Note",
+	"CALL": "Call",
+	"EMAIL": "Email",
+	"MEETING": "Meeting",
+	"TASK": "Task",
+	"STAGE_CHANGE": "Stage change",
+	"ENRICHMENT": "Enrichment"
+}

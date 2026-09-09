@@ -1,0 +1,8 @@
+{
+	"PENDING": "Not researched",
+	"RUNNING": "Researching",
+	"COMPLETE": "Enriched",
+	"FAILED": "Enrichment failed",
+	"SKIPPED": "Nothing found",
+	"QUEUED": "Queued"
+}

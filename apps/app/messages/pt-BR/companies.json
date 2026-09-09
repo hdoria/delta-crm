@@ -1,0 +1,59 @@
+{
+	"title": "Empresas",
+	"description": "Todas as contas do funil.",
+	"create": {
+		"trigger": "Nova empresa",
+		"sheetTitle": "Nova empresa",
+		"sheetDescription": "Informe o nome e o domínio. O agente preenche o logo, a descrição, o setor, o endereço e as redes sociais.",
+		"name": "Nome",
+		"domain": "Domínio",
+		"domainHint": "Uma URL completa funciona. Ela é reduzida ao domínio puro, que precisa ser único.",
+		"owner": "Responsável",
+		"unassigned": "Sem responsável",
+		"submit": "Adicionar empresa",
+		"cancel": "Cancelar",
+		"added": "{name} adicionada."
+	},
+	"table": {
+		"searchPlaceholder": "Buscar empresas por nome ou domínio…",
+		"archived": "Arquivadas",
+		"emptyDefault": "Nenhuma empresa corresponde a esta visão.",
+		"emptyArchived": "Nenhuma empresa arquivada.",
+		"column": {
+			"name": "Empresa",
+			"domain": "Domínio",
+			"industry": "Setor",
+			"owner": "Responsável",
+			"contacts": "Contatos",
+			"deals": "Negócios abertos",
+			"created": "Criada",
+			"createdLabel": "Data de criação",
+			"lastActivity": "Última atividade",
+			"enrichment": "Pesquisa",
+			"enrichmentLabel": "Status da pesquisa",
+			"archivedAt": "Arquivada",
+			"archivedAtLabel": "Data de arquivamento"
+		},
+		"facet": {
+			"owner": "Responsável",
+			"unassigned": "Sem responsável",
+			"industry": "Setor",
+			"enrichment": "Pesquisa",
+			"activity": "Atividade"
+		}
+	},
+	"bulk": {
+		"unassignedOwner": "Ninguém",
+		"reenrich": "Pesquisar de novo",
+		"archive": "Arquivar",
+		"restore": "Restaurar",
+		"deleteForever": "Excluir para sempre",
+		"deleteTitle": "{count, plural, one {Excluir # empresa para sempre?} other {Excluir # empresas para sempre?}}",
+		"deleteDescription": "Isso não pode ser desfeito.",
+		"reassigned": "{count, plural, one {# empresa reatribuída.} other {# empresas reatribuídas.}}",
+		"looking": "{count, plural, one {Pesquisando # empresa. A tabela atualiza.} other {Pesquisando # empresas. A tabela atualiza.}}",
+		"archivedToast": "{count, plural, one {# empresa arquivada.} other {# empresas arquivadas.}}",
+		"restored": "{count, plural, one {# empresa restaurada.} other {# empresas restauradas.}}",
+		"deleted": "{count, plural, one {# empresa excluída para sempre.} other {# empresas excluídas para sempre.}}"
+	}
+}

@@ -15,21 +15,18 @@ import {
 } from "@crm/ui/components/entity-logo";
 import { PersonAvatar } from "@crm/ui/components/person-avatar";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 import { useOpenRecord } from "@/components/crm/record-sheet/record-stack";
 import { SEARCH_PARAM } from "@/lib/search-param-keys";
 import { useTRPC } from "@/lib/trpc/client";
 
-const GROUP_LABEL = {
-	company: "Companies",
-	contact: "Contacts",
-	deal: "Deals",
-} as const;
-
 const KINDS = ["company", "contact", "deal"] as const;
 
 export function QuickSwitcher() {
+	const t = useTranslations("quickSwitcher");
+	const navLabel = useTranslations("nav");
 	const openRecord = useOpenRecord();
 	const trpc = useTRPC();
 
@@ -69,20 +66,18 @@ export function QuickSwitcher() {
 		<CommandDialog
 			open={open}
 			onOpenChange={(next) => setOpen(next || null)}
-			title="Search"
-			description="Jump to a company, contact or deal"
+			title={t("title")}
+			description={t("description")}
 		>
 			<Command shouldFilter={false}>
 				<CommandInput
-					placeholder="Search companies, contacts and deals…"
+					placeholder={t("placeholder")}
 					value={query}
 					onValueChange={setQuery}
 				/>
 				<CommandList>
 					<CommandEmpty>
-						{query.trim().length < 2
-							? "Type at least two characters."
-							: "Nothing matches."}
+						{query.trim().length < 2 ? t("tooShort") : t("noMatch")}
 					</CommandEmpty>
 
 					{KINDS.map((kind) => {
@@ -90,7 +85,7 @@ export function QuickSwitcher() {
 						if (group.length === 0) return null;
 
 						return (
-							<CommandGroup key={kind} heading={GROUP_LABEL[kind]}>
+							<CommandGroup key={kind} heading={navLabel(`${kind}s`)}>
 								{group.map((hit) => (
 									<CommandItem
 										key={`${hit.kind}:${hit.id}`}

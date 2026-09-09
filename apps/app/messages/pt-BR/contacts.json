@@ -1,0 +1,68 @@
+{
+	"title": "Contatos",
+	"description": "Todos no funil.",
+	"create": {
+		"trigger": "Novo contato",
+		"sheetTitle": "Novo contato",
+		"sheetDescription": "O email é único, então importar a mesma pessoa duas vezes atualiza o registro em vez de duplicar.",
+		"firstName": "Nome",
+		"lastName": "Sobrenome",
+		"email": "Email",
+		"title": "Cargo",
+		"company": "Empresa",
+		"noCompany": "Sem empresa",
+		"owner": "Responsável",
+		"unassigned": "Sem responsável",
+		"submit": "Adicionar contato",
+		"cancel": "Cancelar",
+		"added": "{name} adicionado.",
+		"titlePlaceholder": "Head de Segurança"
+	},
+	"table": {
+		"searchPlaceholder": "Buscar por nome, email ou empresa…",
+		"archived": "Arquivados",
+		"emptyDefault": "Nenhum contato corresponde a esta visão.",
+		"emptyArchived": "Nenhum contato arquivado.",
+		"column": {
+			"name": "Nome",
+			"title": "Cargo",
+			"email": "Email",
+			"company": "Empresa",
+			"owner": "Responsável",
+			"created": "Criado",
+			"createdLabel": "Data de criação",
+			"lastActivity": "Última atividade",
+			"archivedAt": "Arquivado",
+			"archivedAtLabel": "Data de arquivamento"
+		},
+		"facet": {
+			"owner": "Responsável",
+			"unassigned": "Sem responsável",
+			"company": "Empresa",
+			"noCompany": "Sem empresa",
+			"searching": "Buscando…",
+			"noCompanyMatch": "Nenhuma empresa encontrada.",
+			"title": "Cargo",
+			"seniority": "Senioridade",
+			"persona": "Persona",
+			"activity": "Atividade"
+		}
+	},
+	"bulk": {
+		"unassignedOwner": "Ninguém",
+		"moveToCompany": "Mover para empresa",
+		"noCompany": "Sem empresa",
+		"reenrich": "Pesquisar de novo",
+		"archive": "Arquivar",
+		"restore": "Restaurar",
+		"deleteForever": "Excluir para sempre",
+		"deleteTitle": "{count, plural, one {Excluir # contato para sempre?} other {Excluir # contatos para sempre?}}",
+		"deleteDescription": "Os emails ficam suprimidos, então a sincronização de caixa de entrada não arquiva esses contatos de novo. Isso não pode ser desfeito.",
+		"reassigned": "{count, plural, one {# contato reatribuído.} other {# contatos reatribuídos.}}",
+		"moved": "{count, plural, one {# contato movido.} other {# contatos movidos.}}",
+		"looking": "{count, plural, one {Pesquisando # contato. A tabela atualiza.} other {Pesquisando # contatos. A tabela atualiza.}}",
+		"archivedToast": "{count, plural, one {# contato arquivado.} other {# contatos arquivados.}}",
+		"restored": "{count, plural, one {# contato restaurado.} other {# contatos restaurados.}}",
+		"deleted": "{count, plural, one {# contato excluído para sempre.} other {# contatos excluídos para sempre.}}"
+	}
+}

@@ -1,20 +1,26 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import { InlineScript } from "./inline-script";
 
 const DAY_MS = 86_400_000;
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
+const MONTH_MS = 30 * DAY_MS;
+const MISSING = "—";
+
 const dateTimeFormatters = new Map<string, Intl.DateTimeFormat>();
-const relativeDateFormatter = new Intl.RelativeTimeFormat(undefined, {
-	numeric: "auto",
-});
+const relativeFormatters = new Map<string, Intl.RelativeTimeFormat>();
+
 const LOCAL_DAY_OPTIONS = {
 	month: "short",
 	day: "numeric",
 	year: "numeric",
 } as const;
-const LOCAL_DATE_TIME_SCRIPT = `{var s="time[data-local-date-kind]",f=function(n){try{var k=n.dataset.localDateKind,v=n.dataset.localDateValue,e=n.dataset.localDateEnd,o=JSON.parse(n.dataset.localDateOptions||"{}"),d=new Date(v),t=d.getTime(),x=Date.now()-t,a=Math.abs(x),r;if(k==="date-time")r=new Intl.DateTimeFormat(void 0,o).format(d);else if(k==="date-range")r=new Intl.DateTimeFormat(void 0,o).formatRange(d,new Date(e));else if(k==="day")r=new Intl.DateTimeFormat(void 0,o).format(new Date(v+"T00:00:00"));else if(k==="relative-date"){var z=new Date(),q=(Date.UTC(z.getFullYear(),z.getMonth(),z.getDate())-Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))/${DAY_MS};r=new Intl.RelativeTimeFormat(void 0,{numeric:"auto"}).format(-q,"day")}else if(!Number.isFinite(t))r="—";else if(a<${MINUTE_MS})r="just now";else if(a>=${30 * DAY_MS})r=new Intl.DateTimeFormat(void 0,{month:"short",day:"numeric"}).format(d);else{var u=a<${HOUR_MS}?Math.floor(a/${MINUTE_MS})+"m":a<${DAY_MS}?Math.floor(a/${HOUR_MS})+"h":Math.floor(a/${DAY_MS})+"d";r=x<0?"in "+u:u+" ago"}n.textContent=r}catch{}};var c=function(r){if(r.nodeType===1&&r.matches&&r.matches(s))f(r);if(r.querySelectorAll)r.querySelectorAll(s).forEach(f)};c(document);new MutationObserver(function(m){m.forEach(function(r){r.addedNodes.forEach(c)})}).observe(document.documentElement,{childList:true,subtree:true})}`;
+
+function localDateTimeScript(locale: string): string {
+	return `{var L=${JSON.stringify(locale)},s="time[data-local-date-kind]",f=function(n){try{var k=n.dataset.localDateKind,v=n.dataset.localDateValue,e=n.dataset.localDateEnd,o=JSON.parse(n.dataset.localDateOptions||"{}"),d=new Date(v),t=d.getTime(),x=Date.now()-t,a=Math.abs(x),r,R=function(){return new Intl.RelativeTimeFormat(L,{numeric:"auto",style:"narrow"})};if(k==="date-time")r=new Intl.DateTimeFormat(L,o).format(d);else if(k==="date-range")r=new Intl.DateTimeFormat(L,o).formatRange(d,new Date(e));else if(k==="day")r=new Intl.DateTimeFormat(L,o).format(new Date(v+"T00:00:00"));else if(k==="relative-date"){var z=new Date(),q=(Date.UTC(z.getFullYear(),z.getMonth(),z.getDate())-Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))/${DAY_MS};r=R().format(-q,"day")}else if(!Number.isFinite(t))r=${JSON.stringify(MISSING)};else if(a<${MINUTE_MS})r=R().format(0,"second");else if(a>=${MONTH_MS})r=new Intl.DateTimeFormat(L,{month:"short",day:"numeric"}).format(d);else{var g=x<0?1:-1,u=a<${HOUR_MS}?[Math.floor(a/${MINUTE_MS}),"minute"]:a<${DAY_MS}?[Math.floor(a/${HOUR_MS}),"hour"]:[Math.floor(a/${DAY_MS}),"day"];r=R().format(g*u[0],u[1])}n.textContent=r}catch{}};var c=function(r){if(r.nodeType===1&&r.matches&&r.matches(s))f(r);if(r.querySelectorAll)r.querySelectorAll(s).forEach(f)};c(document);new MutationObserver(function(m){m.forEach(function(r){r.addedNodes.forEach(c)})}).observe(document.documentElement,{childList:true,subtree:true})}`;
+}
 
 export function LocalDateTime({
 	date,
@@ -23,12 +29,14 @@ export function LocalDateTime({
 	date: string;
 	options: Intl.DateTimeFormatOptions;
 }) {
+	const locale = useLocale();
+
 	return (
 		<LocalTime
 			kind="date-time"
 			date={date}
 			options={options}
-			fallback={getDateTimeFormatter(options).format(new Date(date))}
+			fallback={dateFormatter(locale, options).format(new Date(date))}
 		/>
 	);
 }
@@ -42,13 +50,15 @@ export function LocalDateTimeRange({
 	end: string;
 	options: Intl.DateTimeFormatOptions;
 }) {
+	const locale = useLocale();
+
 	return (
 		<LocalTime
 			kind="date-range"
 			date={start}
 			end={end}
 			options={options}
-			fallback={getDateTimeFormatter(options).formatRange(
+			fallback={dateFormatter(locale, options).formatRange(
 				new Date(start),
 				new Date(end),
 			)}
@@ -57,39 +67,46 @@ export function LocalDateTimeRange({
 }
 
 export function LocalRelativeDate({ date }: { date: string }) {
+	const locale = useLocale();
+
 	return (
 		<LocalTime
 			kind="relative-date"
 			date={date}
-			fallback={formatRelativeDate(date)}
+			fallback={formatRelativeDate(locale, date)}
 		/>
 	);
 }
 
 export function LocalRelativeTime({ date }: { date: string }) {
+	const locale = useLocale();
+
 	return (
 		<LocalTime
 			kind="relative-time"
 			date={date}
-			fallback={formatRelativeTime(date)}
+			fallback={formatRelativeTime(locale, date)}
 		/>
 	);
 }
 
 export function LocalDay({ date }: { date: string }) {
+	const locale = useLocale();
 	const day = date.slice(0, 10);
+
 	return (
 		<LocalTime
 			kind="day"
 			date={day}
 			options={LOCAL_DAY_OPTIONS}
-			fallback={getDateTimeFormatter(LOCAL_DAY_OPTIONS).format(dayDate(day))}
+			fallback={dateFormatter(locale, LOCAL_DAY_OPTIONS).format(dayDate(day))}
 		/>
 	);
 }
 
 export function LocalDateTimeHydrator() {
-	return <InlineScript html={LOCAL_DATE_TIME_SCRIPT} />;
+	const locale = useLocale();
+	return <InlineScript html={localDateTimeScript(locale)} />;
 }
 
 function LocalTime({
@@ -119,32 +136,36 @@ function LocalTime({
 	);
 }
 
-function formatRelativeDate(date: string): string {
+function formatRelativeDate(locale: string, date: string): string {
 	const now = new Date();
 	const then = new Date(date);
 	const days = (calendarDay(now) - calendarDay(then)) / DAY_MS;
-	return relativeDateFormatter.format(-days, "day");
+	return relativeFormatter(locale).format(-days, "day");
 }
 
-function formatRelativeTime(date: string): string {
+function formatRelativeTime(locale: string, date: string): string {
 	const then = new Date(date).getTime();
-	if (!Number.isFinite(then)) return "—";
+	if (!Number.isFinite(then)) return MISSING;
+
 	const difference = Date.now() - then;
 	const absolute = Math.abs(difference);
-	if (absolute < MINUTE_MS) return "just now";
-	if (absolute >= 30 * DAY_MS) {
-		return getDateTimeFormatter({ month: "short", day: "numeric" }).format(
+	const relative = relativeFormatter(locale);
+
+	if (absolute < MINUTE_MS) return relative.format(0, "second");
+	if (absolute >= MONTH_MS) {
+		return dateFormatter(locale, { month: "short", day: "numeric" }).format(
 			new Date(then),
 		);
 	}
 
-	const distance =
+	const [value, unit]: [number, Intl.RelativeTimeFormatUnit] =
 		absolute < HOUR_MS
-			? `${Math.floor(absolute / MINUTE_MS)}m`
+			? [Math.floor(absolute / MINUTE_MS), "minute"]
 			: absolute < DAY_MS
-				? `${Math.floor(absolute / HOUR_MS)}h`
-				: `${Math.floor(absolute / DAY_MS)}d`;
-	return difference < 0 ? `in ${distance}` : `${distance} ago`;
+				? [Math.floor(absolute / HOUR_MS), "hour"]
+				: [Math.floor(absolute / DAY_MS), "day"];
+
+	return relative.format(difference < 0 ? value : -value, unit);
 }
 
 function calendarDay(date: Date): number {
@@ -155,14 +176,27 @@ function dayDate(day: string): Date {
 	return new Date(`${day}T00:00:00`);
 }
 
-function getDateTimeFormatter(
+function dateFormatter(
+	locale: string,
 	options: Intl.DateTimeFormatOptions,
 ): Intl.DateTimeFormat {
-	const key = JSON.stringify(options);
+	const key = `${locale}:${JSON.stringify(options)}`;
 	const cached = dateTimeFormatters.get(key);
 	if (cached) return cached;
 
-	const formatter = new Intl.DateTimeFormat(undefined, options);
+	const formatter = new Intl.DateTimeFormat(locale, options);
 	dateTimeFormatters.set(key, formatter);
+	return formatter;
+}
+
+function relativeFormatter(locale: string): Intl.RelativeTimeFormat {
+	const cached = relativeFormatters.get(locale);
+	if (cached) return cached;
+
+	const formatter = new Intl.RelativeTimeFormat(locale, {
+		numeric: "auto",
+		style: "narrow",
+	});
+	relativeFormatters.set(locale, formatter);
 	return formatter;
 }

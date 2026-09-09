@@ -1,0 +1,17 @@
+{
+	"close": "Fechar",
+	"clear": "Limpar",
+	"sortBy": "Ordenar por",
+	"ascending": "Crescente",
+	"descending": "Decrescente",
+	"toggleColumns": "Mostrar colunas",
+	"noResults": "Nada encontrado.",
+	"selectRow": "Selecionar linha",
+	"selectAllRows": "Selecionar todas as linhas desta página",
+	"detail": "Detalhe",
+	"searchNamed": "Buscar {name}…",
+	"reorderNamed": "Reordenar {name}",
+	"scrollToEnd": "Ir para o fim",
+	"scrollToStart": "Ir para o início",
+	"loadedNamed": "{name} carregou"
+}

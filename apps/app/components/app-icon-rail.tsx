@@ -24,14 +24,23 @@ import {
 import { cn } from "@crm/ui/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { AgentBuilderSidebar } from "@/components/agent-builder/agent-builder-sidebar";
 import { usePrefetchSection } from "@/components/crm/section-prefetch";
 import { useMobileNav } from "@/components/mobile-nav";
 import { useWorkspaceUrl } from "@/lib/use-workspace-url";
 
+type RailId =
+	| "overview"
+	| "chat"
+	| "companies"
+	| "contacts"
+	| "deals"
+	| "settings";
+
 type RailItem = {
-	title: string;
+	id: RailId;
 	href: string;
 	icon: CarbonIcon;
 	iconClassName?: string;
@@ -40,24 +49,24 @@ type RailItem = {
 };
 
 const ITEMS: RailItem[] = [
-	{ title: "Overview", href: "/", icon: Dashboard, match: "exact" },
+	{ id: "overview", href: "/", icon: Dashboard, match: "exact" },
 	{
-		title: "Chat",
+		id: "chat",
 		href: "/chat",
 		icon: Bot,
 		iconClassName: "size-5",
 		match: "prefix",
 		related: ["/agents"],
 	},
-	{ title: "Companies", href: "/companies", icon: Building, match: "prefix" },
+	{ id: "companies", href: "/companies", icon: Building, match: "prefix" },
 	{
-		title: "Contacts",
+		id: "contacts",
 		href: "/contacts",
 		icon: UserMultiple,
 		match: "prefix",
 	},
-	{ title: "Deals", href: "/deals", icon: Partnership, match: "prefix" },
-	{ title: "Settings", href: "/settings", icon: Settings, match: "prefix" },
+	{ id: "deals", href: "/deals", icon: Partnership, match: "prefix" },
+	{ id: "settings", href: "/settings", icon: Settings, match: "prefix" },
 ];
 
 function isActive(item: RailItem, pathname: string): boolean {
@@ -77,6 +86,7 @@ function RailLink({
 	active: boolean;
 	onPrefetch: () => void;
 }) {
+	const title = useTranslations("nav");
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>
@@ -99,11 +109,11 @@ function RailLink({
 						transitionTypes={["nav-lateral"]}
 					>
 						<Icon icon={item.icon} className={item.iconClassName} />
-						<span className="sr-only">{item.title}</span>
+						<span className="sr-only">{title(item.id)}</span>
 					</Link>
 				</Button>
 			</TooltipTrigger>
-			<TooltipContent side="right">{item.title}</TooltipContent>
+			<TooltipContent side="right">{title(item.id)}</TooltipContent>
 		</Tooltip>
 	);
 }
@@ -119,6 +129,7 @@ function MobileRailLink({
 	onNavigate: () => void;
 	onPrefetch: () => void;
 }) {
+	const title = useTranslations("nav");
 	return (
 		<Button
 			asChild
@@ -136,12 +147,10 @@ function MobileRailLink({
 				onFocus={onPrefetch}
 				aria-current={active ? "page" : undefined}
 				onClick={onNavigate}
-				transitionTypes={[
-					item.title === "Chat" ? "nav-forward" : "nav-lateral",
-				]}
+				transitionTypes={[item.id === "chat" ? "nav-forward" : "nav-lateral"]}
 			>
 				<Icon icon={item.icon} className={item.iconClassName} />
-				<span>{item.title}</span>
+				<span>{title(item.id)}</span>
 			</Link>
 		</Button>
 	);
@@ -158,6 +167,7 @@ function MobileRailIconLink({
 	onNavigate: () => void;
 	onPrefetch: () => void;
 }) {
+	const title = useTranslations("nav");
 	return (
 		<Button
 			asChild
@@ -178,16 +188,17 @@ function MobileRailIconLink({
 				onClick={onNavigate}
 			>
 				<Icon icon={item.icon} className={item.iconClassName} />
-				<span className="sr-only">{item.title}</span>
+				<span className="sr-only">{title(item.id)}</span>
 			</Link>
 		</Button>
 	);
 }
 
 export function AppIconRailFallback() {
+	const title = useTranslations("nav");
 	return (
 		<nav
-			aria-label="Primary"
+			aria-label={title("primary")}
 			aria-busy="true"
 			className="hidden w-14 shrink-0 flex-col items-center gap-1 border-r py-3 md:flex [view-transition-name:app-rail]"
 		>
@@ -200,7 +211,7 @@ export function AppIconRailFallback() {
 					className="text-muted-foreground"
 				>
 					<Icon icon={item.icon} className={item.iconClassName} />
-					<span className="sr-only">{item.title}</span>
+					<span className="sr-only">{title(item.id)}</span>
 				</Button>
 			))}
 		</nav>
@@ -208,6 +219,7 @@ export function AppIconRailFallback() {
 }
 
 export function AppIconRail() {
+	const title = useTranslations("nav");
 	const pathname = usePathname();
 	const workspaceUrl = useWorkspaceUrl();
 	const { open, setOpen } = useMobileNav();
@@ -224,13 +236,13 @@ export function AppIconRail() {
 		[workspaceUrl],
 	);
 	const inChat = items.some(
-		(item) => item.title === "Chat" && isActive(item, pathname),
+		(item) => item.id === "chat" && isActive(item, pathname),
 	);
 
 	return (
 		<>
 			<nav
-				aria-label="Primary"
+				aria-label={title("primary")}
 				className="hidden w-14 shrink-0 flex-col items-center gap-1 border-r py-3 md:flex [view-transition-name:app-rail]"
 			>
 				{items.map((item) => (
@@ -251,16 +263,16 @@ export function AppIconRail() {
 						className="w-5/6 max-w-sm flex-row gap-0 p-0"
 					>
 						<SheetHeader className="sr-only">
-							<SheetTitle>Navigation and agent chats</SheetTitle>
+							<SheetTitle>{title("navigationAndChats")}</SheetTitle>
 						</SheetHeader>
 						<nav
-							aria-label="Primary"
+							aria-label={title("primary")}
 							className="flex w-14 shrink-0 flex-col items-center gap-1 border-r py-3"
 						>
 							<Button
 								variant="ghost"
 								size="icon"
-								aria-label="Close navigation"
+								aria-label={title("closeNavigation")}
 								onClick={() => setOpen(false)}
 							>
 								<Icon icon={Close} />
@@ -284,10 +296,10 @@ export function AppIconRail() {
 				) : (
 					<SheetContent side="left" className="w-64 gap-0 p-0">
 						<SheetHeader>
-							<SheetTitle>Navigation</SheetTitle>
+							<SheetTitle>{title("navigation")}</SheetTitle>
 						</SheetHeader>
 						<nav
-							aria-label="Primary"
+							aria-label={title("primary")}
 							className="flex flex-1 flex-col gap-1 p-2"
 						>
 							{items.map((item) => (

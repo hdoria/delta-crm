@@ -1,0 +1,77 @@
+{
+	"stats": {
+		"closedWonThisMonth": {
+			"label": "Closed won this month",
+			"deltaLabel": "vs. last month",
+			"description": "{count, plural, one {# deal} other {# deals}} · {amount} last month"
+		},
+		"openPipeline": {
+			"label": "Open pipeline",
+			"description": "{count, plural, one {# deal} other {# deals}} in progress · {amount} due this month"
+		},
+		"winRate": {
+			"label": "Win rate ({days}d)",
+			"empty": "Nothing has closed yet",
+			"record": "{wins} won · {losses} lost"
+		},
+		"averageDeal": {
+			"label": "Average deal ({days}d)",
+			"empty": "No wins to measure",
+			"cycle": "{days}-day average cycle"
+		}
+	},
+	"unconvertedNotice": "Every figure above is in {currency}. {count, plural, one {# deal} other {# deals}} in {currencies} {count, plural, one {is} other {are}} not included — there is no rate to convert {currencyCount, plural, one {it} other {them}} with. <link>Set one</link>.",
+	"trend": {
+		"wonLabel": "Closed won",
+		"createdLabel": "New pipeline",
+		"panelTitle": "Closed won vs. new pipeline",
+		"panelDescription": "Last six months, by the month a deal closed or was created",
+		"empty": "No deals closed or created yet"
+	},
+	"pipelineByStage": {
+		"panelTitle": "Open pipeline by stage",
+		"panelDescription": "Where the value sits right now",
+		"centerLabel": "open",
+		"empty": "Nothing open"
+	},
+	"dealsInProgress": {
+		"title": "Deals in progress",
+		"description": "The largest open deals, and how long each has sat in its stage",
+		"openDeals": "Open deals",
+		"empty": "Nothing open. Time to fill the pipeline.",
+		"columns": {
+			"deal": "Deal",
+			"stage": "Stage",
+			"share": "Share of the largest",
+			"value": "Value"
+		}
+	},
+	"overdueTasks": {
+		"title": "Overdue tasks",
+		"emptyDescription": "Every task you have logged is either done or still to come",
+		"pastDue": "{count, plural, one {# task} other {# tasks}} past due",
+		"empty": "Nothing overdue. Good.",
+		"markDone": "Mark as done",
+		"noDueDate": "No due date",
+		"columns": {
+			"done": "Done",
+			"task": "Task",
+			"overdue": "Overdue"
+		}
+	},
+	"recentActivity": {
+		"title": "Recent activity",
+		"titleMine": "Your recent activity",
+		"description": "Every note, task and stage change across the workspace",
+		"descriptionMine": "Every note, task and stage change you have logged",
+		"allCompanies": "All companies",
+		"empty": "Nothing has happened yet.",
+		"columns": {
+			"activity": "Activity",
+			"company": "Company",
+			"deal": "Deal",
+			"who": "Who",
+			"when": "When"
+		}
+	}
+}

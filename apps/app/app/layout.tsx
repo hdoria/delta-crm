@@ -1,4 +1,9 @@
 import "@crm/ui/globals.css";
+import {
+	UI_LABELS,
+	type UiLabels,
+	UiLabelsProvider,
+} from "@crm/ui/components/labels";
 import { Toaster } from "@crm/ui/components/sonner";
 import { TooltipProvider } from "@crm/ui/components/tooltip";
 import { cn } from "@crm/ui/lib/utils";
@@ -47,6 +52,13 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const locale = await getLocale();
+	const uiLabel = await getTranslations("ui");
+	const uiLabels = Object.fromEntries(
+		Object.keys(UI_LABELS).map((key) => [
+			key,
+			uiLabel(key as keyof typeof UI_LABELS),
+		]),
+	) as UiLabels;
 
 	return (
 		<html
@@ -56,15 +68,17 @@ export default async function RootLayout({
 		>
 			<body className="flex min-h-full flex-col font-sans">
 				<NextIntlClientProvider>
-					<NuqsAdapter>
-						<TRPCReactProvider>
-							<ThemeProvider>
-								<TooltipProvider>{children}</TooltipProvider>
-								<Toaster richColors />
-							</ThemeProvider>
-						</TRPCReactProvider>
-					</NuqsAdapter>
-					<LocalDateTimeHydrator />
+					<UiLabelsProvider value={uiLabels}>
+						<NuqsAdapter>
+							<TRPCReactProvider>
+								<ThemeProvider>
+									<TooltipProvider>{children}</TooltipProvider>
+									<Toaster richColors />
+								</ThemeProvider>
+							</TRPCReactProvider>
+						</NuqsAdapter>
+						<LocalDateTimeHydrator />
+					</UiLabelsProvider>
 				</NextIntlClientProvider>
 			</body>
 		</html>

@@ -1,0 +1,81 @@
+{
+	"page": {
+		"title": "Deals",
+		"heading": "Deals",
+		"description": "The pipeline, and everything that has already closed."
+	},
+	"createSheet": {
+		"trigger": "New deal",
+		"title": "New deal",
+		"description": "Every deal belongs to a company and has someone's name against it.",
+		"nameLabel": "Name",
+		"companyLabel": "Company",
+		"ownerLabel": "Owner",
+		"ownerPlaceholder": "Choose an owner",
+		"stageLabel": "Stage",
+		"stageDescription": "A new deal is an open deal — close it from the pipeline once there is an outcome to record.",
+		"amountLabel": "Amount",
+		"currencyLabel": "Currency",
+		"closeDateLabel": "Expected close date",
+		"closeDatePlaceholder": "No date yet",
+		"submit": "Add deal",
+		"cancel": "Cancel",
+		"toastSuccess": "{name} added."
+	},
+	"table": {
+		"search": "Search deals by name or company…",
+		"archivedFilter": "Archived",
+		"columns": {
+			"deal": "Deal",
+			"company": "Company",
+			"stage": "Stage",
+			"amount": "Amount",
+			"owner": "Owner",
+			"closeDate": "Close date",
+			"created": "Created",
+			"createdLabel": "Created date",
+			"lastActivity": "Last activity",
+			"archived": "Archived",
+			"archivedLabel": "Archived date"
+		},
+		"facets": {
+			"owner": "Owner",
+			"stage": "Stage",
+			"closing": "Closing"
+		},
+		"tabs": {
+			"all": "All deals",
+			"open": "Open",
+			"closed": "Closed"
+		},
+		"empty": {
+			"archived": "No archived deals.",
+			"default": "No deals match this view."
+		},
+		"meta": {
+			"count": "{count, plural, one {# deal} other {# deals}}",
+			"openPipeline": "open pipeline",
+			"notCounted": "{count, plural, one {# not counted} other {# not counted}} (no {currencies} rate)"
+		}
+	},
+	"bulkActions": {
+		"restore": "Restore",
+		"deleteForever": "Delete forever",
+		"deleteForeverTitle": "{count, plural, one {Delete # deal forever?} other {Delete # deals forever?}}",
+		"deleteForeverDescription": "Everything filed against them — activity, notes, the amounts in your pipeline — goes too. This cannot be undone.",
+		"reassigned": "{count, plural, one {# deal reassigned.} other {# deals reassigned.}}",
+		"changeStage": "Change stage",
+		"moved": "{count, plural, one {# deal moved.} other {# deals moved.}}",
+		"archive": "Archive",
+		"archived": "{count, plural, one {# deal archived.} other {# deals archived.}}",
+		"restored": "{count, plural, one {# deal restored.} other {# deals restored.}}",
+		"deletedForever": "{count, plural, one {# deal deleted forever.} other {# deals deleted forever.}}",
+		"closeLostTitle": "{count, plural, one {Close # deal as lost} other {Close # deals as lost}}",
+		"markUnqualifiedTitle": "{count, plural, one {Mark # deal as unqualified} other {Mark # deals as unqualified}}",
+		"closeDescription": "The same reason goes on every one of them, so keep it to what they have in common.",
+		"reasonLabel": "Reason",
+		"save": "Save",
+		"cancel": "Cancel",
+		"reasonPlaceholder": "Budget pulled for the quarter"
+	}
+}
