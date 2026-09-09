@@ -22,6 +22,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { z } from "zod";
 import { runFailureReason } from "@/lib/agent-run-failure";
+import { AGENT_RUN_STATUSES } from "@/lib/agent-run-status";
 import { dateFormatter } from "@/lib/date-format";
 import type { RouterOutputs } from "@/lib/trpc/types";
 
@@ -80,6 +81,8 @@ export function AgentRuns({
 	retryingRunId?: string;
 }) {
 	const t = useTranslations("agentBuilder.history");
+	const runStatus = useTranslations("agentBuilder.runStatus");
+	const triggerType = useTranslations("agentBuilder.triggerType");
 	const locale = useLocale();
 	const [outcome, setOutcome] = useState("ALL");
 	const [expanded, setExpanded] = useState<string | null>(null);
@@ -101,14 +104,11 @@ export function AgentRuns({
 					className="h-7 rounded-md border bg-muted px-2.5 font-medium text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
 				>
 					<option value="ALL">{t("outcomes.all")}</option>
-					<option value="SUCCEEDED">{t("outcomes.succeeded")}</option>
-					<option value="FAILED">{t("outcomes.failed")}</option>
-					<option value="RUNNING">{t("outcomes.running")}</option>
-					<option value="QUEUED">{t("outcomes.queued")}</option>
-					<option value="WAITING_FOR_APPROVAL">
-						{t("outcomes.waitingForApproval")}
-					</option>
-					<option value="CANCELLED">{t("outcomes.cancelled")}</option>
+					{AGENT_RUN_STATUSES.map((status) => (
+						<option key={status} value={status}>
+							{runStatus(status)}
+						</option>
+					))}
 				</select>
 			</div>
 
@@ -138,11 +138,11 @@ export function AgentRuns({
 											run.status === "FAILED" && "text-destructive",
 										)}
 									>
-										{humanStatus(run.status)}
+										{runStatus(run.status)}
 									</span>
 								</span>
 								<span className="mt-1 block wrap-break-word font-mono text-muted-foreground text-xs leading-5 sm:mt-0">
-									{humanStatus(run.triggerType)} ·{" "}
+									{triggerType(run.triggerType)} ·{" "}
 									{formatDate(locale, run.createdAt)} ·{" "}
 									{t("versionLabel", { number: run.version.number })}
 								</span>
@@ -239,6 +239,8 @@ export function AgentRuns({
 }
 
 function ExpandedRun({ run }: { run: RunRow }) {
+	const actionStatus = useTranslations("agentBuilder.actionStatus");
+	const triggerType = useTranslations("agentBuilder.triggerType");
 	const locale = useLocale();
 	const t = useTranslations("agentBuilder.history");
 	const events = runEvents.parse(run.events);
@@ -260,7 +262,7 @@ function ExpandedRun({ run }: { run: RunRow }) {
 			<div className="grid grid-cols-2 gap-x-4 gap-y-3 border-b bg-background px-4 py-3 sm:min-h-[58px] sm:grid-cols-4 sm:items-center sm:gap-0 sm:px-5 sm:py-2">
 				<RunMeta
 					label={t("metaTrigger")}
-					value={humanStatus(run.triggerType)}
+					value={triggerType(run.triggerType)}
 				/>
 				<RunMeta
 					label={t("metaInitiatedBy")}
@@ -307,7 +309,7 @@ function ExpandedRun({ run }: { run: RunRow }) {
 									{entry.action.summary}
 								</span>
 								<span className="block wrap-break-word text-muted-foreground text-xs">
-									{entry.action.provider} · {humanStatus(entry.action.status)}
+									{entry.action.provider} · {actionStatus(entry.action.status)}
 									{entry.action.targetLabel
 										? ` · ${entry.action.targetLabel}`
 										: ""}
@@ -355,6 +357,7 @@ function RunMeta({
 }
 
 export function AgentActivity({ activity }: { activity: Activity }) {
+	const actionStatus = useTranslations("agentBuilder.actionStatus");
 	const locale = useLocale();
 	const t = useTranslations("agentBuilder.history");
 	const [kind, setKind] = useState("ALL");

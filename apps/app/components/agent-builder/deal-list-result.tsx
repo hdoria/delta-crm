@@ -141,10 +141,14 @@ function tableTitle(
 	const count = result.deals.length;
 	if (count === 0) return t("titleNoMatch");
 
-	const status =
-		result.criteria.status === "all" ? "" : `${result.criteria.status} `;
-	const stale = result.criteria.inactiveForDays === null ? "" : "stale ";
-	return `${count} ${stale}${status}${t("dealNoun", { count })}`;
+	const criteria = [
+		result.criteria.status === "all" ? null : result.criteria.status,
+		result.criteria.inactiveForDays === null ? null : t("staleCriterion"),
+	].filter((entry): entry is string => Boolean(entry));
+
+	return criteria.length === 0
+		? t("titleCount", { count })
+		: t("titleFiltered", { count, criteria: criteria.join(", ") });
 }
 
 function tableMeta(

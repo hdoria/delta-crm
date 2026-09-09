@@ -218,13 +218,7 @@
 	"history": {
 		"filterOutcomesAria": "Filter run outcomes",
 		"outcomes": {
-			"all": "All outcomes",
-			"succeeded": "Succeeded",
-			"failed": "Failed",
-			"running": "Running",
-			"queued": "Queued",
-			"waitingForApproval": "Waiting for approval",
-			"cancelled": "Cancelled"
+			"all": "All outcomes"
 		},
 		"runNumber": "Run #{number}",
 		"versionLabel": "Version {number}",
@@ -300,7 +294,10 @@
 		"metaCount": "{count, plural, one {# deal} other {# deals}}",
 		"metaPipeline": "{amount} pipeline",
 		"metaInactive": "{days}+ days inactive",
-		"metaMoreResults": "More results available"
+		"metaMoreResults": "More results available",
+		"titleCount": "{count, plural, one {# deal} other {# deals}}",
+		"titleFiltered": "{count, plural, one {# deal} other {# deals}} ({criteria})",
+		"staleCriterion": "stale"
 	},
 	"deleteChat": {
 		"deleteAria": "Delete {title}",
@@ -428,5 +425,26 @@
 		"joinsAsYou": "Private. {appName} joins as you",
 		"waitingOnInvite": "Private. Waiting on an invite",
 		"someoneMustInvite": "Private. Someone inside has to invite {appName}"
+	},
+	"runStatus": {
+		"SUCCEEDED": "Succeeded",
+		"FAILED": "Failed",
+		"RUNNING": "Running",
+		"QUEUED": "Queued",
+		"WAITING_FOR_APPROVAL": "Waiting for approval",
+		"CANCELLED": "Cancelled"
+	},
+	"actionStatus": {
+		"PLANNED": "Planned",
+		"RUNNING": "Running",
+		"SUCCEEDED": "Succeeded",
+		"FAILED": "Failed",
+		"CANCELLED": "Cancelled"
+	},
+	"triggerType": {
+		"MANUAL": "Manual",
+		"SCHEDULE": "Schedule",
+		"EVENT": "Event",
+		"WEBHOOK": "Webhook"
 	}
 }
