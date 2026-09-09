@@ -9,7 +9,7 @@ export function Wordmark({ className }: { className?: string }) {
 				className,
 			)}
 		>
-			<Logo className="size-[18px] shrink-0 text-foreground" />
+			<Logo className="w-[38px] shrink-0 text-foreground" />
 			<span className="font-semibold text-[15px]/5 tracking-[-0.01em]">
 				Base CRM
 			</span>

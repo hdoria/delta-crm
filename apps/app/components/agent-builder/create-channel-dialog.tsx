@@ -16,6 +16,7 @@ import { Switch } from "@crm/ui/components/switch";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import { BRAND } from "@/lib/brand";
 import { useTRPC } from "@/lib/trpc/client";
 
 export function CreateChannelDialog({
@@ -57,8 +58,8 @@ export function CreateChannelDialog({
 				<DialogHeader>
 					<DialogTitle>Create a channel</DialogTitle>
 					<DialogDescription>
-						Comp AI makes it in Slack and joins it. You can put the agent in it
-						straight after.
+						{BRAND.appName} makes it in Slack and joins it. You can put the
+						agent in it straight after.
 					</DialogDescription>
 				</DialogHeader>
 

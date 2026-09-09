@@ -21,6 +21,7 @@ import {
 	type PickerChannel,
 } from "@/components/slack/channel-picker";
 import { useSlackChannels } from "@/components/slack/use-slack-channels";
+import { BRAND } from "@/lib/brand";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
 import { CreateChannelDialog } from "./create-channel-dialog";
@@ -83,7 +84,7 @@ export function AgentCapabilities({
 		trpc.slack.joinChannel.mutationOptions({
 			onSuccess: async () => {
 				await channels.reload();
-				toast.success("Asked someone to invite Comp AI.");
+				toast.success(`Asked someone to invite ${BRAND.appName}.`);
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -166,7 +167,7 @@ export function AgentCapabilities({
 							</CreateChannelDialog>
 						) : null
 					}
-					summary="One channel. Comp AI joins it when you save."
+					summary={`One channel. ${BRAND.appName} joins it when you save.`}
 					title="Lives in"
 				>
 					<ChannelPicker
@@ -286,7 +287,7 @@ export function AgentCapabilities({
 				description={
 					blocked ??
 					(channelChanged
-						? `Comp AI joins #${to}. It stays in #${from} until you remove it.`
+						? `${BRAND.appName} joins #${to}. It stays in #${from} until you remove it.`
 						: "The old version stays in the history.")
 				}
 				open={dirty}

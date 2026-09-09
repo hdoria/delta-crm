@@ -29,6 +29,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useSlackChannels } from "@/components/slack/use-slack-channels";
 import { handoffBrief, handoffResources } from "@/lib/agent-handoff";
+import { BRAND } from "@/lib/brand";
 import { useTRPC } from "@/lib/trpc/client";
 import { useWorkspaceUrl } from "@/lib/use-workspace-url";
 
@@ -152,8 +153,8 @@ export function NewAgentDialog({ children }: { children: React.ReactNode }) {
 						<p className="text-muted-foreground text-xs">
 							{channel
 								? channel.isMember
-									? `Comp AI is already in #${channel.name}.`
-									: `Comp AI is not in #${channel.name} yet. It joins when you create this.`
+									? `${BRAND.appName} is already in #${channel.name}.`
+									: `${BRAND.appName} is not in #${channel.name} yet. It joins when you create this.`
 								: "Leave this empty and the builder will ask."}
 						</p>
 					</div>

@@ -11,7 +11,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
 
 				<div className="relative flex gap-2 text-sm/5">
 					<Link href="/" aria-label="Base CRM home" className="flex">
-						<Logo className="size-5 shrink-0" />
+						<Logo className="w-9 shrink-0" />
 					</Link>
 				</div>
 
@@ -25,23 +25,11 @@ export function AuthShell({ children }: { children: ReactNode }) {
 						</h1>
 					</div>
 				</div>
-
-				<p className="relative font-mono text-xs/4 text-muted-foreground">
-					Original project by{" "}
-					<a
-						href="https://trycomp.ai"
-						target="_blank"
-						rel="noreferrer"
-						className="underline underline-offset-4 hover:text-foreground"
-					>
-						Comp AI
-					</a>
-				</p>
 			</section>
 
 			<section className="flex min-h-svh flex-col bg-background px-6 py-8 sm:px-10 lg:px-14">
 				<div className="flex gap-2 text-sm/5 max-lg:hidden lg:invisible">
-					<Logo className="size-5 shrink-0" />
+					<Logo className="w-9 shrink-0" />
 				</div>
 
 				<div className="flex flex-1 items-center justify-center py-12">
@@ -62,7 +50,7 @@ export function AuthHeading({
 	return (
 		<div className="flex flex-col gap-3 text-left">
 			<Link href="/" aria-label="Base CRM home" className="flex">
-				<Logo className="size-6 shrink-0" />
+				<Logo className="w-11 shrink-0" />
 			</Link>
 			<div className="flex flex-col gap-1">
 				<h2 className="text-2xl/8 font-semibold tracking-tight text-balance">
