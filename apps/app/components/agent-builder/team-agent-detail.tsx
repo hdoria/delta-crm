@@ -536,9 +536,7 @@ function AgentOverview({ agent }: { agent: AgentDetail }) {
 
 	if (!capabilities) {
 		return (
-			<p className="text-muted-foreground text-sm">
-				{t("noDeployedVersion")}
-			</p>
+			<p className="text-muted-foreground text-sm">{t("noDeployedVersion")}</p>
 		);
 	}
 

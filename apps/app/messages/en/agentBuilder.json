@@ -14,6 +14,7 @@
 		"sharedReadOnly": "Read-only",
 		"sharedBy": "Shared by {name}",
 		"sharedNotice": "You can read this builder chat, but only its owner can continue or change it.",
+		"agentBuilderFallback": "Agent builder",
 		"untitledChat": "Agent chat",
 		"private": "Private",
 		"workingInBackground": "Working in background",
@@ -28,7 +29,9 @@
 		"followUp": "Follow-up",
 		"answered": "Answered",
 		"waitingForAnswer": "Waiting for your answer",
+		"reasoningLabel": "Reasoning",
 		"buildingAgent": "Building the agent",
+		"agentCreationAria": "Agent creation",
 		"stepOf": "{completed} of {total}",
 		"steps": {
 			"scope": "Scope",
@@ -81,7 +84,13 @@
 		},
 		"chatUnavailableTitle": "Chat unavailable",
 		"chatUnavailableDescription": "This chat does not exist or you do not have access to it.",
-		"messageCouldNotBeSent": "This message could not be sent."
+		"messageCouldNotBeSent": "This message could not be sent.",
+		"manualOnly": "Manual only",
+		"triggerOnDemand": "On demand",
+		"triggerOnCrmEvent": "On CRM event",
+		"triggerOnSchedule": "On schedule",
+		"looksAtFallback": "CRM records in the approved scope",
+		"actionFallback": "Perform the requested team action"
 	},
 	"home": {
 		"greeting": "What can I help with, {name}?",

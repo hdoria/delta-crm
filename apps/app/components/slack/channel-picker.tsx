@@ -135,7 +135,8 @@ function describe(
 			? ""
 			: ` · ${t("peopleCount", { count: channel.memberCount })}`;
 
-	if (channel.isMember) return `${t("isIn", { appName: BRAND.appName })}${people}`;
+	if (channel.isMember)
+		return `${t("isIn", { appName: BRAND.appName })}${people}`;
 	if (!channel.classified) return `${t("notReadYet")}${people}`;
 	if (!channel.isPrivate)
 		return `${t("canJoin", { appName: BRAND.appName })}${people}`;
