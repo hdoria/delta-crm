@@ -47,6 +47,10 @@ export class EnvironmentVariables {
 
 	@IsOptional()
 	@IsString()
+	LOCAL_EMAIL_LOGIN_ENABLED = "false";
+
+	@IsOptional()
+	@IsString()
 	GOOGLE_CLIENT_ID?: string;
 
 	@IsOptional()

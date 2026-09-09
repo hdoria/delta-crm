@@ -62,7 +62,9 @@ export async function ensureWorkspaceMembership(
 			where: {
 				organizationId: workspace.id,
 				role: "owner",
-				user: { accounts: { some: { providerId: "google" } } },
+				user: {
+					accounts: { some: { providerId: { in: ["google", "email"] } } },
+				},
 			},
 			select: { id: true },
 		});

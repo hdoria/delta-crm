@@ -30,7 +30,7 @@ type DisabledIntegrationOptions = {
 const unavailable = async (_options?: DisabledIntegrationOptions) => ({
 	error: {
 		message:
-			"Esta integração não está habilitada no Base CRM. O acesso usa somente Google pelo Supabase.",
+			"Esta integração não está habilitada no Base CRM. O acesso é gerenciado pelo Supabase.",
 	},
 });
 export const signIn = {

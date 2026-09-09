@@ -1,6 +1,6 @@
 # @crm/auth
 
-Base CRM uses Supabase Auth with Google identity only. The CRM retains its Prisma user profiles, workspace and role model in Supabase Postgres.
+Base CRM uses Supabase Auth with Google identity by default. The CRM retains its Prisma user profiles, workspace and role model in Supabase Postgres.
 
 `auth.api.getSession({ headers })` verifies the presented Supabase access token with `auth.getUser()`, checks Google identity, verified email and `ALLOWED_SIGN_IN`, and returns the internal CRM session shape. Missing or empty allowlists deny access. The first authorized human becomes the workspace owner, even when demo profiles already exist.
 
@@ -20,3 +20,9 @@ The server helper `createServerSupabaseClient({ getAll, setAll })` is exported b
 Microsoft, enterprise SSO, mailbox and Slack connections are disabled in this version. API keys are also disabled: the API rejects `x-api-key` credentials and key-management writes return an explicit error. Legacy Better Auth routes, session cookies and development sessions grant no access.
 
 Local Supabase can be prepared before Google OAuth credentials are supplied. The application starts in that state and no user can enter until Google and the allowlist are configured. Tests use an isolated `TEST_DATABASE_URL` ending in `_test`; the integration fixtures mock the Supabase HTTP response while exercising real Prisma profile and membership writes.
+
+## Temporary local email login
+
+`LOCAL_EMAIL_LOGIN_ENABLED=true` admits confirmed email identities on `ALLOWED_SIGN_IN` only when the server's `SUPABASE_URL` points to `127.0.0.1`, `localhost` or `[::1]` over HTTP(S). Missing or false flags and remote Supabase URLs keep Google-only access. The Supabase email provider must also be enabled separately. No application signup or default password is supplied.
+
+Email profiles retain their real provider and UUID. They never create a Google identity. Workspace bootstrap recognizes both Google and email members as human owners, preserving an existing owner's role. Setting the flag back to false rejects existing email sessions on the next server validation. Credentials are provisioned locally and must not be committed.

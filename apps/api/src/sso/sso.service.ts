@@ -27,7 +27,7 @@ export class SsoService {
 		_input: RegisterSsoProviderInput,
 	): Promise<SsoProvider> {
 		throw new ForbiddenException(
-			"O Base CRM usa somente Google pelo Supabase. Outros provedores estão desabilitados.",
+			"Login empresarial por SSO está desabilitado no Base CRM.",
 		);
 	}
 	async remove(

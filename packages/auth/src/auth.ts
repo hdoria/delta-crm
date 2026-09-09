@@ -27,7 +27,7 @@ export type Session = {
 	};
 };
 
-const googleProfile = z.object({
+const identityProfile = z.object({
 	full_name: z.string().catch("").optional(),
 	avatar_url: z.string().nullable().catch(null).optional(),
 });
@@ -37,10 +37,13 @@ const sessionClaims = z.object({
 });
 
 async function profileFor(user: User): Promise<SessionUser> {
-	const google = user.identities?.find(
-		(identity) => identity.provider === "google",
+	const providerId = z
+		.enum(["google", "email"])
+		.parse(user.app_metadata.provider);
+	const identity = user.identities?.find(
+		(candidate) => candidate.provider === providerId,
 	);
-	const metadata = googleProfile.parse(user.user_metadata);
+	const metadata = identityProfile.parse(user.user_metadata);
 	const email = user.email;
 	if (!email) throw new Error("A verified email is required.");
 	const profile = await db.user.upsert({
@@ -55,15 +58,15 @@ async function profileFor(user: User): Promise<SessionUser> {
 		update: { email: email, emailVerified: true },
 	});
 	await db.account.upsert({
-		where: { id: `supabase-google:${user.id}` },
+		where: { id: `supabase-${providerId}:${user.id}` },
 		create: {
-			id: `supabase-google:${user.id}`,
+			id: `supabase-${providerId}:${user.id}`,
 			userId: user.id,
-			providerId: "google",
-			accountId: google?.id ?? user.id,
-			scope: "openid email profile",
+			providerId,
+			accountId: identity?.id ?? user.id,
+			scope: providerId === "google" ? "openid email profile" : null,
 		},
-		update: { accountId: google?.id ?? user.id },
+		update: { accountId: identity?.id ?? user.id },
 	});
 	return profile;
 }

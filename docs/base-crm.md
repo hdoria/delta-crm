@@ -4,7 +4,8 @@ Projeto de prática para a aula de BMAD da Delta Academy em 09/09/2026, das 10h 
 A base vem de [trycompai/crm](https://github.com/trycompai/crm), sob licença MIT.
 O visual e os recursos centrais do CRM seguem o projeto original.
 
-Esta versão usa Postgres e Auth do Supabase. O login aceita somente Google.
+Esta versão usa Postgres e Auth do Supabase. O login Google é o padrão.
+Para a aula, há uma opção temporária de e-mail e senha restrita ao Supabase local.
 O backend continua usando Prisma e tRPC para empresas, contatos e negócios.
 SSO, chaves de API e conexões de e-mail/calendário estão desabilitados nesta versão.
 O BMAD entra durante a aula; a base não inclui uma instalação do BMAD.
@@ -52,10 +53,31 @@ Parar o Supabase preserva os dados locais. Rodar o seed novamente preserva os re
 `bun run dev` inicia app e API. `bun run dev:full` inclui o agente herdado do projeto original.
 As integrações externas do agente exigem configuração própria e ficam fora do exercício inicial.
 
+## Login temporário por e-mail e senha
+
+No `.env` da raiz, defina `LOCAL_EMAIL_LOGIN_ENABLED="true"` e inclua o e-mail autorizado em `ALLOWED_SIGN_IN`.
+Reinicie o Supabase com `bun run supabase:stop` e `bun run supabase:start`, depois reinicie app e API.
+O formulário aparece quando o provedor de e-mail está ativo na instância local.
+
+A conta deve ser criada e confirmada pelo administrador no Supabase Auth.
+Use a API administrativa em ambiente local, com a chave de serviço somente no servidor.
+Não grave senhas em scripts versionados, seed ou documentação.
+O login usa `signInWithPassword` do Supabase e exige e-mail confirmado e lista de acesso.
+O cadastro público fica desabilitado enquanto esse modo está ativo.
+
+O primeiro usuário autorizado recebe o papel de owner. Contas posteriores recebem member;
+um owner existente é preservado. Os representantes do seed não recebem acesso.
+O papel owner permite administrar o workspace e os recursos disponíveis do CRM.
+As integrações desabilitadas nesta versão continuam exigindo implementação própria.
+
+Para voltar ao login Google, defina `LOCAL_EMAIL_LOGIN_ENABLED="false"`, configure o provedor abaixo e reinicie os serviços.
+A opção temporária só aceita URLs Supabase de loopback (`127.0.0.1`, `localhost` ou `::1`).
+Ela não habilita login por senha em um projeto Supabase remoto.
+
 ## Ativar o login Google depois
 
 O banco e os dados de exemplo funcionam sem credenciais Google.
-O acesso ao CRM exige login Google real. Não existe senha de demonstração nem atalho de autenticação.
+Configure o cliente OAuth quando quiser usar esse provedor.
 
 1. No Google Cloud, crie um cliente OAuth do tipo Web application.
 2. Configure a tela de consentimento. Em modo de teste, adicione os e-mails que participarão da aula.
@@ -72,12 +94,13 @@ ALLOWED_SIGN_IN="instrutor@escola.example,aluno@escola.example"
 ```
 
 Um domínio inteiro permite qualquer e-mail desse domínio. Para uma turma pequena, use e-mails individuais.
-A lista vazia recusa acesso. O primeiro usuário Google autorizado recebe o papel de owner.
+A lista vazia recusa acesso. O primeiro usuário autorizado recebe o papel de owner, se ainda não houver um owner real.
 Os representantes fictícios do seed não recebem conta Google, matrícula no workspace ou privilégios de administração.
 
 Os scripts Supabase leem o `.env` da raiz e ativam Google somente quando o par de credenciais existe.
 Não edite `enabled` manualmente no `config.toml`. Use `bun run supabase:start` após preencher o par.
-Email/password, OTP por e-mail ou SMS e login anônimo permanecem desativados.
+E-mail e senha ficam desativados por padrão. A opção local acima é a exceção temporária.
+Telefone e login anônimo permanecem desativados.
 
 O redirecionamento do Google termina no Supabase, em `/auth/v1/callback`.
 Depois disso, o Supabase volta ao app em `http://localhost:3000/auth/callback`.
@@ -106,6 +129,7 @@ Esta etapa fica para depois da preparação local.
 | `APP_URL` | Origem do app |
 | `API_URL` | Origem da API do CRM |
 | `ALLOWED_SIGN_IN` | Lista explícita de usuários ou domínios autorizados |
+| `LOCAL_EMAIL_LOGIN_ENABLED` | `false` no ambiente conectado |
 
 Na nuvem, as credenciais Google ficam na configuração do provedor no Supabase.
 `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET` controlam o provedor da instância local.
@@ -149,6 +173,8 @@ O recorte usa dados que já existem. Ele permite mostrar análise de uma base ex
 ## Referências
 
 - [Configuração local do Supabase](https://supabase.com/docs/guides/local-development/cli/config)
+- [Login por senha no Supabase](https://supabase.com/docs/reference/javascript/auth-signinwithpassword)
+- [Criação administrativa de usuários](https://supabase.com/docs/reference/javascript/auth-admin-createuser)
 - [Login Google no Supabase](https://supabase.com/docs/guides/auth/social-login/auth-google)
 - [Proteção da Data API](https://supabase.com/docs/guides/api/securing-your-api)
 - [Configuração do Prisma com PostgreSQL](https://www.prisma.io/docs/orm/overview/databases/postgresql)

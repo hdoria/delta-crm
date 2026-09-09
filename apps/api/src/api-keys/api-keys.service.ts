@@ -22,7 +22,7 @@ export class ApiKeysService {
 		_input: CreateApiKeyInput,
 	): Promise<CreatedApiKey> {
 		throw new ForbiddenException(
-			"Chaves de API estão desabilitadas. O Base CRM usa somente login Google pelo Supabase.",
+			"Chaves de API estão desabilitadas. Use uma conta autorizada pelo Supabase.",
 		);
 	}
 	async revoke(

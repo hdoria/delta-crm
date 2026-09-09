@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { isLocalEmailLoginEnabled } from "../packages/auth/src/policy.ts";
 import { loadRootEnv } from "../packages/env/src/index.ts";
 
 loadRootEnv();
@@ -22,6 +23,8 @@ const child = spawn("supabase", command, {
 	env: {
 		...process.env,
 		SUPABASE_AUTH_EXTERNAL_GOOGLE_ENABLED: String(Boolean(clientId)),
+		SUPABASE_AUTH_EMAIL_ENABLE_SIGNUP: String(isLocalEmailLoginEnabled()),
+		SUPABASE_AUTH_ENABLE_SIGNUP: String(!isLocalEmailLoginEnabled()),
 	},
 });
 

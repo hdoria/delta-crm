@@ -59,15 +59,20 @@ function malformedUtf8Cookie() {
 const SESSION_COOKIE = sessionCookie();
 const realFetch = globalThis.fetch;
 const savedEnv = Object.fromEntries(
-	["SUPABASE_URL", "SUPABASE_ANON_KEY", "ALLOWED_SIGN_IN", "IS_MARKETING"].map(
-		(name) => [name, process.env[name]],
-	),
+	[
+		"SUPABASE_URL",
+		"SUPABASE_ANON_KEY",
+		"ALLOWED_SIGN_IN",
+		"IS_MARKETING",
+		"LOCAL_EMAIL_LOGIN_ENABLED",
+	].map((name) => [name, process.env[name]]),
 );
 
 beforeEach(() => {
 	process.env.SUPABASE_URL = SUPABASE_URL;
 	process.env.SUPABASE_ANON_KEY = "public-key-for-http-stub";
 	process.env.ALLOWED_SIGN_IN = GOOGLE_USER.email;
+	process.env.LOCAL_EMAIL_LOGIN_ENABLED = "false";
 	marketing(undefined);
 	stub(async () => {
 		throw new Error("Unexpected HTTP request");

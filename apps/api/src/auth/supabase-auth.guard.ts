@@ -25,7 +25,7 @@ export class SupabaseAuthGuard implements CanActivate {
 		request.session = session;
 		if (!session && mode !== "optional")
 			throw new UnauthorizedException(
-				"Entre com sua conta Google para acessar o Base CRM.",
+				"Entre com sua conta para acessar o Base CRM.",
 			);
 		return true;
 	}
