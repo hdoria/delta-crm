@@ -239,7 +239,7 @@ export function DealsTable() {
 			input.archived
 				? [...buildColumns(t, locale), buildArchivedColumn(t), ...fieldColumns]
 				: [...buildColumns(t, locale), ...fieldColumns],
-		[fieldColumns, input.archived, t],
+		[fieldColumns, input.archived, t, locale],
 	);
 
 	return (

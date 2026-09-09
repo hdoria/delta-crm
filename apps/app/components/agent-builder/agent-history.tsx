@@ -357,7 +357,6 @@ function RunMeta({
 }
 
 export function AgentActivity({ activity }: { activity: Activity }) {
-	const actionStatus = useTranslations("agentBuilder.actionStatus");
 	const locale = useLocale();
 	const t = useTranslations("agentBuilder.history");
 	const [kind, setKind] = useState("ALL");
