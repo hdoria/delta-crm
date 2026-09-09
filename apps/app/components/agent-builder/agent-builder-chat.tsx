@@ -40,6 +40,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Client, type MessageStreamEvent } from "eve/client";
 import type { EveMessage, EveMessageInputRequest } from "eve/react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Fragment, type ReactNode, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -95,7 +96,7 @@ import { ShareChatDialog } from "./share-chat-dialog";
 type Conversation = RouterOutputs["conversations"]["builderById"];
 type SharedConversation = RouterOutputs["conversations"]["shared"];
 
-const BUILDER_STEPS = ["Scope", "Instructions", "Manifest", "Review"] as const;
+const BUILDER_STEPS = ["scope", "instructions", "manifest", "review"] as const;
 const BUILDER_STEP_ARTIFACTS = [
 	null,
 	"agent/instructions.md",
@@ -192,6 +193,7 @@ export function AgentBuilderChat({
 	conversationId: string;
 	initialData: Conversation | SharedConversation | null;
 }) {
+	const t = useTranslations("agentBuilder.chat");
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
 	const sharedChat = isSharedChatToken(conversationId);
@@ -281,7 +283,9 @@ export function AgentBuilderChat({
 					className="flex flex-1 items-center justify-center p-8"
 					aria-busy="true"
 				>
-					<span className="text-muted-foreground text-sm">Opening chat…</span>
+					<span className="text-muted-foreground text-sm">
+						{t("openingChat")}
+					</span>
 				</main>
 			);
 		}
@@ -666,6 +670,7 @@ function SharedAgentChat({
 }: {
 	conversation: SharedConversation;
 }) {
+	const t = useTranslations("agentBuilder.chat");
 	const submissions = builderSubmissions.parse(conversation.submissions);
 	const events = streamEvents.parse(conversation.events);
 	const messages = messagesFromEvents(events);
@@ -680,9 +685,13 @@ function SharedAgentChat({
 		<main className="flex min-h-0 flex-1 flex-col">
 			<header className="flex h-12 shrink-0 items-center gap-3 border-b px-5">
 				<h1 className="min-w-0 flex-1 truncate font-medium text-sm">
-					{conversation.agent?.name ?? conversation.title ?? "Agent builder"}
+					{conversation.agent?.name ??
+						conversation.title ??
+						t("agentBuilderFallback")}
 				</h1>
-				<span className="text-muted-foreground text-xs">Read-only</span>
+				<span className="text-muted-foreground text-xs">
+					{t("sharedReadOnly")}
+				</span>
 			</header>
 
 			<MessageScrollerProvider autoScroll defaultScrollPosition="last-anchor">
@@ -695,11 +704,10 @@ function SharedAgentChat({
 							<MessageScrollerItem messageId="shared-chat-notice">
 								<div className="rounded-lg border bg-card px-4 py-3 text-sm">
 									<p className="font-medium">
-										Shared by {conversation.ownerName}
+										{t("sharedBy", { name: conversation.ownerName })}
 									</p>
 									<p className="mt-1 text-muted-foreground text-xs">
-										You can read this builder chat, but only its owner can
-										continue or change it.
+										{t("sharedNotice")}
 									</p>
 								</div>
 							</MessageScrollerItem>
@@ -755,18 +763,19 @@ function ChatHeader({
 	working: boolean;
 	creatingAgent: boolean;
 }) {
+	const t = useTranslations("agentBuilder.chat");
 	const workspaceUrl = useWorkspaceUrl();
 	const title =
 		(creatingAgent ? conversation.agent?.name : null) ??
 		conversation.title ??
-		"Agent chat";
+		t("untitledChat");
 
 	return (
 		<header className="flex h-12 shrink-0 items-center gap-2 border-b px-4 sm:gap-2.5 sm:pr-4 sm:pl-5">
 			<div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
 				<h1 className="truncate font-medium text-sm">{title}</h1>
 				<span className="hidden shrink-0 text-muted-foreground text-xs sm:inline">
-					Private
+					{t("private")}
 				</span>
 				{working ? (
 					<span className="flex shrink-0 items-center gap-2 text-muted-foreground text-xs">
@@ -775,15 +784,15 @@ function ChatHeader({
 							className="size-3.5 animate-spin text-ring"
 							motion="none"
 						/>
-						<span className="sr-only">Working in background</span>
+						<span className="sr-only">{t("workingInBackground")}</span>
 						<span aria-hidden="true" className="hidden sm:inline">
-							Working in background
+							{t("workingInBackground")}
 						</span>
 					</span>
 				) : null}
 			</div>
 			<Button asChild variant="ghost" size="icon-sm">
-				<Link href={workspaceUrl("/chat")} aria-label="Start a new chat">
+				<Link href={workspaceUrl("/chat")} aria-label={t("startNewChat")}>
 					<Icon icon={Add} />
 				</Link>
 			</Button>
@@ -809,8 +818,9 @@ function UserSubmission({
 	error: string | null;
 	sending?: boolean;
 }) {
+	const t = useTranslations("agentBuilder.chat");
 	const message = submission.message;
-	const messageText = message.text ?? "Message unavailable";
+	const messageText = message.text ?? t("messageUnavailable");
 	const command =
 		submission.commandType === "CREATE_AGENT"
 			? consumeBuilderCommand(messageText)
@@ -835,12 +845,12 @@ function UserSubmission({
 				{response ? (
 					<div className="flex items-center gap-1.5 text-muted-foreground text-xs">
 						<Icon icon={Reply} className="size-3.5" />
-						<span>Answer to follow-up</span>
+						<span>{t("answerToFollowUp")}</span>
 					</div>
 				) : null}
 				{submission.commandType === "CREATE_AGENT" ? (
 					<div className="flex flex-wrap gap-1">
-						<ChatCommandChip label="Create agent" icon={Application} />
+						<ChatCommandChip label={t("createAgentChip")} icon={Application} />
 					</div>
 				) : null}
 				<p className="wrap-break-word">{text}</p>
@@ -863,7 +873,7 @@ function UserSubmission({
 				) : null}
 				{failed ? (
 					<p className="mt-2 text-destructive text-xs">
-						{error ?? "This message could not be sent."}
+						{error ?? t("messageCouldNotBeSent")}
 					</p>
 				) : null}
 			</div>

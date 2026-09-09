@@ -14,6 +14,7 @@
 		"sharedReadOnly": "Somente leitura",
 		"sharedBy": "Compartilhado por {name}",
 		"sharedNotice": "Você pode ler este chat do criador de agentes, mas só o dono pode continuar ou alterá-lo.",
+		"agentBuilderFallback": "Criador de agentes",
 		"untitledChat": "Chat do agente",
 		"private": "Privado",
 		"workingInBackground": "Trabalhando em segundo plano",
@@ -28,7 +29,9 @@
 		"followUp": "Acompanhamento",
 		"answered": "Respondido",
 		"waitingForAnswer": "Aguardando sua resposta",
+		"reasoningLabel": "Raciocínio",
 		"buildingAgent": "Criando o agente",
+		"agentCreationAria": "Criação do agente",
 		"stepOf": "{completed} de {total}",
 		"steps": {
 			"scope": "Escopo",
@@ -81,7 +84,13 @@
 		},
 		"chatUnavailableTitle": "Chat indisponível",
 		"chatUnavailableDescription": "Este chat não existe ou você não tem acesso a ele.",
-		"messageCouldNotBeSent": "Não foi possível enviar esta mensagem."
+		"messageCouldNotBeSent": "Não foi possível enviar esta mensagem.",
+		"manualOnly": "Só manual",
+		"triggerOnDemand": "Sob demanda",
+		"triggerOnCrmEvent": "Em evento do CRM",
+		"triggerOnSchedule": "Em agenda",
+		"looksAtFallback": "Registros do CRM dentro do escopo aprovado",
+		"actionFallback": "Executar a ação solicitada pelo time"
 	},
 	"home": {
 		"greeting": "Em que posso ajudar, {name}?",
