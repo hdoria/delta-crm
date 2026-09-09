@@ -19,7 +19,7 @@ import {
 	ApiServiceUnavailableResponse,
 	ApiTags,
 } from "@nestjs/swagger";
-import { AllowAnonymous } from "@thallesp/nestjs-better-auth";
+import { AllowAnonymous } from "../auth/auth.decorators";
 import { CompaniesService } from "../companies/companies.service";
 import type { EnvironmentVariables } from "../config/env.validation";
 import { ContactsService } from "../contacts/contacts.service";

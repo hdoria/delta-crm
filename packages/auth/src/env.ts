@@ -16,12 +16,7 @@ const pair = (
 	const clientId = optional(idKey);
 	const clientSecret = optional(secretKey);
 
-	if (!clientId || !clientSecret) {
-		if (clientId || clientSecret) {
-			throw new Error(`${idKey} and ${secretKey} must be set together.`);
-		}
-		return undefined;
-	}
+	if (!clientId || !clientSecret) return undefined;
 
 	return { clientId, clientSecret };
 };
@@ -46,8 +41,7 @@ const slackCredentials = ():
 	| { clientId: string; clientSecret: string }
 	| undefined => pair("SLACK_CLIENT_ID", "SLACK_CLIENT_SECRET");
 
-const apiUrl =
-	optional("API_URL") ?? optional("BETTER_AUTH_URL") ?? DEFAULT_API_URL;
+const apiUrl = optional("API_URL") ?? DEFAULT_API_URL;
 
 const appUrls = (optional("APP_URL") ?? DEFAULT_APP_URL)
 	.split(",")
@@ -68,15 +62,17 @@ export const env = {
 } as const;
 
 export function isGoogleConfigured(): boolean {
-	return env.google !== undefined;
+	return Boolean(
+		process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL,
+	);
 }
 
 export function isMicrosoftConfigured(): boolean {
-	return env.microsoft !== undefined;
+	return false;
 }
 
 export function isSlackConfigured(): boolean {
-	return env.slack !== undefined;
+	return false;
 }
 
 export { apiUrl, appUrl };

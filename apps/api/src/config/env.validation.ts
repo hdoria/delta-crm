@@ -34,19 +34,16 @@ export class EnvironmentVariables {
 	})
 	DATABASE_URL!: string;
 
-	@IsString()
-	@MinLength(32, {
-		message:
-			"BETTER_AUTH_SECRET must be at least 32 characters. Generate one with: openssl rand -base64 32",
-	})
-	BETTER_AUTH_SECRET!: string;
+	@IsUrl({ require_tld: false, require_protocol: true })
+	SUPABASE_URL!: string;
 
 	@IsString()
-	@MinLength(1, {
-		message:
-			'ALLOWED_SIGN_IN is required — it is the only thing deciding who can sign in. Set it to your email domain, e.g. ALLOWED_SIGN_IN="acme.com", or to a single address for a one-person install.',
-	})
-	ALLOWED_SIGN_IN!: string;
+	@MinLength(1)
+	SUPABASE_ANON_KEY!: string;
+
+	@IsOptional()
+	@IsString()
+	ALLOWED_SIGN_IN = "";
 
 	@IsOptional()
 	@IsString()

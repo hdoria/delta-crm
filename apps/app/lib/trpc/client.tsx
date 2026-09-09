@@ -1,5 +1,6 @@
 "use client";
 
+import { createBrowserSupabaseClient } from "@crm/auth/client";
 import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createTRPCClient, httpBatchLink, type TRPCClient } from "@trpc/client";
@@ -28,7 +29,19 @@ export function TRPCReactProvider({ children }: { children: ReactNode }) {
 	const queryClient = getQueryClient();
 	const [trpcClient] = useState(() =>
 		createTRPCClient<AppRouter>({
-			links: [httpBatchLink({ url: "/api/trpc" })],
+			links: [
+				httpBatchLink({
+					url: "/api/trpc",
+					async headers() {
+						const {
+							data: { session },
+						} = await createBrowserSupabaseClient().auth.getSession();
+						return session
+							? { authorization: `Bearer ${session.access_token}` }
+							: {};
+					},
+				}),
+			],
 		}),
 	);
 

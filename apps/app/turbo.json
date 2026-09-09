@@ -6,7 +6,13 @@
 			"dependsOn": ["^build"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"],
-			"env": ["NEXT_PUBLIC_API_URL", "NEXT_PUBLIC_AUTH_URL"],
+			"env": [
+				"NEXT_PUBLIC_API_URL",
+				"SUPABASE_URL",
+				"SUPABASE_ANON_KEY",
+				"NEXT_PUBLIC_SUPABASE_URL",
+				"NEXT_PUBLIC_SUPABASE_ANON_KEY"
+			],
 			"passThroughEnv": [
 				"AGENT_BRIDGE_SECRET",
 				"AGENT_URL",

@@ -4,3 +4,5 @@ export const API_URL =
 export function isMarketing(): boolean {
 	return process.env.IS_MARKETING === "true";
 }
+
+export const AUTH_SETTINGS_TIMEOUT_MS = 3_000;

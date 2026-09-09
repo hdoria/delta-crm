@@ -13,7 +13,8 @@ fallback(
 	"DATABASE_URL",
 	"postgresql://postgres:postgres@localhost:5432/crm?schema=public",
 );
-fallback("BETTER_AUTH_SECRET", "test-secret-at-least-32-characters-long");
+fallback("SUPABASE_URL", "http://127.0.0.1:54321");
+fallback("SUPABASE_ANON_KEY", "test-anon-key");
 fallback("API_URL", "http://localhost:3001");
 fallback("ALLOWED_SIGN_IN", "example.com");
 fallback("GOOGLE_CLIENT_ID", "test-google-client-id");
@@ -29,7 +30,7 @@ describe("Auth (e2e)", () => {
 			imports: [AppModule],
 		}).compile();
 
-		app = moduleFixture.createNestApplication({ bodyParser: false });
+		app = moduleFixture.createNestApplication();
 		await app.init();
 	});
 
@@ -49,10 +50,10 @@ describe("Auth (e2e)", () => {
 		expect(response.body).toEqual({ authenticated: false, user: null });
 	});
 
-	it("mounts the Better Auth handler", async () => {
+	it("does not mount legacy Better Auth routes", async () => {
 		const response = await request(app.getHttpServer()).get("/api/auth/ok");
 
-		expect(response.status).not.toBe(404);
+		expect(response.status).toBe(404);
 	});
 
 	it("lets the sign-in page read what it may offer", async () => {
@@ -60,13 +61,9 @@ describe("Auth (e2e)", () => {
 			.get("/api/trpc/sso.signInOptions")
 			.expect(200);
 
-		const microsoftConfigured = Boolean(
-			process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET,
-		);
-
 		expect(response.body.result.data).toEqual({
 			google: true,
-			microsoft: microsoftConfigured,
+			microsoft: false,
 			providers: [],
 		});
 	});

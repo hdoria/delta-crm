@@ -17,7 +17,7 @@ import {
 	ApiServiceUnavailableResponse,
 	ApiTags,
 } from "@nestjs/swagger";
-import { AllowAnonymous } from "@thallesp/nestjs-better-auth";
+import { AllowAnonymous } from "../auth/auth.decorators";
 import type { EnvironmentVariables } from "../config/env.validation";
 import { ConversionService } from "./conversion.service";
 import { RatesService } from "./rates.service";

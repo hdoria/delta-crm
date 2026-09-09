@@ -11,7 +11,7 @@ import {
 	ApiServiceUnavailableResponse,
 	ApiTags,
 } from "@nestjs/swagger";
-import { AllowAnonymous } from "@thallesp/nestjs-better-auth";
+import { AllowAnonymous } from "../auth/auth.decorators";
 import { InjectDatabase } from "../database/database.constants";
 
 const SLOW_PROBE_MS = 250;

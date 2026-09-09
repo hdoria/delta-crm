@@ -30,9 +30,9 @@ import {
 	ApiServiceUnavailableResponse,
 	ApiTags,
 } from "@nestjs/swagger";
-import { AllowAnonymous } from "@thallesp/nestjs-better-auth";
 import type { Response } from "express";
 import { z } from "zod";
+import { AllowAnonymous } from "../auth/auth.decorators";
 import type { EnvironmentVariables } from "../config/env.validation";
 import { InjectDatabase } from "../database/database.constants";
 import { TrackingConfigService } from "./tracking-config.service";

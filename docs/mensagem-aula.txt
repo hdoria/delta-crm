@@ -1,0 +1,1 @@
+Preparei o Base CRM para a nossa aula de BMAD. A base já tem empresas, contatos e oportunidades fictícias para a gente trabalhar em um projeto existente. Na aula, vou instalar o BMAD e usá-lo para especificar, implementar e revisar uma melhoria no Kanban. Assim conseguimos acompanhar o processo completo, do pedido até a validação da mudança.

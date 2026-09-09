@@ -1,7 +1,5 @@
-import { mirror } from "../src/blob";
 import { db } from "../src/client";
 import { DEFAULT_REPORTING_CURRENCY } from "../src/currency";
-import { resolveFavicon } from "../src/favicon";
 import { fieldKeyFromLabel } from "../src/fields-shape";
 import {
 	ActivityType,
@@ -11,6 +9,7 @@ import {
 	RateSource,
 } from "../src/generated/prisma/enums";
 import { readReportingCurrency, SETTINGS_ID } from "../src/settings";
+import { markOnboarded, WORKSPACE_ID, workspaceSlug } from "../src/workspace";
 
 function makeRandom(seed: number): () => number {
 	let a = seed;
@@ -22,7 +21,7 @@ function makeRandom(seed: number): () => number {
 	};
 }
 
-const random = makeRandom(20260731);
+const random = makeRandom(20260909);
 
 function pick<T>(items: readonly T[]): T {
 	const item = items[Math.floor(random() * items.length)];
@@ -49,9 +48,9 @@ function daysFromNow(days: number, jitterHours = 0): Date {
 }
 
 const OWNERS = [
-	{ name: "Ada Okafor", email: "ada@trycomp.ai" },
-	{ name: "Marcus Lindqvist", email: "marcus@trycomp.ai" },
-	{ name: "Priya Raman", email: "priya@trycomp.ai" },
+	{ name: "Alex Demo", email: "alex@base-crm.example" },
+	{ name: "Cris Exemplo", email: "cris@base-crm.example" },
+	{ name: "Sam Modelo", email: "sam@base-crm.example" },
 ] as const;
 
 type SeedCompany = {
@@ -65,120 +64,120 @@ type SeedCompany = {
 
 const COMPANIES: readonly SeedCompany[] = [
 	{
-		name: "Stripe",
-		domain: "stripe.com",
+		name: "Aurora Demo",
+		domain: "aurora-demo.example",
 		industry: "Financial Services",
 		city: "San Francisco",
 		country: "United States",
 		countryCode: "US",
 	},
 	{
-		name: "Linear",
-		domain: "linear.app",
+		name: "Horizonte Demo",
+		domain: "horizonte-demo.example",
 		industry: "Software",
 		city: "San Francisco",
 		country: "United States",
 		countryCode: "US",
 	},
 	{
-		name: "Vercel",
-		domain: "vercel.com",
+		name: "Farol Demo",
+		domain: "farol-demo.example",
 		industry: "Software",
 		city: "San Francisco",
 		country: "United States",
 		countryCode: "US",
 	},
 	{
-		name: "Ramp",
-		domain: "ramp.com",
+		name: "Nuvem Demo",
+		domain: "nuvem-demo.example",
 		industry: "Financial Services",
 		city: "New York",
 		country: "United States",
 		countryCode: "US",
 	},
 	{
-		name: "Notion",
-		domain: "notion.so",
+		name: "Cedro Demo",
+		domain: "cedro-demo.example",
 		industry: "Software",
 		city: "San Francisco",
 		country: "United States",
 		countryCode: "US",
 	},
 	{
-		name: "Monzo",
-		domain: "monzo.com",
+		name: "Ponte Demo",
+		domain: "ponte-demo.example",
 		industry: "Banking",
 		city: "London",
 		country: "United Kingdom",
 		countryCode: "GB",
 	},
 	{
-		name: "Wise",
-		domain: "wise.com",
+		name: "Orbita Demo",
+		domain: "orbita-demo.example",
 		industry: "Financial Services",
 		city: "London",
 		country: "United Kingdom",
 		countryCode: "GB",
 	},
 	{
-		name: "Personio",
-		domain: "personio.com",
+		name: "Jardim Demo",
+		domain: "jardim-demo.example",
 		industry: "Human Resources",
 		city: "Munich",
 		country: "Germany",
 		countryCode: "DE",
 	},
 	{
-		name: "Pennylane",
-		domain: "pennylane.com",
+		name: "Trilha Demo",
+		domain: "trilha-demo.example",
 		industry: "Accounting",
 		city: "Paris",
 		country: "France",
 		countryCode: "FR",
 	},
 	{
-		name: "Cal.com",
-		domain: "cal.com",
+		name: "Agenda Demo",
+		domain: "agenda-demo.example",
 		industry: "Software",
 		city: "San Francisco",
 		country: "United States",
 		countryCode: "US",
 	},
 	{
-		name: "Supabase",
-		domain: "supabase.com",
+		name: "Lagoa Demo",
+		domain: "lagoa-demo.example",
 		industry: "Software",
 		city: "Singapore",
 		country: "Singapore",
 		countryCode: "SG",
 	},
 	{
-		name: "Retool",
-		domain: "retool.com",
+		name: "Oficina Demo",
+		domain: "oficina-demo.example",
 		industry: "Software",
 		city: "San Francisco",
 		country: "United States",
 		countryCode: "US",
 	},
 	{
-		name: "Deel",
-		domain: "deel.com",
+		name: "Mosaico Demo",
+		domain: "mosaico-demo.example",
 		industry: "Human Resources",
 		city: "New York",
 		country: "United States",
 		countryCode: "US",
 	},
 	{
-		name: "Mercury",
-		domain: "mercury.com",
+		name: "Porto Demo",
+		domain: "porto-demo.example",
 		industry: "Banking",
 		city: "San Francisco",
 		country: "United States",
 		countryCode: "US",
 	},
 	{
-		name: "Attio",
-		domain: "attio.com",
+		name: "Rota Demo",
+		domain: "rota-demo.example",
 		industry: "Software",
 		city: "London",
 		country: "United Kingdom",
@@ -274,7 +273,7 @@ const LOST_REASONS = [
 	"Went with an incumbent vendor",
 	"No budget this cycle",
 	"Timeline slipped to next year",
-	"Not a fit — no compliance requirement yet",
+	"Not a fit: no compliance requirement yet",
 ] as const;
 
 const NOTE_BODIES = [
@@ -341,14 +340,7 @@ function slug(value: string): string {
 }
 
 async function seedOwners(): Promise<string[]> {
-	const existing = await db.user.findMany({ select: { id: true } });
-
-	if (existing.length > 0) {
-		console.log(`Using ${existing.length} existing user(s) as owners.`);
-		return existing.map((user) => user.id);
-	}
-
-	console.log("No users yet — creating placeholder sales reps.");
+	console.log("Creating fictional sales reps for Base CRM.");
 	const created = await Promise.all(
 		OWNERS.map((owner) =>
 			db.user.upsert({
@@ -357,7 +349,7 @@ async function seedOwners(): Promise<string[]> {
 					id: `seed-${slug(owner.name)}`,
 					name: owner.name,
 					email: owner.email,
-					emailVerified: true,
+					emailVerified: false,
 					updatedAt: new Date(),
 				},
 				update: {},
@@ -378,7 +370,9 @@ async function seedCompanies(
 		const row = await db.company.upsert({
 			where: { domain: company.domain },
 			create: {
+				id: `seed-company-${slug(company.name)}`,
 				name: company.name,
+				description: "Fictional company for the Base CRM workshop.",
 				domain: company.domain,
 				website: `https://${company.domain}`,
 				industry: company.industry,
@@ -389,40 +383,12 @@ async function seedCompanies(
 				createdAt: daysFromNow(-integer(30, 400), 12),
 			},
 			update: {},
-			select: { id: true, name: true, domain: true, iconUrl: true },
+			select: { id: true, name: true, domain: true },
 		});
 		companies.push({ ...row, domain: row.domain ?? company.domain });
 	}
 
-	await seedIcons(companies);
-
-	return companies.map(({ iconUrl: _, ...company }) => company);
-}
-
-async function seedIcons(
-	companies: { id: string; domain: string | null; iconUrl: string | null }[],
-): Promise<void> {
-	const missing = companies.filter(
-		(company) => company.iconUrl === null && company.domain,
-	);
-	if (missing.length === 0) return;
-
-	let resolved = 0;
-	for (const company of missing) {
-		const source = await resolveFavicon(company.domain);
-		if (!source) continue;
-
-		const iconUrl =
-			(await mirror(source, `companies/${company.id}/icon`)) ?? source;
-
-		await db.company.updateMany({
-			where: { id: company.id, iconUrl: null },
-			data: { iconUrl },
-		});
-		resolved += 1;
-	}
-
-	console.log(`Resolved ${resolved} of ${missing.length} company icons.`);
+	return companies;
 }
 
 const ACCOUNT_TYPES = ["Prospect", "Customer", "Partner", "Churned"] as const;
@@ -667,11 +633,14 @@ async function seedContacts(
 			const contact = await db.contact.upsert({
 				where: { email },
 				create: {
+					id: `seed-contact-${slug(company.domain)}-${index}`,
 					firstName,
 					lastName,
 					email,
 					title: pick(TITLES),
-					phone: chance(0.4) ? `+1 415 555 ${integer(1000, 9999)}` : null,
+					phone: chance(0.4)
+						? `+1 202 555 ${String(integer(100, 199)).padStart(4, "0")}`
+						: null,
 					companyId: company.id,
 					ownerId: pick(ownerIds),
 					createdAt: daysFromNow(-integer(10, 300), 12),
@@ -687,8 +656,8 @@ async function seedContacts(
 	for (const company of companies) {
 		const first = contacts.find((contact) => contact.companyId === company.id);
 		if (!first) continue;
-		await db.company.update({
-			where: { id: company.id },
+		await db.company.updateMany({
+			where: { id: company.id, primaryContactId: null },
 			data: { primaryContactId: first.id },
 		});
 	}
@@ -701,6 +670,7 @@ type SeededDeal = {
 	companyId: string;
 	ownerId: string;
 	closed: boolean;
+	stage: DealStage;
 };
 
 type SeedRates = Record<string, number>;
@@ -734,7 +704,7 @@ async function seedRates(): Promise<number> {
 
 	if (seedBase !== "USD") {
 		console.log(
-			`Reporting currency is ${seedBase} — seeding a converted figure only for ` +
+			`Reporting currency is ${seedBase}; seeding a converted figure only for ` +
 				`deals already in ${seedBase}; the rates cron converts the rest.`,
 		);
 	}
@@ -756,7 +726,7 @@ async function seedRates(): Promise<number> {
 				source: RateSource.FETCHED,
 				provider: "seed",
 			},
-			update: { rate, asOf, provider: "seed" },
+			update: {},
 		});
 	}
 
@@ -815,8 +785,8 @@ async function seedDeals(
 					id,
 					name:
 						n === 0
-							? `${company.name} — Comp AI`
-							: `${company.name} — expansion`,
+							? `${company.name} - Base CRM`
+							: `${company.name} - Base CRM expansion`,
 					description: pick(DEAL_DESCRIPTIONS),
 					companyId: company.id,
 					ownerId,
@@ -865,7 +835,7 @@ async function seedDeals(
 				});
 			}
 
-			deals.push({ id, companyId: company.id, ownerId, closed });
+			deals.push({ id, companyId: company.id, ownerId, closed, stage });
 		}
 	}
 
@@ -878,12 +848,6 @@ async function seedActivities(
 	deals: SeededDeal[],
 	ownerIds: string[],
 ): Promise<number> {
-	const existing = await db.activity.count();
-	if (existing > 0) {
-		console.log(`Activities already seeded (${existing}) — skipping.`);
-		return existing;
-	}
-
 	type ActivityRow = {
 		type: ActivityType;
 		subject: string | null;
@@ -951,7 +915,7 @@ async function seedActivities(
 			subject: "Stage changed",
 			meta: {
 				from: DealStage.DEMO_BOOKED,
-				to: deal.closed ? DealStage.CLOSED_WON : DealStage.QUALIFIED_TO_BUY,
+				to: deal.stage,
 			},
 		});
 	}
@@ -987,11 +951,39 @@ async function seedActivities(
 		});
 	}
 
-	await db.activity.createMany({ data: rows });
+	await db.activity.createMany({
+		data: rows.map((row, index) => ({
+			id: `seed-activity-${index}`,
+			...row,
+		})),
+		skipDuplicates: true,
+	});
 	return rows.length;
 }
 
+async function seedWorkspace(): Promise<void> {
+	const existing = await db.organization.findUnique({
+		where: { id: WORKSPACE_ID },
+		select: { metadata: true },
+	});
+	const now = new Date();
+	const metadata = markOnboarded(existing?.metadata ?? null, now);
+
+	await db.organization.upsert({
+		where: { id: WORKSPACE_ID },
+		create: {
+			id: WORKSPACE_ID,
+			name: "Base CRM",
+			slug: workspaceSlug("Base CRM"),
+			metadata,
+			createdAt: now,
+		},
+		update: { metadata },
+	});
+}
+
 async function main() {
+	await seedWorkspace();
 	const rates = await seedRates();
 	const ownerIds = await seedOwners();
 	const companies = await seedCompanies(ownerIds);

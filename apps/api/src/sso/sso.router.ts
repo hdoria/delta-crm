@@ -1,5 +1,5 @@
+import { fromNodeHeaders } from "@crm/auth/supabase";
 import { Inject } from "@nestjs/common";
-import { fromNodeHeaders } from "better-auth/node";
 import {
 	Ctx,
 	Input,

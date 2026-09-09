@@ -311,7 +311,7 @@ describe("disconnecting Microsoft", () => {
 		expect(account?.scope).toBeNull();
 	});
 
-	it("stays disconnected instead of re-creating the sync row", async () => {
+	it("stays disconnected without requiring Microsoft access", async () => {
 		await grant(`openid profile ${OUTLOOK_MAIL_SCOPE}`);
 		await state.ensure(outlookRep, "outlook", { autoCreate: false });
 
@@ -319,7 +319,8 @@ describe("disconnecting Microsoft", () => {
 		const status = await microsoft.status(outlookRep);
 
 		expect(status.linked).toBe(false);
-		expect(status.required).toBe(true);
+		expect(status.required).toBe(false);
+		expect(status.configured).toBe(false);
 		expect(await state.get(outlookRep, "outlook")).toBeNull();
 	});
 

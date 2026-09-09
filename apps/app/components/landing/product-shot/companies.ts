@@ -16,9 +16,9 @@ export const OWNER = {
 
 export const MOCK_COMPANIES: MockCompany[] = [
 	{
-		name: "Comp AI",
-		domain: "trycomp.ai",
-		industry: "Retail & E-commerce",
+		name: "Acme",
+		domain: "example.com",
+		industry: "Software",
 		owner: OWNER,
 		contacts: "1",
 		deals: "0",

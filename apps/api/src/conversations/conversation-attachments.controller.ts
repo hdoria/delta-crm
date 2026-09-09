@@ -1,4 +1,4 @@
-import { type auth, SESSION_COOKIE_NAME } from "@crm/auth";
+import { type Session as CrmSession, SESSION_COOKIE_NAME } from "@crm/auth";
 import {
 	Controller,
 	Get,
@@ -15,11 +15,9 @@ import {
 	ApiQuery,
 	ApiTags,
 } from "@nestjs/swagger";
-import { Session, type UserSession } from "@thallesp/nestjs-better-auth";
 import type { Response } from "express";
+import { Session } from "../auth/auth.decorators";
 import { ConversationsService } from "./conversations.service";
-
-type CrmSession = UserSession<typeof auth>;
 
 @ApiTags("Conversations")
 @ApiCookieAuth(SESSION_COOKIE_NAME)

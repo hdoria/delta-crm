@@ -8,10 +8,11 @@
 		"./client": "./src/client.ts",
 		"./cookies": "./src/cookies.ts",
 		"./scopes": "./src/scopes.ts",
-		"./workspace": "./src/workspace.ts"
+		"./workspace": "./src/workspace.ts",
+		"./supabase": "./src/supabase.ts",
+		"./policy": "./src/policy.ts"
 	},
 	"scripts": {
-		"auth:generate": "better-auth generate --config src/auth.ts --output ../db/prisma/schema.prisma --y",
 		"check-types": "tsc --noEmit",
 		"lint": "biome check .",
 		"test": "bun test",
@@ -24,7 +25,9 @@
 		"@crm/env": "workspace:*",
 		"@crm/validation": "workspace:*",
 		"better-auth": "^1.6.25",
-		"zod": "^4.4.3"
+		"zod": "^4.4.3",
+		"@supabase/ssr": "^0.8.0",
+		"@supabase/supabase-js": "^2.57.4"
 	},
 	"peerDependencies": {
 		"react": "^19.2.0"

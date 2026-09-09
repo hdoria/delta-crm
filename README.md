@@ -1,3 +1,14 @@
+# Base CRM
+
+Base de prática para a aula de BMAD da Delta Academy, com login Google, Supabase local e dados fictícios.
+
+**Comece pelo [guia do Base CRM](./docs/base-crm.md)** para preparar o ambiente, configurar OAuth depois e acompanhar o exercício da aula.
+
+Este projeto deriva de [trycompai/crm](https://github.com/trycompai/crm), sob licença MIT.
+A documentação original abaixo descreve recursos e configuração do upstream. Para este fork, siga o guia acima.
+
+---
+
 <p align="center">
   <a href="https://link.context.dev/crm">
     <picture>
@@ -11,7 +22,7 @@
   <img alt="stars" height="21" src="https://afterglow.watch/badge/trycompai/crm">
 </p>
 
-<h1 align="center">CRM</h1>
+<h1 align="center">CRM upstream</h1>
 
 <p align="center">
   <strong>Comp AI CRM is an open source, CRM designed for AI agents.</strong><br>

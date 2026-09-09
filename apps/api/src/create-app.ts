@@ -22,7 +22,7 @@ export async function createApp(): Promise<NestExpressApplication> {
 	const app = await NestFactory.create<NestExpressApplication>(
 		AppModule,
 		new ExpressAdapter(),
-		{ bodyParser: false, logger: new ContextLogger() },
+		{ logger: new ContextLogger() },
 	);
 
 	app.use(helmet());

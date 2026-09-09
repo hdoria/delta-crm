@@ -1,4 +1,3 @@
-import { isGoogleConfigured, signsInWithGoogle } from "@crm/auth";
 import type { Db, Prisma } from "@crm/db";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { normalizeDomain } from "../companies/domain";
@@ -62,11 +61,11 @@ export class GoogleConnectionService {
 		});
 
 		return {
-			configured: isGoogleConfigured(),
+			configured: false,
 			linked:
 				accounts.some((account) => account.providerId === GOOGLE_PROVIDER_ID) &&
 				sources.some((source) => source.connected),
-			required: signsInWithGoogle(accounts),
+			required: false,
 			hasRefreshToken,
 			sources,
 		};

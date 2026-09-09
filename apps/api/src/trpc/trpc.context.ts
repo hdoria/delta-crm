@@ -1,6 +1,6 @@
 import { auth } from "@crm/auth";
+import { fromNodeHeaders } from "@crm/auth/supabase";
 import { Injectable } from "@nestjs/common";
-import { fromNodeHeaders } from "better-auth/node";
 import type { Request } from "express";
 import type { ContextOptions, TRPCContext } from "nestjs-trpc";
 import type { BaseTrpcContext } from "./context.types";

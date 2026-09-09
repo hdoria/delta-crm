@@ -61,7 +61,8 @@ describe("the committed .env.example", () => {
 	it("names every variable the required section promises", () => {
 		for (const key of [
 			"DATABASE_URL",
-			"BETTER_AUTH_SECRET",
+			"SUPABASE_URL",
+			"SUPABASE_ANON_KEY",
 			"ALLOWED_SIGN_IN",
 			"GOOGLE_CLIENT_ID",
 			"GOOGLE_CLIENT_SECRET",

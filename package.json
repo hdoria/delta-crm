@@ -1,19 +1,18 @@
 {
-	"name": "crm",
+	"name": "base-crm",
 	"private": true,
 	"license": "MIT",
 	"version": "1.15.3",
 	"scripts": {
 		"prepare": "git config core.hooksPath .githooks 2>/dev/null || true",
 		"build": "turbo run build",
-		"dev": "turbo run dev",
+		"dev": "turbo run dev --filter=app --filter=api",
 		"lint": "turbo run lint",
 		"lint:slop": "oxlint",
 		"lint:dead": "knip --no-progress",
 		"format": "biome format --write .",
 		"check-types": "turbo run check-types",
 		"test": "turbo run test --concurrency=1",
-		"auth:generate": "turbo run auth:generate",
 		"db:deploy": "turbo run db:deploy",
 		"db:generate": "turbo run db:generate",
 		"db:migrate": "turbo run db:migrate",
@@ -21,7 +20,12 @@
 		"db:reset": "turbo run db:reset",
 		"db:seed": "turbo run db:seed",
 		"db:studio": "turbo run db:studio",
-		"db:test": "bun run --filter=@crm/db db:test"
+		"db:test": "bun run --filter=@crm/db db:test",
+		"dev:full": "turbo run dev",
+		"supabase:start": "bun supabase/local.ts start",
+		"supabase:stop": "bun supabase/local.ts stop",
+		"supabase:status": "bun supabase/local.ts status",
+		"setup:local": "bun scripts/setup-local.ts"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.10",
@@ -29,7 +33,8 @@
 		"knip": "6.32.2",
 		"oxlint": "1.78.0",
 		"turbo": "^2.10.8",
-		"typescript": "5.9.2"
+		"typescript": "5.9.2",
+		"zod": "^4.4.3"
 	},
 	"engines": {
 		"node": ">=22"

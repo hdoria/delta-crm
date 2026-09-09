@@ -3,8 +3,8 @@ import { DEFAULT_WORKSPACE_NAME } from "@crm/auth";
 import { workspaceLabel } from "../lib/workspace-label";
 
 describe("what the header calls this install", () => {
-	it("does not say CRM twice before anybody has named the workspace", () => {
-		expect(workspaceLabel(DEFAULT_WORKSPACE_NAME)).toBe("CRM");
+	it("uses Base CRM as the initial workspace label", () => {
+		expect(workspaceLabel(DEFAULT_WORKSPACE_NAME)).toBe("Base CRM");
 	});
 
 	it("falls back to CRM while the workspace is still loading", () => {

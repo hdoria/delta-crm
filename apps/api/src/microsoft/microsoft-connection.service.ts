@@ -1,4 +1,3 @@
-import { isMicrosoftConfigured, signsInWithMicrosoft } from "@crm/auth";
 import type { Db, Prisma } from "@crm/db";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ActivityStampService } from "../crm/activity-stamp.service";
@@ -59,12 +58,12 @@ export class MicrosoftConnectionService {
 		);
 
 		return {
-			configured: isMicrosoftConfigured(),
+			configured: false,
 			linked:
 				accounts.some(
 					(account) => account.providerId === MICROSOFT_PROVIDER_ID,
 				) && sources.some((source) => source.connected),
-			required: signsInWithMicrosoft(accounts),
+			required: false,
 			hasRefreshToken,
 			sources,
 		};

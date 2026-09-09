@@ -61,62 +61,50 @@ beforeEach(async () => {
 
 afterAll(clear);
 
+async function googleAccount(userId: string) {
+	await db.account.create({
+		data: {
+			id: `google:${userId}`,
+			accountId: userId,
+			providerId: "google",
+			userId,
+		},
+	});
+}
+
 describe("ensureWorkspaceMembership", () => {
-	it("creates the one workspace and enrols everyone who already had an account", async () => {
-		const workspaceId = await ensureWorkspaceMembership(secondId);
-
-		expect(workspaceId).toBe(WORKSPACE_ID);
-		expect(await roleOf(firstId)).toBe("owner");
-		expect(await roleOf(secondId)).toBe("member");
+	it("makes the first Google user owner even when older mock profiles exist", async () => {
+		await googleAccount(secondId);
+		expect(await ensureWorkspaceMembership(secondId)).toBe(WORKSPACE_ID);
+		expect(await roleOf(firstId)).toBeNull();
+		expect(await roleOf(secondId)).toBe("owner");
 	});
-
-	it("is idempotent, so signing in again neither duplicates nor re-roles", async () => {
+	it("does not let a mock owner prevent the first human becoming owner", async () => {
+		await ensureWorkspaceMembership(firstId);
+		await googleAccount(secondId);
 		await ensureWorkspaceMembership(secondId);
-
-		await db.member.update({
-			where: {
-				organizationId_userId: {
-					organizationId: WORKSPACE_ID,
-					userId: secondId,
-				},
-			},
-			data: { role: "admin" },
-		});
-
-		await ensureWorkspaceMembership(secondId);
-		await ensureWorkspaceMembership(secondId);
-
-		const rows = await db.member.findMany({
-			where: { organizationId: WORKSPACE_ID, userId: secondId },
-		});
-
-		expect(rows).toHaveLength(1);
-		expect(rows[0]?.role).toBe("admin");
+		expect(await roleOf(secondId)).toBe("owner");
 	});
-
-	it("joins someone who signs up later as a member", async () => {
+	it("preserves the owner's role and enrols later Google users as members", async () => {
+		await googleAccount(secondId);
 		await ensureWorkspaceMembership(secondId);
-
-		const laterId = await seedUser("later", new Date("2026-01-01T00:00:00Z"));
-
-		await ensureWorkspaceMembership(laterId);
-
-		expect(await roleOf(laterId)).toBe("member");
+		await googleAccount(firstId);
+		await ensureWorkspaceMembership(firstId);
+		await ensureWorkspaceMembership(firstId);
+		expect(await roleOf(secondId)).toBe("owner");
+		expect(await roleOf(firstId)).toBe("member");
+		expect(await db.member.count({ where: { userId: firstId } })).toBe(1);
 	});
-
-	it("leaves the owner alone when a later arrival signs in", async () => {
-		await ensureWorkspaceMembership(secondId);
-
-		const laterId = await seedUser("later", new Date("2026-01-01T00:00:00Z"));
-
-		await ensureWorkspaceMembership(laterId);
-
-		expect(await roleOf(firstId)).toBe("owner");
-
-		const owners = await db.member.count({
-			where: { organizationId: WORKSPACE_ID, role: "owner" },
-		});
-
-		expect(owners).toBe(1);
+	it("serializes simultaneous initial Google sign-ins to create one owner", async () => {
+		await googleAccount(firstId);
+		await googleAccount(secondId);
+		await Promise.all([
+			ensureWorkspaceMembership(firstId),
+			ensureWorkspaceMembership(secondId),
+		]);
+		expect([await roleOf(firstId), await roleOf(secondId)].sort()).toEqual([
+			"member",
+			"owner",
+		]);
 	});
 });

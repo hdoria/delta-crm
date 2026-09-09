@@ -1,11 +1,11 @@
-import { AUTH_COOKIE_PREFIX } from "@crm/auth/cookies";
-import { getSessionCookie } from "better-auth/cookies";
+import { SESSION_COOKIE_NAME } from "@crm/auth/cookies";
+import { allowsSupabaseUser } from "@crm/auth/policy";
+import { createServerSupabaseClient } from "@crm/auth/supabase";
 import { type NextRequest, NextResponse } from "next/server";
 import { isMarketing } from "@/lib/env";
 import {
 	ONBOARDING_PATH,
 	RESEARCH_PATH,
-	readResearchGate,
 	readWorkspaceGate,
 } from "@/lib/onboarding";
 import { workspaceUrl } from "@/lib/workspace-url";
@@ -23,35 +23,61 @@ const SECTIONS = ["/companies", "/contacts", "/deals", "/settings"];
 export async function proxy(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 
-	if (pathname === SIGN_IN_PATH) return NextResponse.next();
-
-	if (isAnonymous(pathname)) return NextResponse.next();
-
-	if (
-		getSessionCookie(request, { cookiePrefix: AUTH_COOKIE_PREFIX }) === null
-	) {
-		return isPublic(pathname)
-			? NextResponse.next()
-			: NextResponse.redirect(new URL(SIGN_IN_PATH, request.nextUrl));
+	if (isAnonymous(pathname) || pathname === "/auth/callback")
+		return NextResponse.next();
+	let response = NextResponse.next({ request });
+	const supabase = createServerSupabaseClient({
+		getAll: () => request.cookies.getAll(),
+		setAll: (cookies) => {
+			for (const { name, value, options } of cookies) {
+				if (options?.maxAge === 0) request.cookies.delete(name);
+				else request.cookies.set(name, value);
+			}
+			response = NextResponse.next({ request });
+			for (const { name, value, options } of cookies)
+				response.cookies.set(name, value, options);
+		},
+	});
+	const finish = (result: NextResponse) => {
+		for (const cookie of response.cookies.getAll()) result.cookies.set(cookie);
+		result.headers.set("Cache-Control", "private, no-store");
+		return result;
+	};
+	let allowed = false;
+	try {
+		const {
+			data: { user },
+			error,
+		} = await supabase.auth.getUser();
+		allowed = Boolean(!error && user && allowsSupabaseUser(user));
+		if (user && !allowed) await supabase.auth.signOut({ scope: "local" });
+	} catch {
+		const invalidCookies = request.cookies
+			.getAll()
+			.filter(
+				({ name }) =>
+					name === SESSION_COOKIE_NAME ||
+					name.startsWith(`${SESSION_COOKIE_NAME}.`),
+			);
+		for (const { name } of invalidCookies) request.cookies.delete(name);
+		response = NextResponse.next({ request });
+		for (const { name } of invalidCookies)
+			response.cookies.set(name, "", { path: "/", maxAge: 0 });
 	}
-
-	if (isUngated(pathname)) return NextResponse.next();
-
-	// Both answers, every time, and concurrently — so the gate costs one round
-	// trip rather than two, and neither answer can be stale.
-	const [workspace, research] = await Promise.all([
-		readWorkspaceGate(request),
-		readResearchGate(request),
-	]);
-
-	if (workspace.gate === "required") return sendTo(ONBOARDING_PATH, request);
-	if (research === "required") return sendTo(RESEARCH_PATH, request);
-
-	const settled = workspace.gate === "settled" && research === "settled";
-
-	if (!settled || !workspace.slug) return NextResponse.next();
-
-	return sendTo(appPath(pathname, workspace.slug), request);
+	if (!allowed) {
+		return finish(
+			pathname === SIGN_IN_PATH || isPublic(pathname)
+				? response
+				: NextResponse.redirect(new URL(SIGN_IN_PATH, request.nextUrl)),
+		);
+	}
+	if (pathname === SIGN_IN_PATH) return finish(response);
+	if (isUngated(pathname)) return finish(response);
+	const workspace = await readWorkspaceGate(request);
+	if (workspace.gate === "required")
+		return finish(sendTo(ONBOARDING_PATH, request));
+	if (workspace.gate !== "settled" || !workspace.slug) return finish(response);
+	return finish(sendTo(appPath(pathname, workspace.slug), request));
 }
 
 function appPath(pathname: string, slug: string): string {
@@ -91,7 +117,7 @@ function isSetup(pathname: string): boolean {
 }
 
 function sendTo(path: string, request: NextRequest): NextResponse {
-	if (request.nextUrl.pathname === path) return NextResponse.next();
+	if (request.nextUrl.pathname === path) return NextResponse.next({ request });
 
 	const url = new URL(path, request.nextUrl);
 	url.search = request.nextUrl.search;

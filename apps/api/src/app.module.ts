@@ -1,7 +1,5 @@
-import { auth } from "@crm/auth";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { AuthModule as BetterAuthModule } from "@thallesp/nestjs-better-auth";
 import { ActivitiesModule } from "./activities/activities.module";
 import { AgentModule } from "./agent/agent.module";
 import { ApiKeysModule } from "./api-keys/api-keys.module";
@@ -23,7 +21,6 @@ import { FieldsModule } from "./fields/fields.module";
 import { GoogleModule } from "./google/google.module";
 import { HealthModule } from "./health/health.module";
 import { LoggingModule } from "./logging/logging.module";
-import { logAuthRoute } from "./logging/request-logger.middleware";
 import { MailboxModule } from "./mailbox/mailbox.module";
 import { MicrosoftModule } from "./microsoft/microsoft.module";
 import { SavedViewsModule } from "./saved-views/saved-views.module";
@@ -49,7 +46,6 @@ import { WorkspaceModule } from "./workspace/workspace.module";
 		AppCacheModule,
 		DatabaseModule,
 		CrmModule,
-		BetterAuthModule.forRoot({ auth, middleware: logAuthRoute }),
 		AuthModule,
 		HealthModule,
 		TrpcModule,

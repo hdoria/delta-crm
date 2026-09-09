@@ -1,0 +1,10 @@
+CREATE SCHEMA IF NOT EXISTS base_crm_api AUTHORIZATION postgres;
+GRANT USAGE ON SCHEMA base_crm_api TO anon, authenticated, service_role;
+REVOKE CREATE ON SCHEMA base_crm_api FROM PUBLIC, anon, authenticated, service_role;
+REVOKE CREATE ON SCHEMA public FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON ALL TABLES IN SCHEMA public FROM anon, authenticated, service_role;
+REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM anon, authenticated, service_role;
+REVOKE ALL ON ALL FUNCTIONS IN SCHEMA public FROM PUBLIC, anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON TABLES FROM anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON SEQUENCES FROM anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON FUNCTIONS FROM PUBLIC, anon, authenticated, service_role;

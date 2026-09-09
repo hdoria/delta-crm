@@ -1,5 +1,4 @@
 import {
-	auth,
 	type MailboxProviderId,
 	parseScopes,
 	type SignInAccount,
@@ -71,8 +70,6 @@ export class MailboxTokenService {
 		userId: string,
 		source: SyncSource,
 	): Promise<TokenResult> {
-		const providerId = PROVIDER_FOR_SOURCE[source];
-
 		if (!(await this.isConnected(userId, source))) {
 			return {
 				outcome: "not-connected",
@@ -80,33 +77,11 @@ export class MailboxTokenService {
 			};
 		}
 
-		try {
-			const { accessToken } = await auth.api.getAccessToken({
-				body: { providerId, userId },
-			});
-
-			if (!accessToken) {
-				return {
-					outcome: "needs-reconnect",
-					reason: `${label(providerId)} returned no access token.`,
-				};
-			}
-
-			return { outcome: "ok", accessToken };
-		} catch (error) {
-			this.logger.warn({
-				message: "Mailbox token refresh failed",
-				userId,
-				providerId,
-				source,
-				reason: error instanceof Error ? error.message : String(error),
-			});
-
-			return {
-				outcome: "needs-reconnect",
-				reason: `${label(providerId)} would not refresh the access token.`,
-			};
-		}
+		return {
+			outcome: "needs-reconnect",
+			reason:
+				"Mailbox synchronization is not enabled. Base CRM requests Google identity access only.",
+		};
 	}
 
 	async revoke(
@@ -162,8 +137,4 @@ export class MailboxTokenService {
 
 		return false;
 	}
-}
-
-function label(providerId: MailboxProviderId): string {
-	return providerId === GOOGLE_PROVIDER_ID ? "Google" : "Microsoft";
 }
