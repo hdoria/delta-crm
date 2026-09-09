@@ -5,12 +5,11 @@ import { Checkbox } from "@crm/ui/components/checkbox";
 import { StatusIndicator } from "@crm/ui/components/status-indicator";
 import { cn } from "@crm/ui/lib/utils";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { z } from "zod";
 import { RecordLink } from "@/components/crm/record-sheet/record-link";
 import { LocalDateTime, LocalRelativeTime } from "@/components/local-date-time";
-import { activityLabel } from "@/lib/activity-presentation";
-import { dealStageLabel } from "@/lib/deal-stage";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
@@ -45,6 +44,8 @@ export function TimelineEntry({
 	entry: TimelineEntryData;
 	anchor: TimelineAnchor;
 }) {
+	const stageLabel = useTranslations("dealStage");
+	const activityType = useTranslations("activityType");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 
@@ -75,7 +76,7 @@ export function TimelineEntry({
 		: entry.createdBy.name;
 
 	const headline = change
-		? `${dealStageLabel(change.from)} → ${dealStageLabel(change.to)}`
+		? `${stageLabel(change.from)} → ${stageLabel(change.to)}`
 		: entry.subject;
 
 	const here = anchorId(anchor);
@@ -100,7 +101,7 @@ export function TimelineEntry({
 						}
 					/>
 				) : (
-					<span role="img" aria-label={activityLabel(entry.type)}>
+					<span role="img" aria-label={activityType(entry.type)}>
 						<ActivityIcon type={entry.type} />
 					</span>
 				)}
@@ -133,7 +134,7 @@ export function TimelineEntry({
 
 						{!headline && !entry.body ? (
 							<p className="text-muted-foreground">
-								{activityLabel(entry.type)}
+								{activityType(entry.type)}
 							</p>
 						) : null}
 					</div>

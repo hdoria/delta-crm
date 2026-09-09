@@ -28,6 +28,7 @@ import { TableCell } from "@crm/ui/components/table";
 import { formatCount, formatMoneyCompact } from "@crm/ui/lib/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import type { CSSProperties, ReactNode } from "react";
 import { toast } from "sonner";
@@ -35,7 +36,6 @@ import { DealStageIndicator } from "@/components/crm/deal-stage";
 import { RecordLink } from "@/components/crm/record-sheet/record-link";
 import { useOpenRecord } from "@/components/crm/record-sheet/record-stack";
 import { LocalRelativeTime } from "@/components/local-date-time";
-import { activityLabel } from "@/lib/activity-presentation";
 import { dealStageColor } from "@/lib/deal-stage";
 import { SEARCH_PARAM } from "@/lib/search-param-keys";
 import { useCrmCache } from "@/lib/trpc/cache";
@@ -90,6 +90,7 @@ const ACTIVITY_COLUMNS: SimpleTableColumn[] = [
 ];
 
 export function DashboardSummary() {
+	const activityType = useTranslations("activityType");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const openRecord = useOpenRecord();
@@ -286,7 +287,7 @@ export function DashboardSummary() {
 							<SimpleTableRow key={entry.id}>
 								<TableCell className={CELL}>
 									<span className="truncate">
-										{entry.subject ?? activityLabel(entry.type)}
+										{entry.subject ?? activityType(entry.type)}
 									</span>
 								</TableCell>
 								<TableCell className={`${CELL} hidden md:table-cell`}>

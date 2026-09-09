@@ -17,9 +17,9 @@ import {
 import { Spinner } from "@crm/ui/components/spinner";
 import { ToggleGroup, ToggleGroupItem } from "@crm/ui/components/toggle-group";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
-import { activityLabel } from "@/lib/activity-presentation";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 import { ActivityIcon } from "./activity-icon";
@@ -43,6 +43,8 @@ const PLACEHOLDER = {
 } satisfies Record<ComposableType, string>;
 
 export function ActivityComposer({ anchor }: { anchor: TimelineAnchor }) {
+	const t = useTranslations("timeline");
+	const activityType = useTranslations("activityType");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 
@@ -113,10 +115,10 @@ export function ActivityComposer({ anchor }: { anchor: TimelineAnchor }) {
 							<ToggleGroupItem
 								key={option}
 								value={option}
-								aria-label={activityLabel(option)}
+								aria-label={activityType(option)}
 							>
 								<ActivityIcon type={option} />
-								{activityLabel(option)}
+								{activityType(option)}
 							</ToggleGroupItem>
 						))}
 					</ToggleGroup>
@@ -149,7 +151,9 @@ export function ActivityComposer({ anchor }: { anchor: TimelineAnchor }) {
 							disabled={create.isPending}
 						>
 							{create.isPending ? <Spinner /> : null}
-							{isTask ? "Add task" : `Log ${activityLabel(type).toLowerCase()}`}
+							{isTask
+								? t("addTask")
+								: t("logActivity", { type: activityType(type).toLowerCase() })}
 						</InputGroupButton>
 					)}
 				</InputGroupAddon>

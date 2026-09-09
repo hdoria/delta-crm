@@ -10,5 +10,38 @@
 			"label": "Interface language",
 			"saved": "Language changed."
 		}
+	},
+	"dealStage": {
+		"DEMO_BOOKED": "Demo booked",
+		"QUALIFIED_TO_BUY": "Qualified to buy",
+		"DECISION_MAKER_BOUGHT_IN": "Decision maker in",
+		"CONTRACT_SENT": "Contract sent",
+		"CLOSED_WON": "Closed won",
+		"CLOSED_LOST": "Closed lost",
+		"UNQUALIFIED_TO_BUY": "Unqualified"
+	},
+	"activityType": {
+		"NOTE": "Note",
+		"CALL": "Call",
+		"EMAIL": "Email",
+		"MEETING": "Meeting",
+		"TASK": "Task",
+		"STAGE_CHANGE": "Stage change",
+		"ENRICHMENT": "Enrichment"
+	},
+	"enrichmentStatus": {
+		"PENDING": "Not researched",
+		"RUNNING": "Researching",
+		"COMPLETE": "Enriched",
+		"FAILED": "Enrichment failed",
+		"SKIPPED": "Nothing found",
+		"QUEUED": "Queued"
+	},
+	"activityRecency": {
+		"option": "Active within {days} days"
+	},
+	"timeline": {
+		"addTask": "Add task",
+		"logActivity": "Log {type}"
 	}
 }

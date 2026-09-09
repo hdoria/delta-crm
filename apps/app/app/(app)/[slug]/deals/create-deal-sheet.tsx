@@ -31,12 +31,13 @@ import {
 } from "@crm/ui/components/sheet";
 import { Spinner } from "@crm/ui/components/spinner";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { type ComponentProps, Suspense, useId, useState } from "react";
 import { toast } from "sonner";
 import { CompanyPicker } from "@/components/crm/company-picker";
 import { useOpenRecord } from "@/components/crm/record-sheet/record-stack";
-import { dealStageLabel, OPEN_STAGES } from "@/lib/deal-stage";
+import { OPEN_STAGES } from "@/lib/deal-stage";
 import { SEARCH_PARAM } from "@/lib/search-param-keys";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
@@ -61,6 +62,7 @@ export function CreateDealSheet({ companyId }: { companyId?: string }) {
 }
 
 function CreateDealForm({ companyId }: { companyId?: string }) {
+	const stageLabel = useTranslations("dealStage");
 	const openRecord = useOpenRecord();
 	const trpc = useTRPC();
 	const cache = useCrmCache();
@@ -187,7 +189,7 @@ function CreateDealForm({ companyId }: { companyId?: string }) {
 								<SelectContent>
 									{OPEN_STAGES.map((value) => (
 										<SelectItem key={value} value={value}>
-											{dealStageLabel(value)}
+											{stageLabel(value)}
 										</SelectItem>
 									))}
 								</SelectContent>

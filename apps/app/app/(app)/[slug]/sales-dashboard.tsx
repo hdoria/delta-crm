@@ -16,9 +16,10 @@ import {
 	formatPercent,
 } from "@crm/ui/lib/format";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { AreaTrend, DonutStat } from "@/components/dashboard-charts";
-import { dealStageColor, dealStageLabel } from "@/lib/deal-stage";
+import { dealStageColor } from "@/lib/deal-stage";
 import type { RouterOutputs } from "@/lib/trpc/types";
 import { useWorkspaceUrl } from "@/lib/use-workspace-url";
 
@@ -44,6 +45,7 @@ function changeDelta(
 }
 
 export function SalesDashboard({ summary }: { summary: Summary }) {
+	const stageLabel = useTranslations("dealStage");
 	const workspaceUrl = useWorkspaceUrl();
 
 	const {
@@ -68,7 +70,7 @@ export function SalesDashboard({ summary }: { summary: Summary }) {
 			? [
 					{
 						key: stage.stage,
-						label: dealStageLabel(stage.stage),
+						label: stageLabel(stage.stage),
 						value: stage.valueCents,
 						color: dealStageColor(stage.stage),
 						count: stage.count,

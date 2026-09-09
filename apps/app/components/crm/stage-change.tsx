@@ -23,10 +23,11 @@ import { Icon } from "@crm/ui/components/icon";
 import { Spinner } from "@crm/ui/components/spinner";
 import { Textarea } from "@crm/ui/components/textarea";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { parseAsString, useQueryStates } from "nuqs";
 import { useId, useState } from "react";
 import { toast } from "sonner";
-import { DEAL_STAGE_OPTIONS, LOSING_STAGES } from "@/lib/deal-stage";
+import { DEAL_STAGES, LOSING_STAGES } from "@/lib/deal-stage";
 import { SEARCH_PARAM } from "@/lib/search-param-keys";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
@@ -61,6 +62,7 @@ export function DealStageMenu({
 	stage: DealStage;
 	variant?: "inline" | "control";
 }) {
+	const stageLabel = useTranslations("dealStage");
 	const [, setCloseParams] = useQueryStates(closeReasonParams);
 	const setStage = useStageMutation();
 
@@ -108,9 +110,9 @@ export function DealStageMenu({
 						setStage.mutate({ id: dealId, stage: chosen });
 					}}
 				>
-					{DEAL_STAGE_OPTIONS.map((option) => (
-						<DropdownMenuRadioItem key={option.value} value={option.value}>
-							{option.label}
+					{DEAL_STAGES.map((value) => (
+						<DropdownMenuRadioItem key={value} value={value}>
+							{stageLabel(value)}
 						</DropdownMenuRadioItem>
 					))}
 				</DropdownMenuRadioGroup>

@@ -25,6 +25,7 @@ import { Spinner } from "@crm/ui/components/spinner";
 import { Textarea } from "@crm/ui/components/textarea";
 import { formatCount } from "@crm/ui/lib/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -33,7 +34,7 @@ import {
 	BulkOwnerMenu,
 	reportBulk,
 } from "@/components/crm/bulk-actions";
-import { DEAL_STAGE_OPTIONS, LOSING_STAGES } from "@/lib/deal-stage";
+import { DEAL_STAGES, LOSING_STAGES } from "@/lib/deal-stage";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 
@@ -50,6 +51,7 @@ export function DealsBulkActions({
 	onDone: () => void;
 	archived: boolean;
 }) {
+	const stageLabel = useTranslations("dealStage");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const users = useQuery(trpc.users.list.queryOptions());
@@ -168,18 +170,18 @@ export function DealsBulkActions({
 					<DropdownMenuSubTrigger>Change stage</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent className="max-h-72 overflow-y-auto">
 						<DropdownMenuGroup>
-							{DEAL_STAGE_OPTIONS.map((option) => (
+							{DEAL_STAGES.map((value) => (
 								<DropdownMenuItem
-									key={option.value}
+									key={value}
 									onSelect={() => {
-										if (LOSING_STAGES.includes(option.value)) {
-											setClosing(option.value);
+										if (LOSING_STAGES.includes(value)) {
+											setClosing(value);
 											return;
 										}
-										setStage.mutate({ ids, stage: option.value });
+										setStage.mutate({ ids, stage: value });
 									}}
 								>
-									{option.label}
+									{stageLabel(value)}
 								</DropdownMenuItem>
 							))}
 						</DropdownMenuGroup>

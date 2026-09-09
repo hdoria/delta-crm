@@ -12,6 +12,7 @@ import { PersonAvatar } from "@crm/ui/components/person-avatar";
 import { useSearchInput } from "@crm/ui/hooks/use-search-input";
 import { useTableSelection } from "@crm/ui/hooks/use-table-selection";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { CompanyCell } from "@/components/crm/company-cell";
 import { contactName } from "@/components/crm/contact-name";
@@ -24,7 +25,7 @@ import { ListSearch } from "@/components/data-table/list-search";
 import { SavedViewsMenu } from "@/components/data-table/saved-views-menu";
 import { useTableQuery } from "@/components/data-table/use-table-query";
 import { LocalRelativeTime } from "@/components/local-date-time";
-import { ACTIVITY_FACET_OPTIONS } from "@/lib/activity-recency";
+import { ACTIVITY_RECENCY_DAYS } from "@/lib/activity-recency";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
 import { ContactsBulkActions } from "./contacts-bulk-actions";
@@ -144,6 +145,7 @@ const ARCHIVED_COLUMN: DataTableColumn<ContactRow> = {
 };
 
 export function ContactsTable() {
+	const recency = useTranslations("activityRecency");
 	const openRecord = useOpenRecord();
 	const trpc = useTRPC();
 	const prefetchRecord = usePrefetchRecord();
@@ -247,8 +249,10 @@ export function ContactsTable() {
 		{
 			id: "activity",
 			label: "Activity",
-			options: ACTIVITY_FACET_OPTIONS.filter(
-				(option) => (facetCounts?.activity?.[option.value] ?? 0) > 0,
+			options: ACTIVITY_RECENCY_DAYS.flatMap((value) =>
+				(facetCounts?.activity?.[value] ?? 0) > 0
+					? [{ value, label: recency("option", { days: value }) }]
+					: [],
 			),
 		},
 		...fieldFacets,

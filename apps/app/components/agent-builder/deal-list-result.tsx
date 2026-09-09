@@ -15,7 +15,7 @@ import { usePrefetchRecord } from "@/components/crm/record-sheet/record-prefetch
 import { useOpenRecord } from "@/components/crm/record-sheet/record-stack";
 import { LocalDay } from "@/components/local-date-time";
 import type { DealListItem, DealListResult } from "@/lib/agent-transcript";
-import { DEAL_STAGE_OPTIONS } from "@/lib/deal-stage";
+import { DEAL_STAGES } from "@/lib/deal-stage";
 
 const COLUMNS: SimpleTableColumn[] = [
 	{ id: "deal", header: "Deal", width: "w-[20%]" },
@@ -127,11 +127,9 @@ export function DealListResultTable({ result }: { result: DealListResult }) {
 }
 
 function Stage({ stage }: { stage: string }) {
-	const option = DEAL_STAGE_OPTIONS.find(
-		(candidate) => candidate.value === stage,
-	);
-	return option ? (
-		<DealStageIndicator stage={option.value} />
+	const known = DEAL_STAGES.find((candidate) => candidate === stage);
+	return known ? (
+		<DealStageIndicator stage={known} />
 	) : (
 		<span className="text-muted-foreground">{humaniseStage(stage)}</span>
 	);

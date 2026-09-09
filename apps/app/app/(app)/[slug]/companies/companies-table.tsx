@@ -14,6 +14,7 @@ import {
 } from "@crm/ui/components/entity-logo";
 import { useTableSelection } from "@crm/ui/hooks/use-table-selection";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { EnrichmentIndicator } from "@/components/crm/enrichment-status";
 import { useFieldColumns } from "@/components/crm/fields/field-columns";
@@ -25,10 +26,10 @@ import { ListSearch } from "@/components/data-table/list-search";
 import { SavedViewsMenu } from "@/components/data-table/saved-views-menu";
 import { useTableQuery } from "@/components/data-table/use-table-query";
 import { LocalRelativeTime } from "@/components/local-date-time";
-import { ACTIVITY_FACET_OPTIONS } from "@/lib/activity-recency";
+import { ACTIVITY_RECENCY_DAYS } from "@/lib/activity-recency";
 import {
-	ENRICHMENT_FACET_OPTIONS,
 	ENRICHMENT_POLL_MS,
+	ENRICHMENT_STATUSES,
 	isEnriching,
 } from "@/lib/enrichment-status";
 import { useTRPC } from "@/lib/trpc/client";
@@ -171,6 +172,8 @@ const ARCHIVED_COLUMN: DataTableColumn<CompanyRow> = {
 };
 
 export function CompaniesTable() {
+	const recency = useTranslations("activityRecency");
+	const enrichment = useTranslations("enrichmentStatus");
 	const openRecord = useOpenRecord();
 	const trpc = useTRPC();
 	const prefetchRecord = usePrefetchRecord();
@@ -219,15 +222,19 @@ export function CompaniesTable() {
 		{
 			id: "enrichment",
 			label: "Enrichment",
-			options: ENRICHMENT_FACET_OPTIONS.filter(
-				(option) => (facetCounts?.enrichment?.[option.value] ?? 0) > 0,
+			options: ENRICHMENT_STATUSES.flatMap((value) =>
+				(facetCounts?.enrichment?.[value] ?? 0) > 0
+					? [{ value, label: enrichment(value) }]
+					: [],
 			),
 		},
 		{
 			id: "activity",
 			label: "Activity",
-			options: ACTIVITY_FACET_OPTIONS.filter(
-				(option) => (facetCounts?.activity?.[option.value] ?? 0) > 0,
+			options: ACTIVITY_RECENCY_DAYS.flatMap((value) =>
+				(facetCounts?.activity?.[value] ?? 0) > 0
+					? [{ value, label: recency("option", { days: value }) }]
+					: [],
 			),
 		},
 		...fieldFacets,
