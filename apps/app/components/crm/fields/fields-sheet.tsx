@@ -3,6 +3,7 @@
 import { Spinner } from "@crm/ui/components/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@crm/ui/components/tabs";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
 	type RecordKind,
 	useFieldsSheet,
@@ -10,14 +11,10 @@ import {
 import { DetailSheet, DetailSheetHeader } from "@/components/detail-sheet";
 import { useTRPC } from "@/lib/trpc/client";
 import { FieldEditor } from "./field-editor";
-import {
-	ENTITY_TABS,
-	NEW_FIELD,
-	SHEET_TITLE,
-	subtitleFor,
-} from "./fields-copy";
 import { entityOf } from "./fields-entity";
 import { FieldsList } from "./fields-list";
+
+const ENTITY_TABS: readonly RecordKind[] = ["company", "contact", "deal"];
 
 function FieldsSheetBody({
 	kind,
@@ -33,6 +30,7 @@ function FieldsSheetBody({
 	onClose: () => void;
 }) {
 	const trpc = useTRPC();
+	const t = useTranslations("fields");
 	const entity = entityOf(kind);
 
 	const query = useQuery(
@@ -50,16 +48,20 @@ function FieldsSheetBody({
 	});
 
 	if (field) {
-		const entityLabel = ENTITY_TABS.find((tab) => tab.kind === kind)?.label;
+		const entityLabel = t(`tabs.${kind}`);
 		const filled = coverage.data;
 
 		return (
 			<>
 				<DetailSheetHeader
-					title={editing?.label ?? (editingKey ? "" : NEW_FIELD)}
+					title={editing?.label ?? (editingKey ? "" : t("list.newField"))}
 					description={
 						filled
-							? `${entityLabel} · ${filled.filled} of ${filled.total} filled`
+							? t("sheet.filledDescription", {
+									entity: entityLabel,
+									filled: filled.filled,
+									total: filled.total,
+								})
 							: entityLabel
 					}
 					onBack={() => onEdit(null)}
@@ -84,8 +86,8 @@ function FieldsSheetBody({
 	return (
 		<>
 			<DetailSheetHeader
-				title={SHEET_TITLE}
-				description={subtitleFor(kind)}
+				title={t("sheet.title")}
+				description={t(`sheet.subtitle.${kind}`)}
 				onClose={onClose}
 				note={
 					<Tabs
@@ -94,8 +96,8 @@ function FieldsSheetBody({
 					>
 						<TabsList>
 							{ENTITY_TABS.map((tab) => (
-								<TabsTrigger key={tab.kind} value={tab.kind}>
-									{tab.label}
+								<TabsTrigger key={tab} value={tab}>
+									{t(`tabs.${tab}`)}
 								</TabsTrigger>
 							))}
 						</TabsList>

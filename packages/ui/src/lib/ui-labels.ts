@@ -1,0 +1,26 @@
+export const UI_LABELS = {
+	close: "Close",
+	clear: "Clear",
+	sortBy: "Sort by",
+	ascending: "Ascending",
+	descending: "Descending",
+	toggleColumns: "Toggle columns",
+	filters: "Filters",
+	sort: "Sort",
+	columns: "Columns",
+	noResults: "No results found.",
+	showingRange: "Showing {from}–{to} of {total}",
+	previous: "Previous",
+	next: "Next",
+	selectRow: "Select row",
+	selectAllRows: "Select every row on this page",
+	detail: "Detail",
+	back: "Back",
+	searchNamed: "Search {name}…",
+	reorderNamed: "Reorder {name}",
+	scrollToEnd: "Scroll to end",
+	scrollToStart: "Scroll to start",
+	loadedNamed: "{name} loaded",
+} as const;
+
+export type UiLabels = { [K in keyof typeof UI_LABELS]: string };

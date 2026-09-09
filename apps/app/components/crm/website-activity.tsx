@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
 	DetailSheetProperties,
 	DetailSheetProperty,
@@ -23,6 +24,7 @@ export function WebsiteActivity({
 	companyId?: string;
 	contactId?: string;
 }) {
+	const t = useTranslations("crm");
 	const trpc = useTRPC();
 
 	const company = useQuery({
@@ -47,67 +49,74 @@ export function WebsiteActivity({
 	const topPage = activity.pages[0];
 	const first = activity.firstTouch;
 	const last = activity.lastTouch;
+	const unknownChannel = t("websiteActivity.unknown");
 	const channelChanged =
-		first != null && last != null && channel(last) !== channel(first);
+		first != null &&
+		last != null &&
+		channel(last, unknownChannel) !== channel(first, unknownChannel);
 	const campaign = last?.campaign ?? first?.campaign ?? null;
 
 	return (
-		<DetailSheetSection title="Website activity">
+		<DetailSheetSection title={t("websiteActivity.title")}>
 			<DetailSheetProperties>
-				<DetailSheetProperty label="Page views">
+				<DetailSheetProperty label={t("websiteActivity.pageViews")}>
 					<span className="tabular-nums">
 						{activity.views.toLocaleString()}
 					</span>
 					{activity.lastSeenAt ? (
 						<span className="text-muted-foreground">
-							{" · last seen "}
+							{" · "}
+							{t("websiteActivity.lastSeen")}{" "}
 							<LocalRelativeTime date={activity.lastSeenAt} />
 						</span>
 					) : null}
 				</DetailSheetProperty>
 
 				{first ? (
-					<DetailSheetProperty label="Original source">
-						{channel(first)}
+					<DetailSheetProperty label={t("websiteActivity.originalSource")}>
+						{channel(first, unknownChannel)}
 					</DetailSheetProperty>
 				) : null}
 
 				{topPage ? (
-					<DetailSheetProperty label="Top page">
+					<DetailSheetProperty label={t("websiteActivity.topPage")}>
 						<span className="flex min-w-0 items-baseline gap-1">
 							<span className="truncate font-mono" title={topPage.path}>
 								{topPage.path}
 							</span>
 							<span className="shrink-0 text-muted-foreground">
 								{"· "}
-								<span className="tabular-nums">{topPage.views}</span> views
+								<span className="tabular-nums">{topPage.views}</span>{" "}
+								{t("websiteActivity.views")}
 							</span>
 						</span>
 					</DetailSheetProperty>
 				) : null}
 
 				{channelChanged ? (
-					<DetailSheetProperty label="Latest source">
-						{channel(last)}
+					<DetailSheetProperty label={t("websiteActivity.latestSource")}>
+						{channel(last, unknownChannel)}
 					</DetailSheetProperty>
 				) : null}
 
 				{first?.at ? (
-					<DetailSheetProperty label="First seen">
+					<DetailSheetProperty label={t("websiteActivity.firstSeen")}>
 						<LocalRelativeTime date={first.at} />
 					</DetailSheetProperty>
 				) : null}
 
 				{campaign ? (
-					<DetailSheetProperty label="Campaign">{campaign}</DetailSheetProperty>
+					<DetailSheetProperty label={t("websiteActivity.campaign")}>
+						{campaign}
+					</DetailSheetProperty>
 				) : null}
 			</DetailSheetProperties>
 		</DetailSheetSection>
 	);
 }
 
-function channel(touch: Touch | null): string {
-	if (!touch) return "Unknown";
+function channel(touch: Touch | null, unknown: string): string {
+	if (!touch) return unknown;
 	if (!touch.medium || touch.medium === "direct") return touch.source;
 	return `${touch.source} · ${touch.medium}`;
 }

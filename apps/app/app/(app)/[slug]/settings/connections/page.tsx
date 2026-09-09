@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import {
 	PageShell,
 	PageShellDescription,
@@ -6,18 +7,23 @@ import {
 	PageShellHeading,
 	PageShellTitle,
 } from "@/components/page-shell";
+import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Conexões" };
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("settings.connections.page");
+	return { title: t("title") };
+}
 
-export default function ConnectionsPage() {
+export default async function ConnectionsPage() {
+	const t = await getTranslations("settings.connections.page");
+
 	return (
 		<PageShell>
 			<PageShellHeader>
 				<PageShellHeading>
-					<PageShellTitle>Conexões</PageShellTitle>
+					<PageShellTitle>{t("title")}</PageShellTitle>
 					<PageShellDescription>
-						O Google é usado para entrar no Base CRM. Integrações com e-mail,
-						calendário e Slack ainda não estão disponíveis nesta versão.
+						{t("description", { appName: BRAND.appName })}
 					</PageShellDescription>
 				</PageShellHeading>
 			</PageShellHeader>

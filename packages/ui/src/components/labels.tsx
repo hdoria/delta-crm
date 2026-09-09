@@ -1,26 +1,7 @@
 "use client";
 
+import { UI_LABELS, type UiLabels } from "@crm/ui/lib/ui-labels";
 import { createContext, type ReactNode, useContext } from "react";
-
-export const UI_LABELS = {
-	close: "Close",
-	clear: "Clear",
-	sortBy: "Sort by",
-	ascending: "Ascending",
-	descending: "Descending",
-	toggleColumns: "Toggle columns",
-	noResults: "No results found.",
-	selectRow: "Select row",
-	selectAllRows: "Select every row on this page",
-	detail: "Detail",
-	searchNamed: "Search {name}…",
-	reorderNamed: "Reorder {name}",
-	scrollToEnd: "Scroll to end",
-	scrollToStart: "Scroll to start",
-	loadedNamed: "{name} loaded",
-} as const;
-
-export type UiLabels = { [K in keyof typeof UI_LABELS]: string };
 
 const UiLabelsContext = createContext<Partial<UiLabels>>({});
 

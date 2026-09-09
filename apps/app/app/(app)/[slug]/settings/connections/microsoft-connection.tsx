@@ -33,6 +33,7 @@ import { StatusIndicator } from "@crm/ui/components/status-indicator";
 import { Switch } from "@crm/ui/components/switch";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 import { LocalRelativeTime } from "@/components/local-date-time";
@@ -40,29 +41,23 @@ import { isSyncing, SYNC_POLL_MS } from "@/lib/sync-status";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 
-const AUTO_CREATE = "Add the company and contact when you reply to someone new";
-
-const CONNECT_ERRORS = new Map([
-	[
-		"email_doesn't_match",
-		"That Microsoft account has a different email address to the one you sign in with, so it cannot be attached to your account. Connect the Microsoft account that matches your sign-in address.",
-	],
-]);
-
 function MicrosoftUnavailable() {
+	const t = useTranslations("settings.connections.microsoft");
+
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>
 					<div className="flex items-center gap-2">
-						Microsoft
-						<StatusIndicator size="sm" tone="neutral" label="Not configured" />
+						{t("brandName")}
+						<StatusIndicator
+							size="sm"
+							tone="neutral"
+							label={t("notConfigured")}
+						/>
 					</div>
 				</CardTitle>
-				<CardDescription>
-					Set MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET in the root .env
-					file and restart.
-				</CardDescription>
+				<CardDescription>{t("envHint")}</CardDescription>
 			</CardHeader>
 		</Card>
 	);
@@ -75,11 +70,12 @@ function ConnectMicrosoft({
 	slug: string;
 	connectError?: string;
 }) {
+	const t = useTranslations("settings.connections.microsoft");
 	const [pending, setPending] = useState(false);
 
 	function fail(message?: string) {
 		setPending(false);
-		toast.error(message ?? "Could not reach Microsoft.");
+		toast.error(message ?? t("unreachable"));
 	}
 
 	async function handleConnect() {
@@ -97,19 +93,22 @@ function ConnectMicrosoft({
 		if (error) fail(error.message);
 	}
 
+	const connectErrors = new Map([["email_doesn't_match", t("emailMismatch")]]);
+
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>
 					<div className="flex items-center gap-2">
-						Microsoft
-						<StatusIndicator size="sm" tone="neutral" label="Not connected" />
+						{t("brandName")}
+						<StatusIndicator
+							size="sm"
+							tone="neutral"
+							label={t("notConnected")}
+						/>
 					</div>
 				</CardTitle>
-				<CardDescription>
-					Read-only Outlook mail. Only conversations with companies in the CRM
-					are stored.
-				</CardDescription>
+				<CardDescription>{t("connectDescription")}</CardDescription>
 
 				<CardAction>
 					<Button
@@ -125,7 +124,7 @@ function ConnectMicrosoft({
 						) : (
 							<MicrosoftLogo data-icon="inline-start" className="size-4" />
 						)}
-						Connect
+						{t("connect")}
 					</Button>
 				</CardAction>
 			</CardHeader>
@@ -134,10 +133,9 @@ function ConnectMicrosoft({
 				<CardContent>
 					<Alert variant="destructive">
 						<Icon icon={Warning} />
-						<AlertTitle>Microsoft did not finish connecting</AlertTitle>
+						<AlertTitle>{t("connectFailedTitle")}</AlertTitle>
 						<AlertDescription>
-							{CONNECT_ERRORS.get(connectError) ??
-								"Microsoft returned an error before the connection was made. Try again."}
+							{connectErrors.get(connectError) ?? t("connectFailedGeneric")}
 						</AlertDescription>
 					</Alert>
 				</CardContent>
@@ -153,6 +151,7 @@ export function MicrosoftConnection({
 	slug: string;
 	connectError?: string;
 }) {
+	const t = useTranslations("settings.connections.microsoft");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 
@@ -168,7 +167,7 @@ export function MicrosoftConnection({
 		trpc.microsoft.purgeSyncedData.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.microsoft();
-				toast.success(`Removed ${result.purged} synced items.`);
+				toast.success(t("purged", { count: result.purged }));
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -224,17 +223,15 @@ export function MicrosoftConnection({
 			<CardHeader>
 				<CardTitle>
 					<div className="flex items-center gap-2">
-						Microsoft
+						{t("brandName")}
 						<StatusIndicator
 							size="sm"
 							tone={healthy ? "success" : "warning"}
-							label={healthy ? "Connected" : "Needs attention"}
+							label={healthy ? t("connected") : t("needsAttention")}
 						/>
 					</div>
 				</CardTitle>
-				<CardDescription>
-					Email threads land on the matching company as they happen.
-				</CardDescription>
+				<CardDescription>{t("mainDescription")}</CardDescription>
 
 				<CardAction>
 					<Button
@@ -243,7 +240,7 @@ export function MicrosoftConnection({
 						disabled={syncNow.isPending}
 						onClick={() => syncNow.mutate()}
 					>
-						{syncNow.isPending ? "Checking…" : "Check now"}
+						{syncNow.isPending ? t("checking") : t("checkNow")}
 					</Button>
 				</CardAction>
 			</CardHeader>
@@ -252,16 +249,16 @@ export function MicrosoftConnection({
 				{!hasRefreshToken ? (
 					<Alert variant="destructive">
 						<Icon icon={Warning} />
-						<AlertTitle>Microsoft did not return a refresh token</AlertTitle>
-						<AlertDescription>Sign out and back in.</AlertDescription>
+						<AlertTitle>{t("noRefreshTokenTitle")}</AlertTitle>
+						<AlertDescription>{t("signOutBackIn")}</AlertDescription>
 					</Alert>
 				) : failing.length > 0 ? (
 					failing.map((source) => (
 						<Alert key={source.source} variant="destructive">
 							<Icon icon={Warning} />
-							<AlertTitle>Email sync failed</AlertTitle>
+							<AlertTitle>{t("syncFailedTitle")}</AlertTitle>
 							<AlertDescription>
-								{source.lastError ?? "Microsoft needs reconnecting."}
+								{source.lastError ?? t("needsReconnecting")}
 							</AlertDescription>
 						</Alert>
 					))
@@ -269,10 +266,10 @@ export function MicrosoftConnection({
 					<p className="text-muted-foreground text-xs">
 						{lastSyncedAt ? (
 							<>
-								Last checked <LocalRelativeTime date={lastSyncedAt} />
+								{t("lastChecked")} <LocalRelativeTime date={lastSyncedAt} />
 							</>
 						) : (
-							"Waiting for the first check"
+							t("waitingFirstCheck")
 						)}
 					</p>
 				)}
@@ -286,9 +283,9 @@ export function MicrosoftConnection({
 							htmlFor={`auto-create-${source.source}`}
 							className="flex flex-col items-start gap-1"
 						>
-							<span className="text-sm">Email</span>
+							<span className="text-sm">{t("emailLabel")}</span>
 							<span className="font-normal text-muted-foreground text-xs">
-								{AUTO_CREATE}
+								{t("autoCreate")}
 							</span>
 						</Label>
 
@@ -308,27 +305,25 @@ export function MicrosoftConnection({
 						<AlertDialog>
 							<AlertDialogTrigger asChild>
 								<Button variant="ghost" size="xs" disabled={purge.isPending}>
-									Delete synced data
+									{t("deleteSyncedData")}
 								</Button>
 							</AlertDialogTrigger>
 
 							<AlertDialogContent>
 								<AlertDialogHeader>
-									<AlertDialogTitle>Delete synced data?</AlertDialogTitle>
+									<AlertDialogTitle>{t("deleteConfirmTitle")}</AlertDialogTitle>
 									<AlertDialogDescription>
-										Every email brought in from Outlook is removed from the CRM.
-										The next check starts from now, so nothing deleted here
-										comes back.
+										{t("deleteConfirmDescription")}
 									</AlertDialogDescription>
 								</AlertDialogHeader>
 
 								<AlertDialogFooter>
-									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 									<AlertDialogAction
 										variant="destructive"
 										onClick={() => purge.mutate()}
 									>
-										Delete
+										{t("delete")}
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>
@@ -337,29 +332,30 @@ export function MicrosoftConnection({
 						<AlertDialog>
 							<AlertDialogTrigger asChild>
 								<Button variant="ghost" size="xs" disabled={revoke.isPending}>
-									Disconnect Microsoft
+									{t("disconnectButton")}
 								</Button>
 							</AlertDialogTrigger>
 
 							<AlertDialogContent>
 								<AlertDialogHeader>
-									<AlertDialogTitle>Disconnect Microsoft?</AlertDialogTitle>
+									<AlertDialogTitle>
+										{t("disconnectConfirmTitle")}
+									</AlertDialogTitle>
 									<AlertDialogDescription>
 										{required
-											? "You will be signed out, and you cannot use the CRM again until you grant access."
-											: "New email stops arriving. Everything already synced stays, and you can connect Microsoft again from this page."}{" "}
-										Microsoft has no way for us to withdraw the consent itself —
-										remove this app from your Microsoft account to do that.
+											? t("disconnectRequired")
+											: t("disconnectOptional")}{" "}
+										{t("disconnectSuffix")}
 									</AlertDialogDescription>
 								</AlertDialogHeader>
 
 								<AlertDialogFooter>
-									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 									<AlertDialogAction
 										variant="destructive"
 										onClick={() => revoke.mutate()}
 									>
-										Disconnect
+										{t("disconnectAction")}
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>
@@ -371,7 +367,7 @@ export function MicrosoftConnection({
 								target="_blank"
 								rel="noreferrer"
 							>
-								Manage in your Microsoft account
+								{t("manageLink")}
 							</Link>
 						</Button>
 					</div>

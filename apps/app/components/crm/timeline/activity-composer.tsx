@@ -34,19 +34,19 @@ const dueFormat = new Intl.DateTimeFormat("en-US", {
 	day: "numeric",
 });
 
-const PLACEHOLDER = {
-	NOTE: "Log a note, call, email, meeting or task…",
-	CALL: "What came out of the call?",
-	EMAIL: "What was said?",
-	MEETING: "What came out of the meeting?",
-	TASK: "What needs doing?",
-} satisfies Record<ComposableType, string>;
-
 export function ActivityComposer({ anchor }: { anchor: TimelineAnchor }) {
 	const t = useTranslations("timeline");
 	const activityType = useTranslations("activityType");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
+
+	const PLACEHOLDER = {
+		NOTE: t("composerPlaceholder.NOTE"),
+		CALL: t("composerPlaceholder.CALL"),
+		EMAIL: t("composerPlaceholder.EMAIL"),
+		MEETING: t("composerPlaceholder.MEETING"),
+		TASK: t("composerPlaceholder.TASK"),
+	} satisfies Record<ComposableType, string>;
 
 	const [type, setType] = useState<ComposableType>("NOTE");
 	const [draft, setDraft] = useState("");
@@ -93,7 +93,7 @@ export function ActivityComposer({ anchor }: { anchor: TimelineAnchor }) {
 					value={draft}
 					onChange={(event) => setDraft(event.target.value)}
 					placeholder={PLACEHOLDER[type]}
-					aria-label="What happened"
+					aria-label={t("whatHappened")}
 					onKeyDown={(event) => {
 						if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
 							event.preventDefault();
@@ -128,7 +128,7 @@ export function ActivityComposer({ anchor }: { anchor: TimelineAnchor }) {
 							<PopoverTrigger asChild>
 								<InputGroupButton variant="ghost" size="xs">
 									<Icon icon={Calendar} data-icon="inline-start" />
-									{dueAt ? dueFormat.format(dueAt) : "Due date"}
+									{dueAt ? dueFormat.format(dueAt) : t("dueDate")}
 								</InputGroupButton>
 							</PopoverTrigger>
 							<PopoverContent size="fit" align="start">

@@ -46,6 +46,7 @@ export function TimelineEntry({
 }) {
 	const stageLabel = useTranslations("dealStage");
 	const activityType = useTranslations("activityType");
+	const t = useTranslations("timeline");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 
@@ -71,8 +72,8 @@ export function TimelineEntry({
 	const synced = entry.meta?.synced === true;
 	const author = synced
 		? entry.emailThread
-			? "via Gmail"
-			: "via Calendar"
+			? t("entry.viaGmail")
+			: t("entry.viaCalendar")
 		: entry.createdBy.name;
 
 	const headline = change
@@ -95,7 +96,7 @@ export function TimelineEntry({
 					<Checkbox
 						checked={done}
 						disabled={complete.isPending}
-						aria-label={done ? "Mark as not done" : "Mark as done"}
+						aria-label={done ? t("entry.markNotDone") : t("entry.markDone")}
 						onCheckedChange={(checked) =>
 							complete.mutate({ id: entry.id, completed: checked === true })
 						}
@@ -172,7 +173,7 @@ export function TimelineEntry({
 								tone={overdue ? "error" : "info"}
 								label={
 									<>
-										{overdue ? "Overdue" : "Due"}{" "}
+										{overdue ? t("entry.overdue") : t("entry.due")}{" "}
 										<LocalRelativeTime date={entry.dueAt} />
 									</>
 								}

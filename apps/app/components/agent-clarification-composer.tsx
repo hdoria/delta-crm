@@ -14,6 +14,7 @@ import {
 	QuestionnaireTitle,
 } from "@crm/ui/components/questionnaire";
 import type { EveMessageInputRequest } from "eve/react";
+import { useTranslations } from "next-intl";
 import { type FormEvent, useState } from "react";
 import { AGENT_COMPOSER_CLASS_NAME } from "./agent-composer-frame";
 
@@ -32,6 +33,7 @@ export function AgentClarificationComposer({
 	pending: boolean;
 	onSubmit: (response: ClarificationResponse) => Promise<void>;
 }) {
+	const t = useTranslations("agentBuilder.clarification");
 	const options = question.options ?? [];
 	const [transportError, setTransportError] = useState<string | null>(null);
 	const showFreeform =
@@ -72,7 +74,7 @@ export function AgentClarificationComposer({
 			setTransportError(
 				error instanceof Error && error.message.trim()
 					? error.message
-					: "Unable to submit. Check your connection and try again.",
+					: t("submitFailed"),
 			);
 		}
 	};
@@ -88,9 +90,7 @@ export function AgentClarificationComposer({
 			<QuestionnaireItem name="response" required>
 				<QuestionnaireTitle>{question.prompt}</QuestionnaireTitle>
 				<QuestionnaireDescription>
-					{options.length > 0
-						? "Choose an answer, then submit."
-						: "Add the detail the agent needs to continue."}
+					{options.length > 0 ? t("chooseAnswer") : t("addDetail")}
 				</QuestionnaireDescription>
 				<QuestionnaireChoices>
 					{options.map((option) => (
@@ -109,8 +109,12 @@ export function AgentClarificationComposer({
 					))}
 					{showFreeform ? (
 						<QuestionnaireInput
-							aria-label={options.length > 0 ? "Another answer" : "Your answer"}
-							placeholder="Add the detail the agent needs"
+							aria-label={
+								options.length > 0
+									? t("anotherAnswerAria")
+									: t("yourAnswerAria")
+							}
+							placeholder={t("answerPlaceholder")}
 							disabled={pending}
 						/>
 					) : null}
@@ -126,9 +130,9 @@ export function AgentClarificationComposer({
 				<QuestionnaireSubmit disabled={pending} aria-busy={pending} size="sm">
 					<AsyncButtonContent
 						status={pending ? "pending" : "idle"}
-						pendingLabel="Submitting"
+						pendingLabel={t("submitting")}
 					>
-						Submit answer
+						{t("submitAnswer")}
 					</AsyncButtonContent>
 				</QuestionnaireSubmit>
 			</QuestionnaireActions>

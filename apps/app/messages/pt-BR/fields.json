@@ -1,0 +1,144 @@
+{
+	"sheet": {
+		"title": "Campos",
+		"subtitle": {
+			"company": "Isso molda todas as empresas do seu CRM.",
+			"contact": "Isso molda todos os contatos do seu CRM.",
+			"deal": "Isso molda todos os negócios do seu CRM."
+		},
+		"filledDescription": "{entity} · {filled} de {total} preenchidos"
+	},
+	"tabs": {
+		"company": "Empresas",
+		"contact": "Contatos",
+		"deal": "Negócios"
+	},
+	"values": {
+		"yes": "Sim",
+		"no": "Não",
+		"unassigned": "Sem responsável",
+		"none": "Nenhum",
+		"formerMember": "Ex-membro"
+	},
+	"list": {
+		"standardRow": "Campos padrão",
+		"standardNote": "só reordenar e ocultar",
+		"suggestedRow": "Campos sugeridos",
+		"suggestedNote": "um clique para adicionar",
+		"add": "Adicionar",
+		"customGroup": "Campos personalizados",
+		"dragNote": "Arraste para ordenar",
+		"archivedRow": "Arquivados",
+		"archivedNote": "valores mantidos, ocultos em todo lugar",
+		"newField": "Novo campo",
+		"orderNote": "A ordem aqui é a ordem na ficha",
+		"manualOnly": "Só manual",
+		"required": "obrigatório",
+		"optionsCount": "{count, plural, one {# opção} other {# opções}}",
+		"tableNote": "também é uma coluna na tabela",
+		"filterNote": "também é um filtro",
+		"emptyTitle": "Ainda sem campos personalizados",
+		"emptyBody": "Crie campos dinâmicos que seus agentes podem pesquisar e preencher.",
+		"errorTitle": "Não foi possível carregar seus campos",
+		"errorBody": "Seus campos continuam lá. Tente de novo em instantes, antes de criar algo novo.",
+		"retry": "Tentar de novo",
+		"edit": "Editar",
+		"archive": "Arquivar",
+		"restore": "Restaurar",
+		"moreFor": "Mais para {label}"
+	},
+	"standardFields": {
+		"company": {
+			"name": "Nome",
+			"domain": "Domínio",
+			"website": "Site",
+			"phone": "Telefone",
+			"email": "Email",
+			"city": "Cidade",
+			"country": "País",
+			"owner": "Responsável"
+		},
+		"contact": {
+			"firstName": "Nome",
+			"lastName": "Sobrenome",
+			"title": "Cargo",
+			"email": "Email",
+			"phone": "Telefone",
+			"linkedin": "LinkedIn",
+			"github": "GitHub",
+			"company": "Empresa",
+			"owner": "Responsável"
+		},
+		"deal": {
+			"name": "Nome",
+			"amount": "Valor",
+			"currency": "Moeda",
+			"closeDate": "Data de fechamento",
+			"company": "Empresa",
+			"owner": "Responsável",
+			"stage": "Etapa"
+		}
+	},
+	"editor": {
+		"labelLabel": "Rótulo",
+		"keyLabel": "Chave",
+		"keyHelp": "É como a API e seus agentes chamam o campo. Definida a partir do rótulo, fica fixa depois de salva. Renomear o rótulo depois nunca quebra quem já usa a chave.",
+		"agentLabel": "Deixar seus agentes preencherem isso",
+		"agentHelp": "Eles propõem um valor com uma fonte, e nunca sobrescrevem o que você preencheu.",
+		"briefLabel": "O que conta como resposta",
+		"briefHelp": "Deixe em branco e seus agentes trabalham só com o rótulo e o tipo.",
+		"typeLabel": "Tipo",
+		"optionsLabel": "Opções",
+		"addOption": "Adicionar opção",
+		"allFilled": "Nada mais para preencher",
+		"option": "Opção {number}",
+		"removeOption": "Remover {option}",
+		"addField": "Criar campo",
+		"cancel": "Cancelar",
+		"save": "Salvar alterações",
+		"archive": "Arquivar",
+		"fillRest": "Preencher o resto",
+		"archiveConfirmTitle": "Arquivar {label}?",
+		"archiveConfirmDescription": "Fica oculto em todo lugar. Os valores são mantidos.",
+		"archiveField": "Arquivar campo",
+		"typeHints": {
+			"TEXT": "Texto, uma linha curta",
+			"LONG_TEXT": "Texto longo, um parágrafo",
+			"NUMBER": "Número",
+			"DATE": "Data",
+			"CHECKBOX": "Caixa de marcação, sim ou não",
+			"SELECT": "Seleção, uma opção de uma lista fixa",
+			"URL": "URL",
+			"EMAIL": "Email",
+			"PHONE": "Telefone",
+			"USER": "Usuário, alguém do workspace"
+		},
+		"placement": {
+			"sheet": {
+				"company": "Mostrar na ficha da empresa",
+				"contact": "Mostrar na ficha do contato",
+				"deal": "Mostrar na ficha do negócio"
+			},
+			"table": {
+				"company": "Oferecer como coluna na tabela de Empresas",
+				"contact": "Oferecer como coluna na tabela de Contatos",
+				"deal": "Oferecer como coluna na tabela de Negócios"
+			},
+			"filter": {
+				"company": "Oferecer como filtro na tabela de Empresas",
+				"contact": "Oferecer como filtro na tabela de Contatos",
+				"deal": "Oferecer como filtro na tabela de Negócios"
+			}
+		},
+		"coverage": {
+			"filledOn": "Preenchido em {filled} de {total} {noun}",
+			"stillToGo": "{count, plural, one {# ainda falta} other {# ainda faltam}}",
+			"pickup": "Seus agentes vão cuidar disso.",
+			"noun": {
+				"company": "empresas",
+				"contact": "contatos",
+				"deal": "negócios"
+			}
+		}
+	}
+}

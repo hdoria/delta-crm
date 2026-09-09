@@ -7,6 +7,7 @@ import {
 	SheetHeader,
 	SheetTitle,
 } from "@crm/ui/components/sheet";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import type { RouterOutputs } from "@/lib/trpc/types";
 import { AgentActivity, AgentRuns } from "./agent-history";
@@ -14,12 +15,9 @@ import { AgentActivity, AgentRuns } from "./agent-history";
 type Runs = RouterOutputs["agents"]["history"];
 type Activity = RouterOutputs["agents"]["activity"];
 
-const VIEWS = [
-	{ id: "runs", label: "Runs" },
-	{ id: "activity", label: "Activity" },
-] as const;
+const VIEW_IDS = ["runs", "activity"] as const;
 
-type View = (typeof VIEWS)[number]["id"];
+type View = (typeof VIEW_IDS)[number];
 
 export function AgentRunsDrawer({
 	activity,
@@ -41,6 +39,7 @@ export function AgentRunsDrawer({
 	retryingRunId?: string;
 	runs: Runs;
 }) {
+	const t = useTranslations("agentBuilder.runsDrawer");
 	const [view, setView] = useState<View>("runs");
 	const [wasOpen, setWasOpen] = useState(open);
 
@@ -53,27 +52,25 @@ export function AgentRunsDrawer({
 		<Sheet onOpenChange={onOpenChange} open={open}>
 			<SheetContent className="flex flex-col gap-0 p-0" side="right" size="xl">
 				<SheetHeader className="gap-1 border-b px-5 py-4">
-					<SheetTitle>History</SheetTitle>
-					<SheetDescription>
-						Every run and every change, newest first.
-					</SheetDescription>
+					<SheetTitle>{t("title")}</SheetTitle>
+					<SheetDescription>{t("description")}</SheetDescription>
 				</SheetHeader>
 
 				<div className="flex h-9 shrink-0 items-end gap-5 border-b px-5">
-					{VIEWS.map((entry) => (
+					{VIEW_IDS.map((id) => (
 						<button
 							className={`-mb-px h-9 border-b-2 text-sm ${
-								view === entry.id
+								view === id
 									? "border-foreground font-medium"
 									: "border-transparent text-muted-foreground hover:text-foreground"
 							}`}
-							key={entry.id}
-							onClick={() => setView(entry.id)}
+							key={id}
+							onClick={() => setView(id)}
 							type="button"
 						>
-							{entry.label}{" "}
+							{t(`views.${id}`)}{" "}
 							<span className="font-mono text-muted-foreground">
-								{entry.id === "runs" ? runs.length : activity.length}
+								{id === "runs" ? runs.length : activity.length}
 							</span>
 						</button>
 					))}

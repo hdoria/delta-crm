@@ -1,4 +1,63 @@
 {
 	"addTask": "Adicionar tarefa",
-	"logActivity": "Registrar {type}"
+	"logActivity": "Registrar {type}",
+	"tabs": {
+		"all": "Todos",
+		"notes": "Notas",
+		"email": "Email",
+		"meetings": "Reuniões",
+		"upcoming": "Pendentes",
+		"done": "Concluídas"
+	},
+	"empty": {
+		"all": {
+			"title": "Nada aconteceu ainda",
+			"description": "Ligações, notas, emails e reuniões aparecem aqui. Registre o primeiro acima ou espere o Gmail e o Calendar sincronizarem."
+		},
+		"notes": {
+			"title": "Nenhuma nota",
+			"description": "Notas são o que você anota para a próxima pessoa ler: o que importa, quem mais está envolvido, o que você prometeu."
+		},
+		"email": {
+			"title": "Nenhum email",
+			"description": "As conversas aparecem aqui conforme são sincronizadas do Gmail. Nada de antes da conexão desta caixa de entrada é importado."
+		},
+		"meetings": {
+			"title": "Nenhuma reunião",
+			"description": "Eventos do Calendar com alguém deste registro aparecem aqui, passados e futuros."
+		},
+		"upcoming": {
+			"title": "Nada pendente",
+			"description": "Tarefas que você ainda não terminou aparecem aqui, e no topo da aba Todos até serem concluídas."
+		},
+		"done": {
+			"title": "Nada concluído ainda",
+			"description": "Tarefas vêm para cá quando você marca como feitas."
+		}
+	},
+	"today": "Hoje",
+	"yesterday": "Ontem",
+	"outstanding": "Pendentes",
+	"showOlder": "Mostrar mais antigas",
+	"whatHappened": "O que aconteceu",
+	"dueDate": "Data de vencimento",
+	"composerPlaceholder": {
+		"NOTE": "Registre uma nota, ligação, email, reunião ou tarefa…",
+		"CALL": "O que saiu da ligação?",
+		"EMAIL": "O que foi dito?",
+		"MEETING": "O que saiu da reunião?",
+		"TASK": "O que precisa ser feito?"
+	},
+	"entry": {
+		"markDone": "Marcar como feita",
+		"markNotDone": "Marcar como não feita",
+		"viaGmail": "via Gmail",
+		"viaCalendar": "via Calendar",
+		"overdue": "Atrasado",
+		"due": "Vence"
+	},
+	"messageCount": "{count, plural, one {# mensagem} other {# mensagens}}",
+	"openInMailbox": "Abrir no {mailbox}",
+	"allDay": "Dia inteiro",
+	"joinCall": "Entrar na chamada"
 }

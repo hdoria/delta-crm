@@ -1,0 +1,66 @@
+{
+	"agent": {
+		"newConversation": "New conversation",
+		"untitled": "Untitled",
+		"nothingYet": "Nothing yet",
+		"deleteConversation": "Delete this conversation",
+		"conversationDeleted": "Conversation deleted.",
+		"stillWorking": "Still working on the last question. Your next one can go in when it finishes.",
+		"conversationEnded": "This conversation has ended.",
+		"startNewConversation": "Start a new conversation",
+		"ask": "Ask",
+		"followUp": "Follow-up",
+		"openSource": "Open {title}",
+		"hintStartAgent": "Start it with `bun run dev`, or check AGENT_URL.",
+		"hintSetSecret": "Set AGENT_BRIDGE_SECRET for both the app and the agent."
+	},
+	"bulk": {
+		"actions": "Actions",
+		"assignOwner": "Assign owner",
+		"nobodyElse": "Nobody else works here yet.",
+		"cancel": "Cancel",
+		"delete": "Delete"
+	},
+	"companyPicker": {
+		"choose": "Choose a company",
+		"search": "Search companies…",
+		"searching": "Searching…",
+		"noMatches": "No company matches.",
+		"label": "Company"
+	},
+	"enrichment": {
+		"reenrich": "Re-enrich",
+		"research": "Research",
+		"lookingUp": "Looking it up — this page will update when it finishes.",
+		"alreadyRunning": "Already running.",
+		"researching": "Researching — the brief lands on the timeline when it finishes.",
+		"alreadyResearching": "Already researching.",
+		"takingAnotherLook": "Taking another look — this page will update when it finishes."
+	},
+	"stageChange": {
+		"closeAsLost": "Close as lost",
+		"markAsUnqualified": "Mark as unqualified",
+		"whatDidWeLoseItTo": "What did we lose it to? This is the only place that answer gets recorded.",
+		"whyNotAFit": "Why is this not a fit? It goes on the timeline so nobody re-runs the same deal.",
+		"reason": "Reason",
+		"reasonPlaceholder": "Went with an incumbent vendor",
+		"save": "Save",
+		"cancel": "Cancel",
+		"dealClosed": "Deal closed."
+	},
+	"stageStepper": {
+		"updated": "Stage updated."
+	},
+	"websiteActivity": {
+		"title": "Website activity",
+		"pageViews": "Page views",
+		"lastSeen": "last seen",
+		"originalSource": "Original source",
+		"topPage": "Top page",
+		"views": "views",
+		"latestSource": "Latest source",
+		"firstSeen": "First seen",
+		"campaign": "Campaign",
+		"unknown": "Unknown"
+	}
+}

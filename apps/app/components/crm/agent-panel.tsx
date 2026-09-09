@@ -46,6 +46,7 @@ import {
 import { Spinner } from "@crm/ui/components/spinner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEveAgent } from "eve/react";
+import { useTranslations } from "next-intl";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { AgentClarificationComposer } from "@/components/agent-clarification-composer";
 import {
@@ -202,6 +203,7 @@ function Thread({
 	thread: ThreadState | undefined;
 	onNewThread: () => void;
 }) {
+	const t = useTranslations("crm");
 	const copy = recordCopy(record.kind);
 	const agent = useEveAgent({
 		headers: recordHeader(record),
@@ -267,18 +269,17 @@ function Thread({
 
 			{thread?.status === "working" && !busy ? (
 				<p className="border-t px-4 py-2 text-pretty text-muted-foreground text-xs sm:px-5">
-					Still working on the last question. Your next one can go in when it
-					finishes.
+					{t("agent.stillWorking")}
 				</p>
 			) : null}
 
 			{ended ? (
 				<div className="flex flex-col items-start gap-3 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-2">
 					<p className="text-pretty text-muted-foreground text-xs">
-						This conversation has ended.
+						{t("agent.conversationEnded")}
 					</p>
 					<Button variant="outline" size="sm" onClick={onNewThread}>
-						Start a new conversation
+						{t("agent.startNewConversation")}
 					</Button>
 				</div>
 			) : null}
@@ -312,7 +313,7 @@ function Thread({
 							disabled={locked}
 						>
 							{busy ? <Spinner /> : <Icon icon={Send} />}
-							<span className="sr-only">Ask</span>
+							<span className="sr-only">{t("agent.ask")}</span>
 						</Button>
 					</form>
 				)}
@@ -359,10 +360,11 @@ function Idle({
 }
 
 function Failure({ message }: { message: string }) {
+	const t = useTranslations("crm");
 	const hint = message.includes("not reachable")
-		? "Start it with `bun run dev`, or check AGENT_URL."
+		? t("agent.hintStartAgent")
 		: message.includes("not configured")
-			? "Set AGENT_BRIDGE_SECRET for both the app and the agent."
+			? t("agent.hintSetSecret")
 			: null;
 
 	return (
@@ -388,6 +390,8 @@ const SOURCE_ICONS = {
 } satisfies Record<Source["network"], CarbonIcon>;
 
 function Item({ item }: { item: TranscriptItem }) {
+	const t = useTranslations("crm");
+
 	if (item.kind === "said") {
 		return item.mine ? (
 			<Message align="end" className="min-w-0">
@@ -414,7 +418,7 @@ function Item({ item }: { item: TranscriptItem }) {
 	if (item.kind === "asked") {
 		return (
 			<div className="w-full max-w-sm border-ring/50 border-l-2 bg-muted/40 px-3 py-2.5">
-				<p className="font-medium text-xs">Follow-up</p>
+				<p className="font-medium text-xs">{t("agent.followUp")}</p>
 				<Markdown className="mt-1.5 wrap-break-word text-sm leading-5">
 					{item.question.prompt}
 				</Markdown>
@@ -439,6 +443,8 @@ function Item({ item }: { item: TranscriptItem }) {
 }
 
 function Sources({ sources }: { sources: Source[] }) {
+	const t = useTranslations("crm");
+
 	return (
 		<AttachmentGroup>
 			{sources.map((source) => (
@@ -452,7 +458,9 @@ function Sources({ sources }: { sources: Source[] }) {
 
 					<AttachmentTrigger asChild>
 						<a href={source.url} target="_blank" rel="noreferrer noopener">
-							<span className="sr-only">Open {source.title}</span>
+							<span className="sr-only">
+								{t("agent.openSource", { title: source.title })}
+							</span>
 						</a>
 					</AttachmentTrigger>
 				</Attachment>

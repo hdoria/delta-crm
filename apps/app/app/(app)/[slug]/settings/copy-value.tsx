@@ -3,13 +3,14 @@
 import Copy from "@carbon/icons-react/es/Copy";
 import { Button } from "@crm/ui/components/button";
 import { Icon } from "@crm/ui/components/icon";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 export function CopyValue({ value, label }: { value: string; label: string }) {
-	const unavailable = () =>
-		toast.error(
-			`Could not copy the ${label.toLowerCase()}. Select it instead.`,
-		);
+	const t = useTranslations("settings.copyValue");
+	const lowerLabel = label.toLowerCase();
+
+	const unavailable = () => toast.error(t("copyFailed", { label: lowerLabel }));
 
 	return (
 		<Button
@@ -26,12 +27,12 @@ export function CopyValue({ value, label }: { value: string; label: string }) {
 
 				clipboard
 					.writeText(value)
-					.then(() => toast.success(`${label} copied.`))
+					.then(() => toast.success(t("copied", { label })))
 					.catch(unavailable);
 			}}
 		>
 			<Icon icon={Copy} />
-			<span className="sr-only">Copy {label.toLowerCase()}</span>
+			<span className="sr-only">{t("copyLabel", { label: lowerLabel })}</span>
 		</Button>
 	);
 }

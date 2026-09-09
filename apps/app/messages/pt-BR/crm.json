@@ -1,0 +1,66 @@
+{
+	"agent": {
+		"newConversation": "Nova conversa",
+		"untitled": "Sem título",
+		"nothingYet": "Nada ainda",
+		"deleteConversation": "Excluir esta conversa",
+		"conversationDeleted": "Conversa excluída.",
+		"stillWorking": "Ainda está trabalhando na última pergunta. A próxima entra assim que terminar.",
+		"conversationEnded": "Esta conversa terminou.",
+		"startNewConversation": "Iniciar nova conversa",
+		"ask": "Perguntar",
+		"followUp": "Acompanhamento",
+		"openSource": "Abrir {title}",
+		"hintStartAgent": "Inicie com `bun run dev` ou verifique o AGENT_URL.",
+		"hintSetSecret": "Defina o AGENT_BRIDGE_SECRET para o app e para o agente."
+	},
+	"bulk": {
+		"actions": "Ações",
+		"assignOwner": "Atribuir responsável",
+		"nobodyElse": "Ainda não há mais ninguém por aqui.",
+		"cancel": "Cancelar",
+		"delete": "Excluir"
+	},
+	"companyPicker": {
+		"choose": "Escolha uma empresa",
+		"search": "Buscar empresas…",
+		"searching": "Buscando…",
+		"noMatches": "Nenhuma empresa encontrada.",
+		"label": "Empresa"
+	},
+	"enrichment": {
+		"reenrich": "Pesquisar de novo",
+		"research": "Pesquisar",
+		"lookingUp": "Pesquisando. Esta página atualiza quando terminar.",
+		"alreadyRunning": "Já está em andamento.",
+		"researching": "Pesquisando. O resumo aparece no histórico quando terminar.",
+		"alreadyResearching": "Já está pesquisando.",
+		"takingAnotherLook": "Pesquisando de novo. Esta página atualiza quando terminar."
+	},
+	"stageChange": {
+		"closeAsLost": "Fechar como perdido",
+		"markAsUnqualified": "Marcar como desqualificado",
+		"whatDidWeLoseItTo": "Para quem perdemos o negócio? Essa resposta só fica registrada aqui.",
+		"whyNotAFit": "Por que não é um bom encaixe? Isso entra no histórico para ninguém repetir o mesmo negócio.",
+		"reason": "Motivo",
+		"reasonPlaceholder": "Fechou com um fornecedor já estabelecido",
+		"save": "Salvar",
+		"cancel": "Cancelar",
+		"dealClosed": "Negócio fechado."
+	},
+	"stageStepper": {
+		"updated": "Etapa atualizada."
+	},
+	"websiteActivity": {
+		"title": "Atividade no site",
+		"pageViews": "Visualizações de página",
+		"lastSeen": "visto por último",
+		"originalSource": "Origem original",
+		"topPage": "Página principal",
+		"views": "visualizações",
+		"latestSource": "Origem mais recente",
+		"firstSeen": "Primeira visita",
+		"campaign": "Campanha",
+		"unknown": "Desconhecido"
+	}
+}

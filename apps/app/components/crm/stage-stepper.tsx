@@ -20,6 +20,7 @@ export function StageStepper({
 	stage: DealStage;
 }) {
 	const stageLabel = useTranslations("dealStage");
+	const t = useTranslations("crm");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 
@@ -27,7 +28,7 @@ export function StageStepper({
 		trpc.deals.setStage.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.deal(dealId);
-				if (result.changed) toast.success("Stage updated.");
+				if (result.changed) toast.success(t("stageStepper.updated"));
 			},
 			onError: (error) => toast.error(error.message),
 		}),

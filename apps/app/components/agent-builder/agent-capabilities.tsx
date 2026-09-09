@@ -14,6 +14,7 @@ import {
 import { SaveBar } from "@crm/ui/components/save-bar";
 import { Switch } from "@crm/ui/components/switch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -33,10 +34,10 @@ export type Resource = Extract<
 	{ readable: true }
 >["dataScope"]["resources"][number];
 
-const ACTION_LABELS = new Map([
-	["slack.message.post", "Post a message"],
-	["crm.activity.create", "Write a note or task on the record"],
-	["run.summary", "Write a summary of the run"],
+const ACTION_LABEL_KEYS = new Map([
+	["slack.message.post", "slackMessagePost"],
+	["crm.activity.create", "crmActivityCreate"],
+	["run.summary", "runSummary"],
 ]);
 
 export function AgentCapabilities({
@@ -48,6 +49,7 @@ export function AgentCapabilities({
 	canManage: boolean;
 	capabilities: Capabilities;
 }) {
+	const t = useTranslations("agentBuilder.capabilities");
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
 
@@ -74,7 +76,7 @@ export function AgentCapabilities({
 					queryKey: trpc.agents.byId.pathKey(),
 				});
 				reset();
-				toast.success("Saved. A new version is live.");
+				toast.success(t("savedToast"));
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -84,7 +86,7 @@ export function AgentCapabilities({
 		trpc.slack.joinChannel.mutationOptions({
 			onSuccess: async () => {
 				await channels.reload();
-				toast.success(`Asked someone to invite ${BRAND.appName}.`);
+				toast.success(t("invitedToast", { appName: BRAND.appName }));
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -94,9 +96,9 @@ export function AgentCapabilities({
 		return (
 			<Alert variant="warning">
 				<Icon icon={Warning} />
-				<AlertTitle>This version's manifest cannot be read</AlertTitle>
+				<AlertTitle>{t("manifestUnreadableTitle")}</AlertTitle>
 				<AlertDescription>
-					{capabilities.problem ?? "The manifest is not in a shape we know."}
+					{capabilities.problem ?? t("manifestUnreadableFallback")}
 				</AlertDescription>
 			</Alert>
 		);
@@ -120,9 +122,9 @@ export function AgentCapabilities({
 		shownResources.length === 0 &&
 		capabilities.dataScope?.mode !== "WORKSPACE";
 	const blocked = everyActionOff
-		? "Leave one action on. An agent that does nothing cannot be saved."
+		? t("blockedNoActions")
 		: scopeEmptied
-			? "Add one record. An empty list opens every record in the workspace."
+			? t("blockedNoRecords")
 			: null;
 
 	const save = () => {
@@ -162,13 +164,13 @@ export function AgentCapabilities({
 								}}
 							>
 								<Button size="sm" variant="outline">
-									Create a channel
+									{t("createChannel")}
 								</Button>
 							</CreateChannelDialog>
 						) : null
 					}
-					summary={`One channel. ${BRAND.appName} joins it when you save.`}
-					title="Lives in"
+					summary={t("livesInSummary", { appName: BRAND.appName })}
+					title={t("livesInTitle")}
 				>
 					<ChannelPicker
 						canInviteItself={canInviteItself}
@@ -183,10 +185,7 @@ export function AgentCapabilities({
 				</Section>
 			) : null}
 
-			<Section
-				summary="If it is off here, it cannot do it."
-				title="What it can do there"
-			>
+			<Section summary={t("whatItCanDoSummary")} title={t("whatItCanDoTitle")}>
 				<div className="flex flex-col">
 					{capabilities.actions.map((action) => (
 						<div
@@ -194,9 +193,7 @@ export function AgentCapabilities({
 							key={action.type}
 						>
 							<div className="min-w-0 flex-1">
-								<p className="text-sm">
-									{ACTION_LABELS.get(action.type) ?? action.type}
-								</p>
+								<p className="text-sm">{actionLabel(t, action.type)}</p>
 								<p className="text-muted-foreground text-xs">
 									{action.summary || action.provider}
 								</p>
@@ -216,7 +213,7 @@ export function AgentCapabilities({
 					))}
 					{capabilities.actions.length === 0 ? (
 						<p className="text-muted-foreground text-sm">
-							Nothing outside the CRM.
+							{t("nothingOutsideCrm")}
 						</p>
 					) : null}
 				</div>
@@ -224,15 +221,15 @@ export function AgentCapabilities({
 
 			<Section
 				summary={
-					capabilities.dataScope?.summary || "What it reads to do its job."
+					capabilities.dataScope?.summary || t("whatItCanSeeSummaryFallback")
 				}
-				title="What it can see"
+				title={t("whatItCanSeeTitle")}
 			>
 				<div className="flex flex-wrap gap-2">
 					{shownResources.length === 0 &&
 					capabilities.dataScope?.mode === "WORKSPACE" ? (
 						<span className="flex h-7 items-center rounded-md border px-2.5 text-sm">
-							Every record in the workspace
+							{t("everyRecordInWorkspace")}
 						</span>
 					) : null}
 
@@ -244,7 +241,9 @@ export function AgentCapabilities({
 							{resource.label}
 							{canManage ? (
 								<button
-									aria-label={`Remove ${resource.label}`}
+									aria-label={t("removeResourceAria", {
+										label: resource.label,
+									})}
 									className="text-muted-foreground hover:text-foreground"
 									onClick={() =>
 										setResources(
@@ -287,16 +286,20 @@ export function AgentCapabilities({
 				description={
 					blocked ??
 					(channelChanged
-						? `${BRAND.appName} joins #${to}. It stays in #${from} until you remove it.`
-						: "The old version stays in the history.")
+						? t("savingBarDescriptionMoving", {
+								appName: BRAND.appName,
+								to: to ?? "",
+								from: from ?? "",
+							})
+						: t("savingBarDescriptionOld"))
 				}
 				open={dirty}
 				title={
 					blocked
-						? "This change cannot be saved"
+						? t("savingBarTitleBlocked")
 						: channelChanged
-							? `Moving from #${from} to #${to}`
-							: "Changing what this agent can do"
+							? t("savingBarTitleMoving", { from: from ?? "", to: to ?? "" })
+							: t("savingBarTitleChanging")
 				}
 			>
 				<Button
@@ -305,21 +308,30 @@ export function AgentCapabilities({
 					size="sm"
 					variant="outline"
 				>
-					Discard
+					{t("discard")}
 				</Button>
 				<Button
 					disabled={revise.isPending || blocked !== null}
 					onClick={save}
 					size="sm"
 				>
-					{revise.isPending ? "Saving…" : "Save"}
+					{revise.isPending ? t("saving") : t("save")}
 				</Button>
 			</SaveBar>
 		</div>
 	);
 }
 
+function actionLabel(
+	t: ReturnType<typeof useTranslations>,
+	type: string,
+): string {
+	const key = ACTION_LABEL_KEYS.get(type);
+	return key ? t(`actionLabels.${key}`) : type;
+}
+
 function ResourcePicker({ onPick }: { onPick: (resource: Resource) => void }) {
+	const t = useTranslations("agentBuilder.capabilities");
 	const trpc = useTRPC();
 	const [open, setOpen] = useState(false);
 	const [query, setQuery] = useState("");
@@ -336,7 +348,7 @@ function ResourcePicker({ onPick }: { onPick: (resource: Resource) => void }) {
 					type="button"
 				>
 					<Icon className="size-3" icon={Add} motion="none" />
-					Add a record type
+					{t("addRecordType")}
 				</button>
 			</PopoverTrigger>
 
@@ -344,7 +356,7 @@ function ResourcePicker({ onPick }: { onPick: (resource: Resource) => void }) {
 				<input
 					className="w-full border-b bg-transparent px-3 py-2.5 text-sm outline-none"
 					onChange={(event) => setQuery(event.target.value)}
-					placeholder="Search records and integrations"
+					placeholder={t("searchRecordsPlaceholder")}
 					value={query}
 				/>
 				<div className="flex max-h-64 flex-col overflow-y-auto py-1">
@@ -372,7 +384,7 @@ function ResourcePicker({ onPick }: { onPick: (resource: Resource) => void }) {
 					))}
 					{(results.data ?? []).length === 0 ? (
 						<p className="px-3 py-2 text-muted-foreground text-sm">
-							Nothing matches.
+							{t("noMatchingRecords")}
 						</p>
 					) : null}
 				</div>

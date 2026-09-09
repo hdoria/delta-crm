@@ -4,6 +4,7 @@ import ChevronLeft from "@carbon/icons-react/es/ChevronLeft";
 import ChevronRight from "@carbon/icons-react/es/ChevronRight";
 import { Button } from "@crm/ui/components/button";
 import { Spinner } from "@crm/ui/components/spinner";
+import { useUiLabel } from "@crm/ui/components/labels";
 import type { ReactNode } from "react";
 
 const numberFormat = new Intl.NumberFormat();
@@ -25,6 +26,10 @@ export function TablePagination({
 	loading?: boolean;
 	meta?: ReactNode;
 }) {
+	const noResults = useUiLabel("noResults");
+	const showingLabel = useUiLabel("showingRange");
+	const previousLabel = useUiLabel("previous");
+	const nextLabel = useUiLabel("next");
 	const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1;
 	const rangeEnd = Math.min(page * pageSize, total);
 
@@ -34,10 +39,11 @@ export function TablePagination({
 				{loading && <Spinner />}
 				{meta ??
 					(total === 0
-						? "No results"
-						: `Showing ${numberFormat.format(rangeStart)}–${numberFormat.format(
-								rangeEnd,
-							)} of ${numberFormat.format(total)}`)}
+						? noResults
+						: showingLabel
+								.replace("{from}", numberFormat.format(rangeStart))
+								.replace("{to}", numberFormat.format(rangeEnd))
+								.replace("{total}", numberFormat.format(total)))}
 			</span>
 			{totalPages > 1 && (
 				<div className="flex items-center gap-2">
@@ -48,7 +54,7 @@ export function TablePagination({
 						onClick={() => onPageChange(Math.max(1, page - 1))}
 					>
 						<ChevronLeft data-icon="inline-start" />
-						Previous
+						{previousLabel}
 					</Button>
 					<span className="text-muted-foreground text-xs tabular-nums">
 						{page} / {totalPages}
@@ -59,7 +65,7 @@ export function TablePagination({
 						disabled={page >= totalPages}
 						onClick={() => onPageChange(page + 1)}
 					>
-						Next
+						{nextLabel}
 						<ChevronRight data-icon="inline-end" />
 					</Button>
 				</div>

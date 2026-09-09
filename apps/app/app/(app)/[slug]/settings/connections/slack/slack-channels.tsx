@@ -21,6 +21,7 @@ import {
 	InputGroupInput,
 } from "@crm/ui/components/input-group";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useDeferredValue, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -34,6 +35,7 @@ import { useTRPC } from "@/lib/trpc/client";
 const INVITE_COMMAND = BRAND.slackInviteCommand;
 
 export function SlackChannels() {
+	const t = useTranslations("settings.connections.slack.channels");
 	const trpc = useTRPC();
 	const [asking, setAsking] = useState<PickerChannel | null>(null);
 	const [query, setQuery] = useState("");
@@ -46,10 +48,10 @@ export function SlackChannels() {
 				setAsking(null);
 				toast.success(
 					result.alreadyJoined
-						? `${BRAND.appName} is already in there.`
+						? t("alreadyJoined", { appName: BRAND.appName })
 						: result.queued
-							? `${BRAND.appName} is joining.`
-							: `Ask someone inside to invite ${BRAND.appName}.`,
+							? t("joining", { appName: BRAND.appName })
+							: t("askInvite", { appName: BRAND.appName }),
 				);
 			},
 			onError: (error) => toast.error(error.message),
@@ -61,7 +63,7 @@ export function SlackChannels() {
 	const refresh = useMutation(
 		trpc.slack.refreshPeople.mutationOptions({
 			onSuccess: async () => {
-				toast.success("Reading the channel list from Slack.");
+				toast.success(t("readingList"));
 				await channels.reload();
 			},
 			onError: (error) => toast.error(error.message),
@@ -77,11 +79,9 @@ export function SlackChannels() {
 			<div className="flex items-end justify-between gap-4">
 				<div>
 					<h2 className="font-medium text-sm">
-						Channels {BRAND.appName} can reach
+						{t("title", { appName: BRAND.appName })}
 					</h2>
-					<p className="text-muted-foreground text-xs">
-						Agents pick from this list.
-					</p>
+					<p className="text-muted-foreground text-xs">{t("hint")}</p>
 				</div>
 				<Button
 					disabled={refreshing}
@@ -89,14 +89,13 @@ export function SlackChannels() {
 					size="sm"
 					variant="outline"
 				>
-					{refreshing ? "Refreshing…" : "Refresh"}
+					{refreshing ? t("refreshing") : t("refresh")}
 				</Button>
 			</div>
 
 			{channels.stalled ? (
 				<p className="text-warning text-xs">
-					{BRAND.appName} is not reading Slack right now. The list can be out of
-					date.
+					{t("stalled", { appName: BRAND.appName })}
 				</p>
 			) : null}
 
@@ -107,7 +106,7 @@ export function SlackChannels() {
 					</InputGroupAddon>
 					<InputGroupInput
 						onChange={(event) => setQuery(event.target.value)}
-						placeholder="Search channels"
+						placeholder={t("searchPlaceholder")}
 						value={query}
 					/>
 				</InputGroup>
@@ -119,10 +118,10 @@ export function SlackChannels() {
 				empty={
 					<p className="px-4 py-4 text-muted-foreground text-sm">
 						{channels.pending
-							? "Reading the channel list from Slack…"
+							? t("loadingList")
 							: query
-								? `No channel matches “${query}”.`
-								: `No channels yet. ${BRAND.appName} reads the list from Slack after it connects.`}
+								? t("noMatch", { query })
+								: t("emptyList", { appName: BRAND.appName })}
 					</p>
 				}
 				onAdd={(channel) => void joinAction.run(channel.id)}
@@ -137,7 +136,7 @@ export function SlackChannels() {
 					size="sm"
 					variant="outline"
 				>
-					{channels.fetchingMore ? "Loading…" : "Load more"}
+					{channels.fetchingMore ? t("loadingMore") : t("loadMore")}
 				</Button>
 			) : null}
 
@@ -165,17 +164,19 @@ function AskDialog({
 	onConfirm: () => void;
 	status: "idle" | "pending" | "success" | "error";
 }) {
+	const t = useTranslations("settings.connections.slack.channels");
+
 	if (!channel) return null;
 
 	async function copyThenConfirm() {
 		try {
 			await navigator.clipboard.writeText(INVITE_COMMAND);
 		} catch {
-			toast.error("Copying failed. Copy the command above by hand.");
+			toast.error(t("copyFailed"));
 			return;
 		}
 
-		toast.success("Command copied.");
+		toast.success(t("commandCopied"));
 		onConfirm();
 	}
 
@@ -185,13 +186,16 @@ function AskDialog({
 				<AlertDialogHeader>
 					<AlertDialogTitle>
 						{canInviteItself
-							? `Add ${BRAND.appName} to #${channel.name}?`
-							: `Ask someone to add ${BRAND.appName}`}
+							? t("addTitle", { appName: BRAND.appName, channel: channel.name })
+							: t("askTitle", { appName: BRAND.appName })}
 					</AlertDialogTitle>
 					<AlertDialogDescription>
 						{canInviteItself
-							? `It is a private channel, so ${BRAND.appName} joins as you. Same as typing the invite yourself. Everyone in the channel sees it join. It reads nothing until you turn a permission on.`
-							: `We cannot add ${BRAND.appName} to a private channel yet. Someone already in #${channel.name} has to run this.`}
+							? t("addDescription", { appName: BRAND.appName })
+							: t("askDescription", {
+									appName: BRAND.appName,
+									channel: channel.name,
+								})}
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 
@@ -203,16 +207,16 @@ function AskDialog({
 
 				<AlertDialogFooter>
 					<AlertDialogCancel disabled={status === "pending"}>
-						Cancel
+						{t("cancel")}
 					</AlertDialogCancel>
 					<Button
 						disabled={status === "pending"}
 						onClick={canInviteItself ? onConfirm : () => void copyThenConfirm()}
 					>
-						<AsyncButtonContent pendingLabel="Adding…" status={status}>
+						<AsyncButtonContent pendingLabel={t("adding")} status={status}>
 							{canInviteItself
-								? `Add ${BRAND.appName}`
-								: "Copy and mark as asked"}
+								? t("addButton", { appName: BRAND.appName })
+								: t("copyMarkAsked")}
 						</AsyncButtonContent>
 					</Button>
 				</AlertDialogFooter>

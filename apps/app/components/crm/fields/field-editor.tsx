@@ -2,11 +2,7 @@
 
 import Add from "@carbon/icons-react/es/Add";
 import Close from "@carbon/icons-react/es/Close";
-import {
-	FIELD_TYPES,
-	fieldKeyFromLabel,
-	typeLabel,
-} from "@crm/db/fields-shape";
+import { FIELD_TYPES, fieldKeyFromLabel } from "@crm/db/fields-shape";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -39,40 +35,13 @@ import { StatusIndicator } from "@crm/ui/components/status-indicator";
 import { Switch } from "@crm/ui/components/switch";
 import { Textarea } from "@crm/ui/components/textarea";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
-import {
-	ADD_FIELD,
-	ADD_OPTION,
-	AGENT_HELP,
-	AGENT_LABEL,
-	ALL_FILLED,
-	ARCHIVE,
-	BRIEF_HELP,
-	BRIEF_LABEL,
-	CANCEL,
-	FILL_REST,
-	filterPlacement,
-	KEY_HELP,
-	KEY_LABEL,
-	LABEL_LABEL,
-	OPTIONS_LABEL,
-	optionLabel,
-	SAVE,
-	sheetPlacement,
-	TYPE_LABEL,
-	tablePlacement,
-} from "./fields-copy";
 import { type FieldEntity, kindOf } from "./fields-entity";
-
-const COVERAGE_NOUN = {
-	COMPANY: "companies",
-	CONTACT: "contacts",
-	DEAL: "deals",
-} satisfies Record<FieldEntity, string>;
 
 type FieldRecord = RouterOutputs["fields"]["list"][number];
 
@@ -86,19 +55,6 @@ type Draft = {
 	showOnTable: boolean;
 	showOnFilter: boolean;
 };
-
-const TYPE_HINTS = {
-	TEXT: "Text — a short line",
-	LONG_TEXT: "Long text — a paragraph",
-	NUMBER: "Number",
-	DATE: "Date",
-	CHECKBOX: "Checkbox — yes or no",
-	SELECT: "Select — one of a fixed list",
-	URL: "URL",
-	EMAIL: "Email",
-	PHONE: "Phone",
-	USER: "User — someone in the workspace",
-} satisfies Record<(typeof FIELD_TYPES)[number], string>;
 
 function optionId(option: { id?: string }, index: number): string {
 	return option.id ?? `draft-${index}`;
@@ -126,6 +82,7 @@ function draftFrom(field: FieldRecord | undefined): Draft {
 function Coverage({ field }: { field: FieldRecord }) {
 	const trpc = useTRPC();
 	const cache = useCrmCache();
+	const t = useTranslations("fields");
 	const coverage = useQuery(
 		trpc.fields.coverage.queryOptions({ id: field.id }),
 	);
@@ -133,7 +90,7 @@ function Coverage({ field }: { field: FieldRecord }) {
 	const backfill = useMutation(
 		trpc.fields.backfill.mutationOptions({
 			onSuccess: async () => {
-				toast.success("Your agents will pick this up.");
+				toast.success(t("editor.coverage.pickup"));
 				await cache.fieldCoverage(field.id);
 			},
 			onError: (error) => toast.error(error.message),
@@ -143,7 +100,8 @@ function Coverage({ field }: { field: FieldRecord }) {
 	if (!field.agentFilled || !coverage.data) return null;
 
 	const { filled, total } = coverage.data;
-	const noun = COVERAGE_NOUN[field.entity as FieldEntity];
+	const kind = kindOf(field.entity as FieldEntity);
+	const noun = t(`editor.coverage.noun.${kind}`);
 	const covered = filled >= total;
 
 	return (
@@ -153,10 +111,12 @@ function Coverage({ field }: { field: FieldRecord }) {
 					<StatusIndicator
 						tone="primary"
 						className="font-medium text-foreground"
-						label={`Filled on ${filled} of ${total} ${noun}`}
+						label={t("editor.coverage.filledOn", { filled, total, noun })}
 					/>
 					<span className="pl-4 text-muted-foreground text-xs">
-						{covered ? ALL_FILLED : `${total - filled} still to go`}
+						{covered
+							? t("editor.allFilled")
+							: t("editor.coverage.stillToGo", { count: total - filled })}
 					</span>
 				</div>
 				<Button
@@ -165,7 +125,7 @@ function Coverage({ field }: { field: FieldRecord }) {
 					disabled={backfill.isPending || covered}
 					onClick={() => backfill.mutate({ id: field.id })}
 				>
-					{FILL_REST}
+					{t("editor.fillRest")}
 				</Button>
 			</div>
 		</div>
@@ -183,6 +143,8 @@ export function FieldEditor({
 }) {
 	const trpc = useTRPC();
 	const cache = useCrmCache();
+	const t = useTranslations("fields");
+	const kind = kindOf(entity);
 	const labelId = useId();
 	const briefId = useId();
 	const agentId = useId();
@@ -250,7 +212,7 @@ export function FieldEditor({
 			<div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
 				<div className={SECTION}>
 					<Field>
-						<FieldLabel htmlFor={labelId}>{LABEL_LABEL}</FieldLabel>
+						<FieldLabel htmlFor={labelId}>{t("editor.labelLabel")}</FieldLabel>
 						<Input
 							id={labelId}
 							value={draft.label}
@@ -260,20 +222,22 @@ export function FieldEditor({
 
 					<Field>
 						<div className="flex items-baseline justify-between gap-2">
-							<FieldTitle>{KEY_LABEL}</FieldTitle>
+							<FieldTitle>{t("editor.keyLabel")}</FieldTitle>
 							<span className="font-mono text-muted-foreground text-xs">
 								{key || "—"}
 							</span>
 						</div>
-						<FieldDescription>{KEY_HELP}</FieldDescription>
+						<FieldDescription>{t("editor.keyHelp")}</FieldDescription>
 					</Field>
 				</div>
 
 				<div className={SECTION}>
 					<Field orientation="horizontal">
 						<div className="flex min-w-0 flex-1 flex-col gap-0.5">
-							<FieldLabel htmlFor={agentId}>{AGENT_LABEL}</FieldLabel>
-							<FieldDescription>{AGENT_HELP}</FieldDescription>
+							<FieldLabel htmlFor={agentId}>
+								{t("editor.agentLabel")}
+							</FieldLabel>
+							<FieldDescription>{t("editor.agentHelp")}</FieldDescription>
 						</div>
 						<Switch
 							id={agentId}
@@ -283,20 +247,20 @@ export function FieldEditor({
 					</Field>
 
 					<Field>
-						<FieldLabel htmlFor={briefId}>{BRIEF_LABEL}</FieldLabel>
+						<FieldLabel htmlFor={briefId}>{t("editor.briefLabel")}</FieldLabel>
 						<Textarea
 							id={briefId}
 							rows={3}
 							value={draft.agentBrief}
 							onChange={(event) => patch({ agentBrief: event.target.value })}
 						/>
-						<FieldDescription>{BRIEF_HELP}</FieldDescription>
+						<FieldDescription>{t("editor.briefHelp")}</FieldDescription>
 					</Field>
 				</div>
 
 				<div className={SECTION}>
 					<Field>
-						<FieldLabel htmlFor={typeId}>{TYPE_LABEL}</FieldLabel>
+						<FieldLabel htmlFor={typeId}>{t("editor.typeLabel")}</FieldLabel>
 						<Select
 							value={draft.type}
 							onValueChange={(value) => patch({ type: value as Draft["type"] })}
@@ -307,7 +271,7 @@ export function FieldEditor({
 							<SelectContent>
 								{FIELD_TYPES.map((type) => (
 									<SelectItem key={type} value={type}>
-										{TYPE_HINTS[type] ?? typeLabel(type)}
+										{t(`editor.typeHints.${type}`)}
 									</SelectItem>
 								))}
 							</SelectContent>
@@ -316,7 +280,7 @@ export function FieldEditor({
 
 					{draft.type === "SELECT" ? (
 						<Field aria-labelledby={optionsId}>
-							<FieldTitle id={optionsId}>{OPTIONS_LABEL}</FieldTitle>
+							<FieldTitle id={optionsId}>{t("editor.optionsLabel")}</FieldTitle>
 							<SortableList
 								ids={draft.options.map(optionId)}
 								onReorder={(ids) =>
@@ -338,10 +302,13 @@ export function FieldEditor({
 										<SortableItem
 											key={optionId(option, index)}
 											id={optionId(option, index)}
-											label={option.label || "option"}
+											label={
+												option.label ||
+												t("editor.option", { number: index + 1 })
+											}
 										>
 											<Input
-												aria-label={optionLabel(index)}
+												aria-label={t("editor.option", { number: index + 1 })}
 												value={option.label}
 												onChange={(event) =>
 													patch({
@@ -366,7 +333,9 @@ export function FieldEditor({
 											>
 												<Icon icon={Close} />
 												<span className="sr-only">
-													Remove {optionLabel(index)}
+													{t("editor.removeOption", {
+														option: t("editor.option", { number: index + 1 }),
+													})}
 												</span>
 											</Button>
 										</SortableItem>
@@ -382,7 +351,7 @@ export function FieldEditor({
 								}
 							>
 								<Icon icon={Add} data-icon="inline-start" />
-								{ADD_OPTION}
+								{t("editor.addOption")}
 							</Button>
 						</Field>
 					) : null}
@@ -396,7 +365,7 @@ export function FieldEditor({
 								patch({ showOnSheet: checked === true })
 							}
 						/>
-						{sheetPlacement(entity)}
+						{t(`editor.placement.sheet.${kind}`)}
 					</FieldLabel>
 					<FieldLabel className="items-center gap-2 font-normal">
 						<Checkbox
@@ -405,7 +374,7 @@ export function FieldEditor({
 								patch({ showOnTable: checked === true })
 							}
 						/>
-						{tablePlacement(entity)}
+						{t(`editor.placement.table.${kind}`)}
 					</FieldLabel>
 					{filterable ? (
 						<FieldLabel className="items-center gap-2 font-normal">
@@ -415,7 +384,7 @@ export function FieldEditor({
 									patch({ showOnFilter: checked === true })
 								}
 							/>
-							{filterPlacement(entity)}
+							{t(`editor.placement.filter.${kind}`)}
 						</FieldLabel>
 					) : null}
 				</div>
@@ -425,15 +394,15 @@ export function FieldEditor({
 
 			<div className="flex shrink-0 items-center gap-2 border-t px-5 py-3">
 				<Button disabled={saving || draft.label.trim() === ""} onClick={save}>
-					{field ? SAVE : ADD_FIELD}
+					{field ? t("editor.save") : t("editor.addField")}
 				</Button>
 				{field ? (
 					<Button variant="outline" onClick={() => setConfirming(true)}>
-						{ARCHIVE}
+						{t("editor.archive")}
 					</Button>
 				) : (
 					<Button variant="outline" onClick={onDone}>
-						{CANCEL}
+						{t("editor.cancel")}
 					</Button>
 				)}
 			</div>
@@ -442,18 +411,20 @@ export function FieldEditor({
 				<AlertDialog open={confirming} onOpenChange={setConfirming}>
 					<AlertDialogContent>
 						<AlertDialogHeader>
-							<AlertDialogTitle>Archive {field.label}?</AlertDialogTitle>
+							<AlertDialogTitle>
+								{t("editor.archiveConfirmTitle", { label: field.label })}
+							</AlertDialogTitle>
 							<AlertDialogDescription>
-								Hidden everywhere. Its values are kept.
+								{t("editor.archiveConfirmDescription")}
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
-							<AlertDialogCancel>{CANCEL}</AlertDialogCancel>
+							<AlertDialogCancel>{t("editor.cancel")}</AlertDialogCancel>
 							<AlertDialogAction
 								variant="destructive"
 								onClick={() => archive.mutate({ id: field.id })}
 							>
-								Archive field
+								{t("editor.archiveField")}
 							</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>

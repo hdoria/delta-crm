@@ -1,0 +1,175 @@
+{
+	"actions": {
+		"cancel": "Cancelar",
+		"addContact": "Adicionar contato",
+		"newDeal": "Novo negócio",
+		"makePrimary": "Tornar principal",
+		"primaryContact": "Contato principal",
+		"moreActions": "Mais ações"
+	},
+	"labels": {
+		"name": "Nome",
+		"domain": "Domínio",
+		"website": "Site",
+		"phone": "Telefone",
+		"email": "Email",
+		"city": "Cidade",
+		"country": "País",
+		"owner": "Responsável",
+		"unassigned": "Sem responsável",
+		"firstName": "Nome",
+		"lastName": "Sobrenome",
+		"title": "Cargo",
+		"titlePlaceholder": "Head de Segurança",
+		"linkedin": "LinkedIn",
+		"x": "X",
+		"github": "GitHub",
+		"company": "Empresa",
+		"noCompany": "Sem empresa",
+		"amount": "Valor",
+		"currency": "Moeda",
+		"closeDate": "Data de fechamento",
+		"description": "Descrição",
+		"deal": "Negócio",
+		"stage": "Etapa",
+		"role": "Função",
+		"rolePlaceholder": "Patrocinador",
+		"primary": "Principal",
+		"remove": "Remover"
+	},
+	"sections": {
+		"details": "Detalhes",
+		"links": "Links"
+	},
+	"tabs": {
+		"overview": "Visão geral",
+		"contacts": "Contatos",
+		"deals": "Negócios",
+		"activity": "Atividade",
+		"agent": "Agente"
+	},
+	"frame": {
+		"loadFailed": "Não foi possível carregar este registro"
+	},
+	"validation": {
+		"amountNumber": "O valor precisa ser um número."
+	},
+	"recordActions": {
+		"noun": {
+			"company": "empresa",
+			"contact": "contato",
+			"deal": "negócio"
+		},
+		"archive": "{kind, select, company {Arquivar empresa} contact {Arquivar contato} deal {Arquivar negócio} other {Arquivar}}",
+		"restore": "{kind, select, company {Restaurar empresa} contact {Restaurar contato} deal {Restaurar negócio} other {Restaurar}}",
+		"deleteForever": "{kind, select, company {Excluir empresa para sempre} contact {Excluir contato para sempre} deal {Excluir negócio para sempre} other {Excluir para sempre}}",
+		"confirmTitle": "Excluir {name} para sempre?",
+		"deleteForeverAction": "Excluir para sempre",
+		"archivedToast": "{kind, select, company {{hasName, select, yes {{name} foi arquivada.} other {A empresa foi arquivada.}}} contact {{hasName, select, yes {{name} foi arquivado.} other {O contato foi arquivado.}}} deal {{hasName, select, yes {{name} foi arquivado.} other {O negócio foi arquivado.}}} other {{hasName, select, yes {{name} foi arquivado.} other {Foi arquivado.}}}}",
+		"restoredToast": "{kind, select, company {{hasName, select, yes {{name} foi restaurada.} other {A empresa foi restaurada.}}} contact {{hasName, select, yes {{name} foi restaurado.} other {O contato foi restaurado.}}} deal {{hasName, select, yes {{name} foi restaurado.} other {O negócio foi restaurado.}}} other {{hasName, select, yes {{name} foi restaurado.} other {Foi restaurado.}}}}",
+		"purgedToast": "{kind, select, company {{hasName, select, yes {{name} foi excluída para sempre.} other {A empresa foi excluída para sempre.}}} contact {{hasName, select, yes {{name} foi excluído para sempre.} other {O contato foi excluído para sempre.}}} deal {{hasName, select, yes {{name} foi excluído para sempre.} other {O negócio foi excluído para sempre.}}} other {{hasName, select, yes {{name} foi excluído para sempre.} other {Foi excluído para sempre.}}}}"
+	},
+	"companySheet": {
+		"fallbackTitle": "Empresa",
+		"stats": {
+			"openPipeline": "Funil aberto",
+			"unconverted": "{count, plural, one {+# não convertido} other {+# não convertidos}}",
+			"openDeals": "Negócios abertos",
+			"nextClose": "Próximo fechamento"
+		},
+		"about": "Sobre",
+		"pendingFields": {
+			"industry": "Setor",
+			"description": "Descrição",
+			"socialLinks": "Redes sociais"
+		},
+		"consequence": "{deals, plural, =0 {Tudo o que está registrado na conta também é excluído.} one {O único negócio dela e tudo o que está registrado na conta também são excluídos.} other {Todos os # negócios dela e tudo o que está registrado na conta também são excluídos.}}{contacts, plural, =0 {} one { A única pessoa que trabalha lá continua no CRM, sem empresa.} other { As # pessoas que trabalham lá continuam no CRM, sem empresa.}}",
+		"contactsEmpty": {
+			"title": "Ainda sem contatos",
+			"description": "Todo mundo que você conversa em {name} fica aqui. Adicione a primeira pessoa e as ligações, emails e notas ficam registrados nela."
+		},
+		"dealsEmpty": {
+			"title": "Ainda sem negócios",
+			"description": "Nada está sendo vendido para {name} agora. Abra um negócio e ele entra no funil e na previsão."
+		},
+		"contactColumns": {
+			"primarySr": "Principal"
+		}
+	},
+	"contactSheet": {
+		"fallbackTitle": "Contato",
+		"thisCompany": "esta empresa",
+		"primaryContactAt": "Contato principal em {company}",
+		"primaryUpdated": "Contato principal atualizado.",
+		"background": {
+			"title": "Histórico",
+			"source": "Fonte",
+			"currentRole": "Cargo atual",
+			"tenure": "Tempo de casa",
+			"seniority": "Senioridade",
+			"function": "Área",
+			"based": "Localização",
+			"previously": "Anteriormente",
+			"rolesCount": "{count, plural, one {# cargo} other {# cargos}}"
+		},
+		"weKnowThem": {
+			"title": "O que sabemos sobre a pessoa",
+			"emails": "Emails",
+			"meetings": "Reuniões",
+			"nextMeeting": "Próxima reunião",
+			"meetingFallback": "Reunião",
+			"alsoHere": "Também aqui",
+			"lastReply": "última resposta",
+			"neverReplied": "{name} nunca respondeu"
+		},
+		"dealsEmpty": {
+			"title": "Não está em nenhum negócio",
+			"description": "{name} ainda não está em nada que está sendo vendido. Negócios são abertos na empresa, depois as pessoas são adicionadas a eles."
+		},
+		"consequence": "{hasEmail, select, yes {As notas dela, as conversas com o agente e tudo o que o agente encontrou também são excluídos. Emails e reuniões continuam registrados na empresa. A sincronização não traz {email} de volta, só você adicionando de novo.} other {As notas dela, as conversas com o agente e tudo o que o agente encontrou também são excluídos. Emails e reuniões continuam registrados na empresa.}}"
+	},
+	"dealSheet": {
+		"fallbackTitle": "Negócio",
+		"unsupportedCurrency": "{currency}, não é mais compatível",
+		"noRate": "Sem cotação de {currency}, fora dos totais",
+		"inCurrency": "Em {currency}",
+		"stats": {
+			"expectedClose": "Fechamento previsto",
+			"inStage": "Nesta etapa"
+		},
+		"stageSection": "Etapa",
+		"closed": "Fechado",
+		"reason": "Motivo",
+		"descriptionPlaceholder": "O que {company} está comprando, por que agora, e o que está no caminho.",
+		"whereItStands": {
+			"title": "Como está",
+			"opened": "Aberto",
+			"inStageSince": "Nesta etapa desde",
+			"onIt": "No negócio",
+			"nobodyAttached": "Ainda ninguém de {company} está no negócio."
+		},
+		"contactsEmpty": {
+			"title": "Sem contatos neste negócio",
+			"description": "Ainda ninguém de {company} está no negócio. Traga as pessoas para quem você está vendendo e o negócio mostra quem procurar."
+		},
+		"roleFor": "Função de {name} neste negócio",
+		"takeOff": "Tirar {name} deste negócio",
+		"takeOffShort": "Tirar deste negócio",
+		"consequence": "{count, plural, one {O histórico de etapas, as notas e as conversas com o agente também são excluídos. {company} e a pessoa no negócio continuam no CRM.} other {O histórico de etapas, as notas e as conversas com o agente também são excluídos. {company} e as # pessoas no negócio continuam no CRM.}}"
+	},
+	"quickAdd": {
+		"person": "Pessoa",
+		"loading": "Carregando…",
+		"everybodyOn": "Todo mundo em {company} já está no negócio",
+		"chooseSomebody": "Escolha alguém",
+		"addToDeal": "Adicionar ao negócio",
+		"attachedNamed": "{name} está no negócio.",
+		"attachedGeneric": "Adicionado ao negócio.",
+		"createDeal": "Criar negócio",
+		"expectedClose": "Fechamento previsto",
+		"noDateYet": "Ainda sem data",
+		"noOwner": "Não foi possível definir quem é o responsável por este negócio.",
+		"dealCreated": "{name} criado.",
+		"contactAdded": "{name} adicionado."
+	}
+}

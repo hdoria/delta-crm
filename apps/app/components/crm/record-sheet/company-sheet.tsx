@@ -23,6 +23,7 @@ import {
 } from "@crm/ui/components/tooltip";
 import { formatMoney } from "@crm/ui/lib/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { AgentPanel } from "@/components/crm/agent-panel";
 import { EnrichmentActions } from "@/components/crm/enrichment-actions";
@@ -76,51 +77,60 @@ type CompanyDeal = Company["deals"][number];
 
 const UNASSIGNED = "unassigned";
 
-function pendingFields(company: Company): string[] {
+function pendingFields(company: Company, t: (key: string) => string): string[] {
 	const missing: string[] = [];
-	if (!company.industry) missing.push("industry");
-	if (!company.description) missing.push("description");
-	if (!hasCompanyLinks(company)) missing.push("social links");
+	if (!company.industry) missing.push(t("companySheet.pendingFields.industry"));
+	if (!company.description)
+		missing.push(t("companySheet.pendingFields.description"));
+	if (!hasCompanyLinks(company))
+		missing.push(t("companySheet.pendingFields.socialLinks"));
 	return missing;
 }
 
-function companyConsequence(company: Company): string {
-	const deals = company.deals.length;
-	const contacts = company.contacts.length;
-
-	const gone =
-		deals > 0
-			? `${deals === 1 ? "Its one deal" : `All ${deals} of its deals`} and everything filed against the account go too.`
-			: "Everything filed against the account goes too.";
-
-	const kept =
-		contacts > 0
-			? ` ${contacts === 1 ? "The one person" : `The ${contacts} people`} who work there stay in the CRM, without a company.`
-			: "";
-
-	return gone + kept;
+function companyConsequence(
+	company: Company,
+	t: (key: string, values?: Record<string, string | number | Date>) => string,
+): string {
+	return t("companySheet.consequence", {
+		deals: company.deals.length,
+		contacts: company.contacts.length,
+	});
 }
 
-const CONTACT_COLUMNS = [
-	{ id: "primary", srLabel: "Primary", width: "w-10", className: "pl-5" },
-	{ id: "name", header: "Name", width: "w-[28%]" },
-	{ id: "title", header: "Title", width: "w-[24%]" },
-	{ id: "email", header: "Email", width: "w-[26%]" },
-	{ id: "owner", header: "Owner", width: "w-[22%]" },
-];
+function contactColumns(t: (key: string) => string) {
+	return [
+		{
+			id: "primary",
+			srLabel: t("companySheet.contactColumns.primarySr"),
+			width: "w-10",
+			className: "pl-5",
+		},
+		{ id: "name", header: t("labels.name"), width: "w-[28%]" },
+		{ id: "title", header: t("labels.title"), width: "w-[24%]" },
+		{ id: "email", header: t("labels.email"), width: "w-[26%]" },
+		{ id: "owner", header: t("labels.owner"), width: "w-[22%]" },
+	];
+}
 
-const DEAL_COLUMNS = [
-	{ id: "deal", header: "Deal", width: "w-[32%]", className: "pl-5" },
-	{ id: "stage", header: "Stage", width: "w-[24%]" },
-	{
-		id: "amount",
-		header: "Amount",
-		width: "w-[16%]",
-		align: "right" as const,
-	},
-	{ id: "close-date", header: "Close date", width: "w-[14%]" },
-	{ id: "owner", header: "Owner", width: "w-[14%]" },
-];
+function dealColumns(t: (key: string) => string) {
+	return [
+		{
+			id: "deal",
+			header: t("labels.deal"),
+			width: "w-[32%]",
+			className: "pl-5",
+		},
+		{ id: "stage", header: t("labels.stage"), width: "w-[24%]" },
+		{
+			id: "amount",
+			header: t("labels.amount"),
+			width: "w-[16%]",
+			align: "right" as const,
+		},
+		{ id: "close-date", header: t("labels.closeDate"), width: "w-[14%]" },
+		{ id: "owner", header: t("labels.owner"), width: "w-[14%]" },
+	];
+}
 
 function nextClose(deals: CompanyDeal[]): string | null {
 	const dates = deals
@@ -132,6 +142,7 @@ function nextClose(deals: CompanyDeal[]): string | null {
 
 export function CompanySheet({ companyId }: { companyId: string }) {
 	const trpc = useTRPC();
+	const t = useTranslations("recordSheet");
 	const {
 		tab,
 		setTab,
@@ -172,12 +183,12 @@ export function CompanySheet({ companyId }: { companyId: string }) {
 		? [
 				{
 					value: "overview",
-					label: "Overview",
+					label: t("tabs.overview"),
 					content: <CompanyOverview company={company} />,
 				},
 				{
 					value: "contacts",
-					label: "Contacts",
+					label: t("tabs.contacts"),
 					count: company.contacts.length,
 					content: (
 						<CompanyContacts
@@ -190,7 +201,7 @@ export function CompanySheet({ companyId }: { companyId: string }) {
 				},
 				{
 					value: "deals",
-					label: "Deals",
+					label: t("tabs.deals"),
 					count: company.deals.length,
 					content: (
 						<CompanyDeals
@@ -203,12 +214,12 @@ export function CompanySheet({ companyId }: { companyId: string }) {
 				},
 				{
 					value: "activity",
-					label: "Activity",
+					label: t("tabs.activity"),
 					content: <Timeline anchor={{ companyId: company.id }} />,
 				},
 				{
 					value: "agent",
-					label: "Agent",
+					label: t("tabs.agent"),
 					content: <AgentPanel record={{ kind: "company", id: company.id }} />,
 					keepMounted: true,
 				},
@@ -219,7 +230,7 @@ export function CompanySheet({ companyId }: { companyId: string }) {
 		<RecordSheetFrame
 			loading={query.isPending}
 			error={query.error?.message ?? null}
-			title={company?.name ?? "Company"}
+			title={company?.name ?? t("companySheet.fallbackTitle")}
 			description={
 				company ? (
 					<MetaLine
@@ -258,7 +269,7 @@ export function CompanySheet({ companyId }: { companyId: string }) {
 						<RecordActions
 							record={{ kind: "company", id: company.id }}
 							name={company.name}
-							consequence={companyConsequence(company)}
+							consequence={companyConsequence(company, t)}
 							archivedAt={company.archivedAt}
 						/>
 					</>
@@ -267,24 +278,26 @@ export function CompanySheet({ companyId }: { companyId: string }) {
 			stats={
 				company ? (
 					<DetailSheetStats>
-						<DetailSheetStat label="Open pipeline">
+						<DetailSheetStat label={t("companySheet.stats.openPipeline")}>
 							<span className="tabular-nums">
 								{formatMoney(openValueCents, company.reportingCurrency)}
 							</span>
 							{openUncounted > 0 ? (
 								<span className="text-muted-foreground">
 									{" "}
-									+{openUncounted} unconverted
+									{t("companySheet.stats.unconverted", {
+										count: openUncounted,
+									})}
 								</span>
 							) : null}
 						</DetailSheetStat>
-						<DetailSheetStat label="Open deals">
+						<DetailSheetStat label={t("companySheet.stats.openDeals")}>
 							<span className="tabular-nums">{openDeals.length}</span>
 						</DetailSheetStat>
-						<DetailSheetStat label="Next close">
+						<DetailSheetStat label={t("companySheet.stats.nextClose")}>
 							{closing ? <LocalDay date={closing} /> : <EmptyCellValue />}
 						</DetailSheetStat>
-						<DetailSheetStat label="Owner">
+						<DetailSheetStat label={t("labels.owner")}>
 							<OwnerCell owner={company.owner} />
 						</DetailSheetStat>
 					</DetailSheetStats>
@@ -300,6 +313,7 @@ export function CompanySheet({ companyId }: { companyId: string }) {
 function CompanyOverview({ company }: { company: Company }) {
 	const trpc = useTRPC();
 	const cache = useCrmCache();
+	const t = useTranslations("recordSheet");
 
 	const users = useQuery(trpc.users.list.queryOptions());
 
@@ -324,7 +338,7 @@ function CompanyOverview({ company }: { company: Company }) {
 			<DetailSheetSplit>
 				<DetailSheetMain>
 					{company.description ? (
-						<DetailSheetSection title="About">
+						<DetailSheetSection title={t("companySheet.about")}>
 							<DetailSheetProse>{company.description}</DetailSheetProse>
 						</DetailSheetSection>
 					) : null}
@@ -334,18 +348,18 @@ function CompanyOverview({ company }: { company: Company }) {
 
 				<DetailSheetRail>
 					<DetailSheetSection
-						title="Details"
+						title={t("sections.details")}
 						action={<FieldsCog kind="company" />}
 					>
 						<DetailSheetProperties columns={1}>
 							<InlineField
-								label="Name"
+								label={t("labels.name")}
 								value={company.name}
 								saving={isSaving("name")}
 								onSave={(name) => name && save({ name })}
 							/>
 							<InlineField
-								label="Domain"
+								label={t("labels.domain")}
 								value={company.domain}
 								type="url"
 								placeholder="stripe.com"
@@ -353,7 +367,7 @@ function CompanyOverview({ company }: { company: Company }) {
 								onSave={(domain) => save({ domain })}
 							/>
 							<InlineField
-								label="Website"
+								label={t("labels.website")}
 								value={company.website}
 								type="url"
 								placeholder="https://stripe.com"
@@ -361,36 +375,36 @@ function CompanyOverview({ company }: { company: Company }) {
 								onSave={(website) => save({ website })}
 							/>
 							<InlineField
-								label="Phone"
+								label={t("labels.phone")}
 								value={company.phone}
 								type="tel"
 								saving={isSaving("phone")}
 								onSave={(phone) => save({ phone })}
 							/>
 							<InlineField
-								label="Email"
+								label={t("labels.email")}
 								value={company.email}
 								type="email"
 								saving={isSaving("email")}
 								onSave={(email) => save({ email })}
 							/>
 							<InlineField
-								label="City"
+								label={t("labels.city")}
 								value={company.city}
 								saving={isSaving("city")}
 								onSave={(city) => save({ city })}
 							/>
 							<InlineField
-								label="Country"
+								label={t("labels.country")}
 								value={company.country}
 								saving={isSaving("country")}
 								onSave={(country) => save({ country })}
 							/>
 							<InlineSelectField
-								label="Owner"
+								label={t("labels.owner")}
 								value={company.owner?.id ?? UNASSIGNED}
 								options={[
-									{ value: UNASSIGNED, label: "Unassigned" },
+									{ value: UNASSIGNED, label: t("labels.unassigned") },
 									...(users.data ?? []).map((user) => ({
 										value: user.id,
 										label: user.name,
@@ -409,12 +423,12 @@ function CompanyOverview({ company }: { company: Company }) {
 					</DetailSheetSection>
 
 					<DetailSheetPending
-						fields={pendingFields(company)}
+						fields={pendingFields(company, t)}
 						running={isEnriching(company.enrichmentStatus, company.queued)}
 					/>
 
 					{hasCompanyLinks(company) ? (
-						<DetailSheetSection title="Links">
+						<DetailSheetSection title={t("sections.links")}>
 							<CompanySocials company={company} />
 						</DetailSheetSection>
 					) : null}
@@ -438,6 +452,7 @@ function CompanyContacts({
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const openRecord = useOpenRecord();
+	const t = useTranslations("recordSheet");
 
 	const setPrimary = useMutation(
 		trpc.companies.setPrimaryContact.mutationOptions({
@@ -454,6 +469,8 @@ function CompanyContacts({
 		/>
 	) : null;
 
+	const columns = contactColumns(t);
+
 	if (company.contacts.length === 0) {
 		return (
 			<>
@@ -461,12 +478,14 @@ function CompanyContacts({
 				{adding ? null : (
 					<DetailSheetEmpty
 						icon={UserMultiple}
-						title="No contacts yet"
-						description={`Everyone you talk to at ${company.name} lives here — add the first person and their calls, emails and notes hang off them.`}
+						title={t("companySheet.contactsEmpty.title")}
+						description={t("companySheet.contactsEmpty.description", {
+							name: company.name,
+						})}
 						action={
 							<Button variant="outline" size="sm" onClick={onAdd}>
 								<Icon icon={Add} data-icon="inline-start" />
-								Add contact
+								{t("actions.addContact")}
 							</Button>
 						}
 					/>
@@ -478,7 +497,7 @@ function CompanyContacts({
 	return (
 		<>
 			{form}
-			<SimpleTable variant="panel" columns={CONTACT_COLUMNS}>
+			<SimpleTable variant="panel" columns={columns}>
 				{company.contacts.map((contact) => {
 					const isPrimary = contact.id === company.primaryContactId;
 					return (
@@ -505,12 +524,16 @@ function CompanyContacts({
 										>
 											<Icon icon={isPrimary ? StarFilled : Star} />
 											<span className="sr-only">
-												{isPrimary ? "Primary contact" : "Make primary"}
+												{isPrimary
+													? t("actions.primaryContact")
+													: t("actions.makePrimary")}
 											</span>
 										</Button>
 									</TooltipTrigger>
 									<TooltipContent>
-										{isPrimary ? "Primary contact" : "Make primary"}
+										{isPrimary
+											? t("actions.primaryContact")
+											: t("actions.makePrimary")}
 									</TooltipContent>
 								</Tooltip>
 							</TableCell>
@@ -545,8 +568,8 @@ function CompanyContacts({
 				})}
 
 				<AddRow
-					label="Add contact"
-					columns={CONTACT_COLUMNS.length}
+					label={t("actions.addContact")}
+					columns={columns.length}
 					onClick={onAdd}
 				/>
 			</SimpleTable>
@@ -566,6 +589,7 @@ function CompanyDeals({
 	onDone: () => void;
 }) {
 	const openRecord = useOpenRecord();
+	const t = useTranslations("recordSheet");
 
 	const form = adding ? (
 		<QuickAddDeal
@@ -576,6 +600,8 @@ function CompanyDeals({
 		/>
 	) : null;
 
+	const columns = dealColumns(t);
+
 	if (company.deals.length === 0) {
 		return (
 			<>
@@ -583,12 +609,14 @@ function CompanyDeals({
 				{adding ? null : (
 					<DetailSheetEmpty
 						icon={Partnership}
-						title="No deals yet"
-						description={`Nothing is being sold to ${company.name} right now. Open one and it joins the pipeline and the forecast.`}
+						title={t("companySheet.dealsEmpty.title")}
+						description={t("companySheet.dealsEmpty.description", {
+							name: company.name,
+						})}
 						action={
 							<Button variant="outline" size="sm" onClick={onAdd}>
 								<Icon icon={Add} data-icon="inline-start" />
-								New deal
+								{t("actions.newDeal")}
 							</Button>
 						}
 					/>
@@ -600,7 +628,7 @@ function CompanyDeals({
 	return (
 		<>
 			{form}
-			<SimpleTable variant="panel" columns={DEAL_COLUMNS}>
+			<SimpleTable variant="panel" columns={columns}>
 				{company.deals.map((deal) => (
 					<SimpleTableRow
 						key={deal.id}
@@ -633,8 +661,8 @@ function CompanyDeals({
 				))}
 
 				<AddRow
-					label="New deal"
-					columns={DEAL_COLUMNS.length}
+					label={t("actions.newDeal")}
+					columns={columns.length}
 					onClick={onAdd}
 				/>
 			</SimpleTable>

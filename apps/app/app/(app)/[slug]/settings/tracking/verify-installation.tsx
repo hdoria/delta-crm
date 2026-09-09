@@ -23,6 +23,7 @@ import {
 import { Spinner } from "@crm/ui/components/spinner";
 import { StatusIndicator } from "@crm/ui/components/status-indicator";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { useTRPC } from "@/lib/trpc/client";
@@ -31,6 +32,7 @@ import type { RouterOutputs } from "@/lib/trpc/types";
 type Result = RouterOutputs["tracking"]["verify"];
 
 export function VerifyInstallation() {
+	const t = useTranslations("settings.tracking.verify");
 	const trpc = useTRPC();
 	const urlId = useId();
 
@@ -55,14 +57,11 @@ export function VerifyInstallation() {
 			<CardHeader>
 				<CardTitle>
 					<div className="flex items-center gap-2">
-						Verify installation
+						{t("title")}
 						{result ? <Indicator result={result} /> : null}
 					</div>
 				</CardTitle>
-				<CardDescription>
-					We load one page and look for the script, then read your Tag Manager
-					container if it is not in the HTML.
-				</CardDescription>
+				<CardDescription>{t("description")}</CardDescription>
 
 				<CardAction>
 					<Button
@@ -72,7 +71,7 @@ export function VerifyInstallation() {
 						disabled={!canManage || verify.isPending || url.trim() === ""}
 					>
 						{verify.isPending ? <Spinner data-icon="inline-start" /> : null}
-						Check now
+						{t("checkNow")}
 					</Button>
 				</CardAction>
 			</CardHeader>
@@ -87,7 +86,7 @@ export function VerifyInstallation() {
 					}}
 				>
 					<Field>
-						<FieldLabel htmlFor={urlId}>Page to check</FieldLabel>
+						<FieldLabel htmlFor={urlId}>{t("pageLabel")}</FieldLabel>
 						<InputGroup>
 							<InputGroupAddon>
 								<InputGroupText>https://</InputGroupText>
@@ -108,10 +107,7 @@ export function VerifyInstallation() {
 								disabled={!canManage || verify.isPending}
 							/>
 						</InputGroup>
-						<FieldDescription>
-							The page has to be public. A page behind a login always fails this
-							check.
-						</FieldDescription>
+						<FieldDescription>{t("pageDescription")}</FieldDescription>
 					</Field>
 				</form>
 
@@ -122,19 +118,17 @@ export function VerifyInstallation() {
 }
 
 function Indicator({ result }: { result: Result }) {
+	const t = useTranslations("settings.tracking.verify");
+
 	if (result.status === "found" && result.pageView) {
 		return (
-			<StatusIndicator size="sm" tone="success" label="Verified just now" />
+			<StatusIndicator size="sm" tone="success" label={t("statusVerified")} />
 		);
 	}
 
 	if (result.status === "found" && result.container?.carriesSiteId === false) {
 		return (
-			<StatusIndicator
-				size="sm"
-				tone="warning"
-				label="Tag Manager needs a fix"
-			/>
+			<StatusIndicator size="sm" tone="warning" label={t("statusNeedsFix")} />
 		);
 	}
 
@@ -142,20 +136,25 @@ function Indicator({ result }: { result: Result }) {
 		<StatusIndicator
 			size="sm"
 			tone="warning"
-			label={result.status === "found" ? "No page view yet" : "Not detected"}
+			label={
+				result.status === "found"
+					? t("statusNoPageView")
+					: t("statusNotDetected")
+			}
 		/>
 	);
 }
 
 function Outcome({ result, siteId }: { result: Result; siteId: string }) {
+	const t = useTranslations("settings.tracking.verify");
+
 	if (result.status === "unreachable") {
 		return (
 			<Alert variant="destructive">
 				<Icon icon={Warning} />
-				<AlertTitle>Could not open {result.host}</AlertTitle>
+				<AlertTitle>{t("unreachableTitle", { host: result.host })}</AlertTitle>
 				<AlertDescription>
-					{result.detail} We only follow public pages, and we never follow a
-					redirect to a private address.
+					{result.detail} {t("unreachableDescriptionSuffix")}
 				</AlertDescription>
 			</Alert>
 		);
@@ -165,13 +164,11 @@ function Outcome({ result, siteId }: { result: Result; siteId: string }) {
 		return (
 			<Alert variant="destructive">
 				<Icon icon={Warning} />
-				<AlertTitle>No script on {result.host}</AlertTitle>
+				<AlertTitle>{t("missingTitle", { host: result.host })}</AlertTitle>
 				<AlertDescription>
-					The page answered in {result.responseMs} ms, but the tag was not in
-					the HTML. Check that it sits in the head, above anything that rewrites
-					the page.
+					{t("missingDescription", { ms: result.responseMs })}
 					{result.containers.length > 0
-						? ` We also read Tag Manager container ${result.containers.join(" and ")}, and the tag is not in there either.`
+						? ` ${t("missingContainers", { containers: result.containers.join(` ${t("and")} `) })}`
 						: ""}
 				</AlertDescription>
 			</Alert>
@@ -182,16 +179,10 @@ function Outcome({ result, siteId }: { result: Result; siteId: string }) {
 		return (
 			<Alert variant="destructive">
 				<Icon icon={Warning} />
-				<AlertTitle>Tag Manager will drop the site ID</AlertTitle>
+				<AlertTitle>{t("dropTitle")}</AlertTitle>
 				<AlertDescription>
-					Container {result.container.id} carries the tag, but the site ID is
-					not in the script URL. Tag Manager keeps only the URL when it injects
-					a script, so a data-site attribute never reaches the page and the
-					tracker never starts. Copy the Tag Manager snippet above and replace
-					the tag's HTML.
-					{result.pageView
-						? " A page view did arrive in the last five minutes, so something on this site is still recording."
-						: ""}
+					{t("dropDescription", { id: result.container.id })}
+					{result.pageView ? ` ${t("recentPageView")}` : ""}
 				</AlertDescription>
 			</Alert>
 		);
@@ -202,18 +193,17 @@ function Outcome({ result, siteId }: { result: Result; siteId: string }) {
 			<Icon icon={CheckmarkFilled} className="text-success" />
 			<AlertTitle>
 				{result.container
-					? `Script found in container ${result.container.id}`
-					: `Script found on ${result.host}`}
+					? t("foundContainer", { id: result.container.id })
+					: t("foundHost", { host: result.host })}
 			</AlertTitle>
 			<AlertDescription>
-				It answered in {result.responseMs} ms. Site ID {siteId} matched, and
-				this domain is {result.allowed ? "on" : "not on"} the allow list.
-				{result.container
-					? " The tag is not in the HTML, so it only runs once Tag Manager fires it — a page view is the proof."
-					: ""}
-				{result.pageView
-					? " A page view arrived in the last five minutes."
-					: " No page view has arrived yet — open the page in a browser to send one."}
+				{t("foundDescription", {
+					ms: result.responseMs,
+					siteId,
+					allowed: result.allowed ? "yes" : "other",
+				})}
+				{result.container ? ` ${t("foundContainerNote")}` : ""}
+				{result.pageView ? ` ${t("pageViewArrived")}` : ` ${t("pageViewNone")}`}
 			</AlertDescription>
 		</Alert>
 	);

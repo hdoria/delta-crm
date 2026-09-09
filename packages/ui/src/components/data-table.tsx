@@ -295,6 +295,9 @@ export function DataTable<TRow, TSub = unknown>({
 	const ascendingLabel = useUiLabel("ascending");
 	const descendingLabel = useUiLabel("descending");
 	const toggleColumnsLabel = useUiLabel("toggleColumns");
+	const filtersLabel = useUiLabel("filters");
+	const sortLabel = useUiLabel("sort");
+	const columnsLabel = useUiLabel("columns");
 	const noResultsLabel = useUiLabel("noResults");
 	const selectAllLabel = useUiLabel("selectAllRows");
 	const selectRowLabel = useUiLabel("selectRow");
@@ -405,7 +408,7 @@ export function DataTable<TRow, TSub = unknown>({
 					>
 						<span className="flex items-center gap-2">
 							<Filter />
-							Filters
+							{filtersLabel}
 							{activeFilterCount > 0 && (
 								<span className="tabular-nums opacity-60">
 									({activeFilterCount})
@@ -479,7 +482,7 @@ export function DataTable<TRow, TSub = unknown>({
 										className="justify-start sm:justify-center"
 									>
 										<Filter data-icon="inline-start" />
-										Filters
+										{filtersLabel}
 										{activeFacetFilterCount > 0 && (
 											<span className="tabular-nums opacity-60">
 												({activeFacetFilterCount})
@@ -508,7 +511,7 @@ export function DataTable<TRow, TSub = unknown>({
 										className="justify-start sm:justify-center"
 									>
 										<ArrowsVertical data-icon="inline-start" />
-										Sort
+										{sortLabel}
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="end" className="min-w-48">
@@ -554,7 +557,7 @@ export function DataTable<TRow, TSub = unknown>({
 										className="justify-start sm:justify-center"
 									>
 										<Column data-icon="inline-start" />
-										Columns
+										{columnsLabel}
 										<span className="tabular-nums opacity-60">
 											({visibleColumns.length})
 										</span>

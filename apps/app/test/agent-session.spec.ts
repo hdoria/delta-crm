@@ -156,7 +156,7 @@ describe("the panel", () => {
 	});
 
 	it("offers a way out of a thread that has ended", () => {
-		expect(source()).toContain("Start a new conversation");
+		expect(source()).toContain('t("agent.startNewConversation")');
 		expect(source()).toContain("onClick={onNewThread}");
 	});
 });

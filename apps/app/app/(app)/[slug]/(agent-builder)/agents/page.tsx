@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { TeamAgentsIndex } from "@/components/agent-builder/team-agents-index";
 import {
@@ -13,17 +14,20 @@ import {
 import { HydrateClient } from "@/lib/trpc/hydrate";
 import { getServerQueryClient, getServerTrpc } from "@/lib/trpc/server";
 
-export const metadata: Metadata = { title: "Agents" };
+export async function generateMetadata(): Promise<Metadata> {
+	const meta = await getTranslations("agentBuilder.pages");
+	return { title: meta("agentsTitle") };
+}
 
-export default function AgentsPage() {
+export default async function AgentsPage() {
+	const t = await getTranslations("agentBuilder.agentsPage");
+
 	return (
 		<PageShell className="min-h-0">
 			<PageShellHeader>
 				<PageShellHeading>
-					<PageShellTitle>Team agents</PageShellTitle>
-					<PageShellDescription>
-						Durable automations created from private agent-builder chats.
-					</PageShellDescription>
+					<PageShellTitle>{t("title")}</PageShellTitle>
+					<PageShellDescription>{t("description")}</PageShellDescription>
 				</PageShellHeading>
 			</PageShellHeader>
 

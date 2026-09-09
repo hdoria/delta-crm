@@ -14,5 +14,11 @@
 	"scrollToEnd": "Ir para o fim",
 	"scrollToStart": "Ir para o início",
 	"loadedNamed": "{name} carregou",
-	"back": "Voltar"
+	"back": "Voltar",
+	"filters": "Filtros",
+	"sort": "Ordenar",
+	"columns": "Colunas",
+	"showingRange": "Mostrando {from} a {to} de {total}",
+	"previous": "Anterior",
+	"next": "Próxima"
 }

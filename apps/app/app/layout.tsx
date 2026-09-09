@@ -1,11 +1,8 @@
 import "@crm/ui/globals.css";
-import {
-	UI_LABELS,
-	type UiLabels,
-	UiLabelsProvider,
-} from "@crm/ui/components/labels";
+import { UiLabelsProvider } from "@crm/ui/components/labels";
 import { Toaster } from "@crm/ui/components/sonner";
 import { TooltipProvider } from "@crm/ui/components/tooltip";
+import { UI_LABELS, type UiLabels } from "@crm/ui/lib/ui-labels";
 import { cn } from "@crm/ui/lib/utils";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -56,7 +53,7 @@ export default async function RootLayout({
 	const uiLabels = Object.fromEntries(
 		Object.keys(UI_LABELS).map((key) => [
 			key,
-			uiLabel(key as keyof typeof UI_LABELS),
+			uiLabel.raw(key as keyof typeof UI_LABELS),
 		]),
 	) as UiLabels;
 

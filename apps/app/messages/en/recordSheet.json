@@ -1,0 +1,175 @@
+{
+	"actions": {
+		"cancel": "Cancel",
+		"addContact": "Add contact",
+		"newDeal": "New deal",
+		"makePrimary": "Make primary",
+		"primaryContact": "Primary contact",
+		"moreActions": "More actions"
+	},
+	"labels": {
+		"name": "Name",
+		"domain": "Domain",
+		"website": "Website",
+		"phone": "Phone",
+		"email": "Email",
+		"city": "City",
+		"country": "Country",
+		"owner": "Owner",
+		"unassigned": "Unassigned",
+		"firstName": "First name",
+		"lastName": "Last name",
+		"title": "Title",
+		"titlePlaceholder": "Head of Security",
+		"linkedin": "LinkedIn",
+		"x": "X",
+		"github": "GitHub",
+		"company": "Company",
+		"noCompany": "No company",
+		"amount": "Amount",
+		"currency": "Currency",
+		"closeDate": "Close date",
+		"description": "Description",
+		"deal": "Deal",
+		"stage": "Stage",
+		"role": "Role",
+		"rolePlaceholder": "Champion",
+		"primary": "Primary",
+		"remove": "Remove"
+	},
+	"sections": {
+		"details": "Details",
+		"links": "Links"
+	},
+	"tabs": {
+		"overview": "Overview",
+		"contacts": "Contacts",
+		"deals": "Deals",
+		"activity": "Activity",
+		"agent": "Agent"
+	},
+	"frame": {
+		"loadFailed": "This record could not be loaded"
+	},
+	"validation": {
+		"amountNumber": "Amount has to be a number."
+	},
+	"recordActions": {
+		"noun": {
+			"company": "company",
+			"contact": "contact",
+			"deal": "deal"
+		},
+		"archive": "{kind, select, company {Archive company} contact {Archive contact} deal {Archive deal} other {Archive}}",
+		"restore": "{kind, select, company {Restore company} contact {Restore contact} deal {Restore deal} other {Restore}}",
+		"deleteForever": "{kind, select, company {Delete company forever} contact {Delete contact forever} deal {Delete deal forever} other {Delete forever}}",
+		"confirmTitle": "Delete {name} forever?",
+		"deleteForeverAction": "Delete forever",
+		"archivedToast": "{kind, select, company {{hasName, select, yes {{name} was archived.} other {The company was archived.}}} contact {{hasName, select, yes {{name} was archived.} other {The contact was archived.}}} deal {{hasName, select, yes {{name} was archived.} other {The deal was archived.}}} other {{hasName, select, yes {{name} was archived.} other {It was archived.}}}}",
+		"restoredToast": "{kind, select, company {{hasName, select, yes {{name} was restored.} other {The company was restored.}}} contact {{hasName, select, yes {{name} was restored.} other {The contact was restored.}}} deal {{hasName, select, yes {{name} was restored.} other {The deal was restored.}}} other {{hasName, select, yes {{name} was restored.} other {It was restored.}}}}",
+		"purgedToast": "{kind, select, company {{hasName, select, yes {{name} was deleted forever.} other {The company was deleted forever.}}} contact {{hasName, select, yes {{name} was deleted forever.} other {The contact was deleted forever.}}} deal {{hasName, select, yes {{name} was deleted forever.} other {The deal was deleted forever.}}} other {{hasName, select, yes {{name} was deleted forever.} other {It was deleted forever.}}}}"
+	},
+	"companySheet": {
+		"fallbackTitle": "Company",
+		"stats": {
+			"openPipeline": "Open pipeline",
+			"unconverted": "{count, plural, one {+# unconverted} other {+# unconverted}}",
+			"openDeals": "Open deals",
+			"nextClose": "Next close"
+		},
+		"about": "About",
+		"pendingFields": {
+			"industry": "Industry",
+			"description": "Description",
+			"socialLinks": "Social links"
+		},
+		"consequence": "{deals, plural, =0 {Everything filed against the account goes too.} one {Its one deal and everything filed against the account go too.} other {All # of its deals and everything filed against the account go too.}}{contacts, plural, =0 {} one { The one person who works there stays in the CRM, without a company.} other { The # people who work there stay in the CRM, without a company.}}",
+		"contactsEmpty": {
+			"title": "No contacts yet",
+			"description": "Everyone you talk to at {name} lives here — add the first person and their calls, emails and notes hang off them."
+		},
+		"dealsEmpty": {
+			"title": "No deals yet",
+			"description": "Nothing is being sold to {name} right now. Open one and it joins the pipeline and the forecast."
+		},
+		"contactColumns": {
+			"primarySr": "Primary"
+		}
+	},
+	"contactSheet": {
+		"fallbackTitle": "Contact",
+		"thisCompany": "this company",
+		"primaryContactAt": "Primary contact at {company}",
+		"primaryUpdated": "Primary contact updated.",
+		"background": {
+			"title": "Background",
+			"source": "Source",
+			"currentRole": "Current role",
+			"tenure": "Tenure",
+			"seniority": "Seniority",
+			"function": "Function",
+			"based": "Based",
+			"previously": "Previously",
+			"rolesCount": "{count, plural, one {# role} other {# roles}}"
+		},
+		"weKnowThem": {
+			"title": "We know them",
+			"emails": "Emails",
+			"meetings": "Meetings",
+			"nextMeeting": "Next meeting",
+			"meetingFallback": "Meeting",
+			"alsoHere": "Also here",
+			"lastReply": "last reply",
+			"neverReplied": "{name} has never replied"
+		},
+		"dealsEmpty": {
+			"title": "Not on any deals",
+			"description": "{name} is not attached to anything being sold yet. Deals are opened on the company, then people are added to them."
+		},
+		"consequence": "{hasEmail, select, yes {Their notes, agent conversations and everything the agent found go too; emails and meetings stay filed against the company. The sync will not bring {email} back — only adding them yourself will.} other {Their notes, agent conversations and everything the agent found go too; emails and meetings stay filed against the company.}}"
+	},
+	"dealSheet": {
+		"fallbackTitle": "Deal",
+		"unsupportedCurrency": "{currency} — no longer supported",
+		"noRate": "No {currency} rate — left out of totals",
+		"inCurrency": "In {currency}",
+		"stats": {
+			"expectedClose": "Expected close",
+			"inStage": "In stage"
+		},
+		"stageSection": "Stage",
+		"closed": "Closed",
+		"reason": "Reason",
+		"descriptionPlaceholder": "What {company} is buying, why now, and what stands in the way.",
+		"whereItStands": {
+			"title": "Where it stands",
+			"opened": "Opened",
+			"inStageSince": "In stage since",
+			"onIt": "On it",
+			"nobodyAttached": "Nobody from {company} is attached yet."
+		},
+		"contactsEmpty": {
+			"title": "No contacts on this deal",
+			"description": "Nobody from {company} is attached yet. Bring the people you are selling to onto the deal and it says who to chase."
+		},
+		"roleFor": "Role on this deal for {name}",
+		"takeOff": "Take {name} off this deal",
+		"takeOffShort": "Take off this deal",
+		"consequence": "{count, plural, one {Its stage history, notes and agent conversations go too. {company} and the person on it stay in the CRM.} other {Its stage history, notes and agent conversations go too. {company} and the # people on it stay in the CRM.}}"
+	},
+	"quickAdd": {
+		"person": "Person",
+		"loading": "Loading…",
+		"everybodyOn": "Everybody at {company} is already on it",
+		"chooseSomebody": "Choose somebody",
+		"addToDeal": "Add to deal",
+		"attachedNamed": "{name} is on the deal.",
+		"attachedGeneric": "Added to the deal.",
+		"createDeal": "Create deal",
+		"expectedClose": "Expected close",
+		"noDateYet": "No date yet",
+		"noOwner": "Could not work out who should own this deal.",
+		"dealCreated": "{name} created.",
+		"contactAdded": "{name} added."
+	}
+}

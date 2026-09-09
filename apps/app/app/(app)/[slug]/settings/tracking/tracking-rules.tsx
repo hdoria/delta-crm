@@ -10,6 +10,7 @@ import {
 import { Label } from "@crm/ui/components/label";
 import { Switch } from "@crm/ui/components/switch";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
@@ -17,17 +18,18 @@ import { useTRPC } from "@/lib/trpc/client";
 const RULES = [
 	{
 		flag: "crossDomain",
-		label: "Automatic cross-domain linking",
-		hint: "Carry the visitor between the domains below, so one journey is not counted as two people",
+		labelKey: "crossDomainLabel",
+		hintKey: "crossDomainHint",
 	},
 	{
 		flag: "limitToDomains",
-		label: "Limit tracking to the domains below",
-		hint: "On any other domain the script loads and then does nothing",
+		labelKey: "limitToDomainsLabel",
+		hintKey: "limitToDomainsHint",
 	},
 ] as const;
 
 export function TrackingRules() {
+	const t = useTranslations("settings.tracking.rules");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 
@@ -47,10 +49,8 @@ export function TrackingRules() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Tracking rules</CardTitle>
-				<CardDescription>
-					Where the script may run, and how it follows a visitor.
-				</CardDescription>
+				<CardTitle>{t("title")}</CardTitle>
+				<CardDescription>{t("description")}</CardDescription>
 			</CardHeader>
 
 			<CardContent>
@@ -63,9 +63,9 @@ export function TrackingRules() {
 							htmlFor={`tracking-${rule.flag}`}
 							className="flex flex-col items-start gap-1"
 						>
-							<span className="text-sm">{rule.label}</span>
+							<span className="text-sm">{t(rule.labelKey)}</span>
 							<span className="font-normal text-muted-foreground text-xs">
-								{rule.hint}
+								{t(rule.hintKey)}
 							</span>
 						</Label>
 

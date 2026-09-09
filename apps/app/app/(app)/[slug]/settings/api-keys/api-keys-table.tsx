@@ -17,6 +17,7 @@ import { Button } from "@crm/ui/components/button";
 import { DataTable, type DataTableColumn } from "@crm/ui/components/data-table";
 import { Icon } from "@crm/ui/components/icon";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { ListSearch } from "@/components/data-table/list-search";
 import { useTableQuery } from "@/components/data-table/use-table-query";
@@ -33,25 +34,26 @@ function isExpired(expiresAt: string | null): boolean {
 }
 
 function columns(
+	t: ReturnType<typeof useTranslations<"settings.apiKeys">>,
 	onRevoke: (apiKey: ApiKeyRow) => void,
 	pending: boolean,
 ): DataTableColumn<ApiKeyRow>[] {
 	return [
 		{
 			id: "name",
-			header: "Name",
+			header: t("nameColumn"),
 			sortable: true,
 			hideable: false,
 			width: "w-[28%]",
 			cell: (row) => (
 				<span className="truncate font-medium">
-					{row.name ?? "Untitled key"}
+					{row.name ?? t("untitled")}
 				</span>
 			),
 		},
 		{
 			id: "start",
-			header: "Key",
+			header: t("keyColumn"),
 			width: "w-[20%]",
 			hideBelow: "sm",
 			cell: (row) => (
@@ -60,7 +62,7 @@ function columns(
 		},
 		{
 			id: "createdAt",
-			header: "Created",
+			header: t("createdColumn"),
 			sortable: true,
 			width: "w-[16%]",
 			hideBelow: "md",
@@ -72,8 +74,8 @@ function columns(
 		},
 		{
 			id: "lastRequest",
-			header: "Last used",
-			label: "Last used date",
+			header: t("lastUsedColumn"),
+			label: t("lastUsedLabel"),
 			sortable: true,
 			width: "w-[16%]",
 			hideBelow: "lg",
@@ -82,14 +84,14 @@ function columns(
 					{row.lastRequest ? (
 						<LocalRelativeTime date={row.lastRequest} />
 					) : (
-						"Never"
+						t("never")
 					)}
 				</span>
 			),
 		},
 		{
 			id: "expiresAt",
-			header: "Expires",
+			header: t("expiresColumn"),
 			sortable: true,
 			width: "w-[14%]",
 			hideBelow: "lg",
@@ -105,13 +107,13 @@ function columns(
 						<LocalRelativeTime date={row.expiresAt} />
 					</span>
 				) : (
-					<span className="text-muted-foreground">Never</span>
+					<span className="text-muted-foreground">{t("never")}</span>
 				),
 		},
 		{
 			id: "actions",
-			header: <span className="sr-only">Actions</span>,
-			label: "Actions",
+			header: <span className="sr-only">{t("actionsColumn")}</span>,
+			label: t("actionsColumn"),
 			hideable: false,
 			align: "right",
 			width: "w-[6%]",
@@ -121,7 +123,7 @@ function columns(
 						<Button variant="ghost" size="icon" disabled={pending}>
 							<Icon icon={TrashCan} />
 							<span className="sr-only">
-								Revoke {row.name ?? "this API key"}
+								{t("revokeAction", { name: row.name ?? t("thisKey") })}
 							</span>
 						</Button>
 					</AlertDialogTrigger>
@@ -129,21 +131,20 @@ function columns(
 					<AlertDialogContent>
 						<AlertDialogHeader>
 							<AlertDialogTitle>
-								Revoke {row.name ?? "this API key"}?
+								{t("revokeConfirmTitle", { name: row.name ?? t("thisKey") })}
 							</AlertDialogTitle>
 							<AlertDialogDescription>
-								Anything using it stops working immediately. This cannot be
-								undone.
+								{t("revokeConfirmDescription")}
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 
 						<AlertDialogFooter>
-							<AlertDialogCancel>Cancel</AlertDialogCancel>
+							<AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
 							<AlertDialogAction
 								variant="destructive"
 								onClick={() => onRevoke(row)}
 							>
-								Revoke
+								{t("revoke")}
 							</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>
@@ -154,6 +155,7 @@ function columns(
 }
 
 export function ApiKeysTable() {
+	const t = useTranslations("settings.apiKeys");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const { query, input } = useTableQuery(apiKeysSearchParams);
@@ -170,7 +172,7 @@ export function ApiKeysTable() {
 					await query.setPage(query.page - 1);
 				}
 				await cache.apiKeys();
-				toast.success("API key revoked.");
+				toast.success(t("revoked"));
 			},
 			onError: (error) => toast.error(error.message),
 		}),
@@ -179,8 +181,9 @@ export function ApiKeysTable() {
 	return (
 		<DataTable
 			query={query}
-			search={<ListSearch placeholder="Search by name…" />}
+			search={<ListSearch placeholder={t("searchPlaceholder")} />}
 			columns={columns(
+				t,
 				(apiKey) => revoke.mutate({ id: apiKey.id }),
 				revoke.isPending,
 			)}
@@ -188,7 +191,7 @@ export function ApiKeysTable() {
 			total={apiKeys.data?.total ?? 0}
 			getRowId={(row) => row.id}
 			loading={apiKeys.isFetching}
-			empty="No API keys yet."
+			empty={t("empty")}
 		/>
 	);
 }

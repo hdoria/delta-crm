@@ -33,31 +33,11 @@ import { SortableItem, SortableList } from "@crm/ui/components/sortable-list";
 import { Spinner } from "@crm/ui/components/spinner";
 import { FIELD_TEMPLATES } from "@crm/validation/field-templates";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
-import {
-	ADD,
-	ARCHIVED_NOTE,
-	ARCHIVED_ROW,
-	CUSTOM_GROUP,
-	DRAG_NOTE,
-	EMPTY_BODY,
-	EMPTY_TITLE,
-	ERROR_BODY,
-	ERROR_TITLE,
-	FILTER_NOTE,
-	MANUAL_ONLY,
-	NEW_FIELD,
-	ORDER_NOTE,
-	RETRY,
-	STANDARD_NOTE,
-	STANDARD_ROW,
-	SUGGESTED_NOTE,
-	SUGGESTED_ROW,
-	TABLE_NOTE,
-} from "./fields-copy";
 import { type FieldEntity, kindOf } from "./fields-entity";
 import { STANDARD_FIELDS } from "./standard-fields";
 
@@ -65,23 +45,26 @@ type Field = RouterOutputs["fields"]["list"][number];
 
 const ROW = "flex items-center gap-2.5 border-b px-5 py-2";
 
-function summaryOf(field: Field): string {
+function summaryOf(
+	field: Field,
+	t: (key: string, values?: Record<string, string | number | Date>) => string,
+): string {
 	const parts: string[] = [];
 
 	if (field.agentFilled) {
 		parts.push(
 			field.agentBrief ??
 				(field.options.length > 0
-					? `${field.options.length} options`
+					? t("list.optionsCount", { count: field.options.length })
 					: field.label),
 		);
 	} else {
-		parts.push(MANUAL_ONLY);
-		if (field.required) parts.push("required");
+		parts.push(t("list.manualOnly"));
+		if (field.required) parts.push(t("list.required"));
 	}
 
-	if (field.showOnTable) parts.push(TABLE_NOTE);
-	if (field.showOnFilter) parts.push(FILTER_NOTE);
+	if (field.showOnTable) parts.push(t("list.tableNote"));
+	if (field.showOnFilter) parts.push(t("list.filterNote"));
 
 	return parts.join(" · ");
 }
@@ -143,6 +126,7 @@ export function FieldsList({
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const queryClient = useQueryClient();
+	const t = useTranslations("fields");
 
 	const listKey = trpc.fields.list.queryKey({ entity, includeArchived: true });
 
@@ -194,6 +178,7 @@ export function FieldsList({
 	const all = query.data ?? [];
 	const live = all.filter((field) => !field.archived);
 	const archived = all.filter((field) => field.archived);
+	const kind = kindOf(entity);
 	const standard = STANDARD_FIELDS[entity];
 
 	const existingKeys = new Set(all.map((field) => field.key));
@@ -205,8 +190,8 @@ export function FieldsList({
 		<>
 			<div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
 				<DisclosureRow
-					title={STANDARD_ROW}
-					note={`${standard.length} · ${STANDARD_NOTE}`}
+					title={t("list.standardRow")}
+					note={`${standard.length} · ${t("list.standardNote")}`}
 				>
 					<ul className="border-b bg-muted/40 py-1">
 						{standard.map((field) => (
@@ -214,7 +199,7 @@ export function FieldsList({
 								key={field}
 								className="px-5 py-1 text-muted-foreground text-xs"
 							>
-								{field}
+								{t(`standardFields.${kind}.${field}`)}
 							</li>
 						))}
 					</ul>
@@ -222,8 +207,8 @@ export function FieldsList({
 
 				{suggestions.length > 0 && (
 					<DisclosureRow
-						title={SUGGESTED_ROW}
-						note={`${suggestions.length} · ${SUGGESTED_NOTE}`}
+						title={t("list.suggestedRow")}
+						note={`${suggestions.length} · ${t("list.suggestedNote")}`}
 					>
 						<ul className="border-b bg-muted/40 py-1">
 							{suggestions.map((template) => (
@@ -260,7 +245,7 @@ export function FieldsList({
 										}
 									>
 										<Icon icon={Add} data-icon="inline-start" />
-										{ADD}
+										{t("list.add")}
 									</Button>
 								</li>
 							))}
@@ -278,8 +263,8 @@ export function FieldsList({
 							<EmptyMedia variant="icon">
 								<Icon icon={Warning} />
 							</EmptyMedia>
-							<EmptyTitle>{ERROR_TITLE}</EmptyTitle>
-							<EmptyDescription>{ERROR_BODY}</EmptyDescription>
+							<EmptyTitle>{t("list.errorTitle")}</EmptyTitle>
+							<EmptyDescription>{t("list.errorBody")}</EmptyDescription>
 						</EmptyHeader>
 						<EmptyContent>
 							<Button
@@ -288,7 +273,7 @@ export function FieldsList({
 								onClick={() => query.refetch()}
 							>
 								<Icon icon={Renew} data-icon="inline-start" />
-								{RETRY}
+								{t("list.retry")}
 							</Button>
 						</EmptyContent>
 					</Empty>
@@ -300,13 +285,13 @@ export function FieldsList({
 									<EmptyMedia variant="icon">
 										<Icon icon={Add} />
 									</EmptyMedia>
-									<EmptyTitle>{EMPTY_TITLE}</EmptyTitle>
-									<EmptyDescription>{EMPTY_BODY}</EmptyDescription>
+									<EmptyTitle>{t("list.emptyTitle")}</EmptyTitle>
+									<EmptyDescription>{t("list.emptyBody")}</EmptyDescription>
 								</EmptyHeader>
 								<EmptyContent>
 									<Button onClick={onNew}>
 										<Icon icon={Add} data-icon="inline-start" />
-										{NEW_FIELD}
+										{t("list.newField")}
 									</Button>
 								</EmptyContent>
 							</Empty>
@@ -314,10 +299,10 @@ export function FieldsList({
 							<>
 								<div className="flex items-center justify-between gap-3 px-5 pt-3.5 pb-2">
 									<span className="font-medium text-muted-foreground text-xs uppercase tracking-wider">
-										{CUSTOM_GROUP}
+										{t("list.customGroup")}
 									</span>
 									<span className="text-muted-foreground text-xs">
-										{DRAG_NOTE}
+										{t("list.dragNote")}
 									</span>
 								</div>
 
@@ -341,7 +326,7 @@ export function FieldsList({
 													{field.label}
 												</span>
 												<span className="w-full truncate text-muted-foreground text-xs">
-													{summaryOf(field)}
+													{summaryOf(field, t)}
 												</span>
 											</button>
 
@@ -357,19 +342,19 @@ export function FieldsList({
 													<Button variant="ghost" size="icon-xs">
 														<Icon icon={OverflowMenuVertical} />
 														<span className="sr-only">
-															More for {field.label}
+															{t("list.moreFor", { label: field.label })}
 														</span>
 													</Button>
 												</DropdownMenuTrigger>
 												<DropdownMenuContent align="end">
 													<DropdownMenuItem onSelect={() => onEdit(field.key)}>
-														Edit
+														{t("list.edit")}
 													</DropdownMenuItem>
 													<DropdownMenuSeparator />
 													<DropdownMenuItem
 														onSelect={() => archive.mutate({ id: field.id })}
 													>
-														Archive
+														{t("list.archive")}
 													</DropdownMenuItem>
 												</DropdownMenuContent>
 											</DropdownMenu>
@@ -381,8 +366,8 @@ export function FieldsList({
 
 						{archived.length > 0 ? (
 							<DisclosureRow
-								title={ARCHIVED_ROW}
-								note={`${archived.length} · ${ARCHIVED_NOTE}`}
+								title={t("list.archivedRow")}
+								note={`${archived.length} · ${t("list.archivedNote")}`}
 							>
 								<ul className="border-b">
 									{archived.map((field) => (
@@ -398,7 +383,7 @@ export function FieldsList({
 												size="xs"
 												onClick={() => restore.mutate({ id: field.id })}
 											>
-												Restore
+												{t("list.restore")}
 											</Button>
 										</li>
 									))}
@@ -413,10 +398,10 @@ export function FieldsList({
 				<div className="flex shrink-0 items-center justify-between gap-3 border-t px-5 py-3">
 					<Button onClick={onNew}>
 						<Icon icon={Add} data-icon="inline-start" />
-						{NEW_FIELD}
+						{t("list.newField")}
 					</Button>
 					<span className="text-right text-muted-foreground text-xs">
-						{ORDER_NOTE}
+						{t("list.orderNote")}
 					</span>
 				</div>
 			) : null}
