@@ -73,5 +73,15 @@
 			"who": "Who",
 			"when": "When"
 		}
+	},
+	"greeting": {
+		"title": "Welcome back",
+		"mine": "What you have closed, what is still in play, and what needs you today.",
+		"everyone": "What the team has closed, what is still in play, and what needs you today."
+	},
+	"scope": {
+		"me": "Me",
+		"everyone": "Everyone",
+		"aria": "Whose numbers to show"
 	}
 }

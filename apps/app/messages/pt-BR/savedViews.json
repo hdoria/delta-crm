@@ -1,0 +1,14 @@
+{
+	"trigger": "Visões",
+	"saveCurrent": "Salvar a visão atual…",
+	"mine": "Minhas visões",
+	"shared": "Compartilhadas com o time",
+	"dialogTitle": "Salvar esta visão",
+	"nameLabel": "Nome",
+	"shareLabel": "Compartilhar com o time",
+	"save": "Salvar",
+	"cancel": "Cancelar",
+	"saved": "Visão salva.",
+	"deleted": "Visão excluída.",
+	"delete": "Excluir {name}"
+}
