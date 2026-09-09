@@ -676,16 +676,17 @@ type SeededDeal = {
 type SeedRates = Record<string, number>;
 
 const SEED_RATES: SeedRates = {
-	EUR: 1.09,
-	GBP: 1.27,
-	CAD: 0.73,
-	AUD: 0.66,
-	JPY: 0.0067,
+	USD: 5.42,
+	EUR: 5.91,
+	GBP: 6.88,
+	CAD: 3.96,
+	AUD: 3.58,
+	JPY: 0.036,
 };
 
-const DEAL_CURRENCIES = ["USD", "USD", "USD", "EUR", "GBP", "JPY", "CAD"];
+const DEAL_CURRENCIES = ["BRL", "BRL", "BRL", "USD", "EUR", "GBP"];
 
-let seedBase = "USD";
+let seedBase = DEFAULT_REPORTING_CURRENCY;
 
 async function seedRates(): Promise<number> {
 	const asOf = daysFromNow(-1);
@@ -702,7 +703,7 @@ async function seedRates(): Promise<number> {
 
 	seedBase = await readReportingCurrency(db);
 
-	if (seedBase !== "USD") {
+	if (seedBase !== DEFAULT_REPORTING_CURRENCY) {
 		console.log(
 			`Reporting currency is ${seedBase}; seeding a converted figure only for ` +
 				`deals already in ${seedBase}; the rates cron converts the rest.`,
@@ -713,13 +714,13 @@ async function seedRates(): Promise<number> {
 		await db.exchangeRate.upsert({
 			where: {
 				baseCurrency_quoteCurrency_source: {
-					baseCurrency: "USD",
+					baseCurrency: DEFAULT_REPORTING_CURRENCY,
 					quoteCurrency,
 					source: RateSource.FETCHED,
 				},
 			},
 			create: {
-				baseCurrency: "USD",
+				baseCurrency: DEFAULT_REPORTING_CURRENCY,
 				quoteCurrency,
 				rate,
 				asOf,
@@ -733,15 +734,15 @@ async function seedRates(): Promise<number> {
 	return Object.keys(SEED_RATES).length;
 }
 
-function money(usdAmount: number, currency: string) {
+function money(baseAmount: number, currency: string) {
 	const rate = SEED_RATES[currency] ?? 1;
 	const places = currency === "JPY" ? 0 : 2;
-	const amount = Number((usdAmount / rate).toFixed(places));
+	const amount = Number((baseAmount / rate).toFixed(places));
 
 	const converted =
 		currency === seedBase
 			? { baseAmount: amount, fxRate: 1 }
-			: seedBase === "USD"
+			: seedBase === DEFAULT_REPORTING_CURRENCY
 				? { baseAmount: Number((amount * rate).toFixed(2)), fxRate: rate }
 				: null;
 
