@@ -142,33 +142,22 @@ As migrations Prisma continuam sendo a fonte do schema das tabelas de negócio.
 
 ## Roteiro da demonstração BMAD
 
-A proposta é acrescentar um aviso de negócio parado no Kanban, sem executar a feature antes da aula.
+A feature da aula é um aviso textual na tabela de negócios abertos há pelo menos 7 dias completos na mesma etapa.
+O aviso informa os dias completos. Mudar de etapa reinicia a contagem. Negócios encerrados ficam fora.
+A implementação acontece durante a aula.
 
-Pedido inicial para o exercício:
+O [exercício BMAD](exercicio-bmad.md) reúne o prompt pra copiar, os critérios de aceite e o mapa técnico pro instrutor.
+Ele também registra os checks, a validação manual e o plano B.
 
-> Quero identificar no Kanban os negócios abertos que permanecem há sete dias ou mais na mesma etapa.
-> Mostre um aviso com a quantidade de dias. Remova o aviso quando o negócio mudar de etapa.
-> Negócios encerrados não recebem esse aviso.
+Na raiz de `delta-crm`, instale com `npx bmad-method install` e selecione o módulo BMM. O core vem junto.
+Confirme os comandos com `bmad-help`. Use `/` no Claude Code, como `/bmad-help`, e `$` no Codex, como `$bmad-help`.
+Use `bmad-spec` quando quiser mostrar a SPEC antes da execução.
+Use `bmad-build` pra investigar a base, implementar, testar e revisar.
 
-Critérios de aceite para a turma:
-
-- Um negócio aberto com sete dias completos na etapa mostra o aviso.
-- Um negócio com menos de sete dias na etapa não mostra o aviso.
-- Negócios ganhos, perdidos ou desqualificados não mostram o aviso.
-- Mudar a etapa reinicia a contagem e atualiza o card.
-- O cálculo usa `stageChangedAt`, já presente no modelo de negócio.
-- Os testes cobrem o limite de sete dias e a mudança de etapa.
-
-Sequência sugerida:
-
-1. Abrir a base, percorrer empresas, contatos e negócios e conferir os dados de exemplo.
-2. Instalar BMAD no repositório durante a aula.
-3. Pedir ao BMAD para documentar a base existente e localizar o Kanban e suas regras.
-4. Transformar o pedido em uma especificação curta, com os critérios de aceite.
-5. Criar e implementar a story.
-6. Revisar o diff, executar os testes e demonstrar o comportamento no navegador.
-
-O recorte usa dados que já existem. Ele permite mostrar análise de uma base existente, decisão de escopo, implementação e revisão.
+Reserve 35 minutos como orçamento da feature e mais 8 minutos pra instalação.
+Use 0 a 5 minutos pra intenção e aceite, 5 a 25 pra Build e 25 a 35 pra revisão e demonstração.
+Confira ambiente, login e dados fictícios antes de começar a demonstração.
+O exercício registra uma pendência de preflight: preparar `uv`, exigido pelo [guia atual de instalação](https://docs.bmad-method.org/start/install-bmad/).
 
 ## Referências
 
