@@ -28,7 +28,7 @@ import { TableCell } from "@crm/ui/components/table";
 import { formatMoneyCompact } from "@crm/ui/lib/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import type { CSSProperties, ReactNode } from "react";
 import { toast } from "sonner";
@@ -47,6 +47,7 @@ import { SalesDashboard } from "./sales-dashboard";
 const CELL = "px-3 py-2.5 align-middle";
 
 export function DashboardSummary() {
+	const locale = useLocale();
 	const t = useTranslations("overview");
 	const activityType = useTranslations("activityType");
 	const trpc = useTRPC();
@@ -200,7 +201,11 @@ export function DashboardSummary() {
 											{deal.amountCents === null ? (
 												<EmptyCellValue />
 											) : (
-												formatMoneyCompact(deal.amountCents, deal.currency)
+												formatMoneyCompact(
+													deal.amountCents,
+													deal.currency,
+													locale,
+												)
 											)}
 										</TableCell>
 									</SimpleTableRow>

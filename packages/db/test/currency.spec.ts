@@ -62,7 +62,7 @@ describe("normalizeCurrency and isCurrencyCode", () => {
 		}
 	});
 
-	it("offers only the eleven currencies most of the world trades in", () => {
+	it("offers only the twelve currencies this CRM trades in", () => {
 		expect(CURRENCIES.map((entry) => entry.code)).toEqual([
 			"USD",
 			"EUR",
@@ -75,6 +75,7 @@ describe("normalizeCurrency and isCurrencyCode", () => {
 			"HKD",
 			"SGD",
 			"ZAR",
+			"BRL",
 		]);
 	});
 

@@ -39,6 +39,7 @@ import { useTRPC } from "@/lib/trpc/client";
 const CELL = "px-3 py-2.5 align-middle";
 
 export function CurrencySettings() {
+	const currencyName = useTranslations("currency");
 	const t = useTranslations("settings.currencies");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
@@ -172,7 +173,7 @@ export function CurrencySettings() {
 							<SelectContent>
 								{CURRENCIES.map((entry) => (
 									<SelectItem key={entry.code} value={entry.code}>
-										{entry.code} · {entry.name}
+										{entry.code} · {currencyName(entry.code)}
 									</SelectItem>
 								))}
 							</SelectContent>
@@ -235,7 +236,7 @@ export function CurrencySettings() {
 										(entry) => entry.code !== reportingCurrency,
 									).map((entry) => (
 										<SelectItem key={entry.code} value={entry.code}>
-											{entry.code} · {entry.name}
+											{entry.code} · {currencyName(entry.code)}
 										</SelectItem>
 									))}
 								</SelectContent>
@@ -278,7 +279,7 @@ export function CurrencySettings() {
 								<TableCell className={CELL}>
 									<span className="font-medium">{rate.currency}</span>
 									<span className="text-muted-foreground">
-										{rate.name ? ` · ${rate.name}` : ""}
+										{` · ${currencyName(rate.currency)}`}
 									</span>
 								</TableCell>
 								<TableCell className={`${CELL} text-right tabular-nums`}>
@@ -346,7 +347,7 @@ export function CurrencySettings() {
 								<TableCell className={CELL}>
 									<span className="font-medium">{row.currency}</span>
 									<span className="text-muted-foreground">
-										{row.name ? ` · ${row.name}` : ""}
+										{` · ${currencyName(row.currency)}`}
 									</span>
 									{row.currency === reportingCurrency ? (
 										<span className="text-muted-foreground">

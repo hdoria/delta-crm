@@ -22,7 +22,7 @@ import {
 } from "@crm/ui/components/tooltip";
 import { formatMoney } from "@crm/ui/lib/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { AgentPanel } from "@/components/crm/agent-panel";
 import { InlineCompanyField } from "@/components/crm/company-picker";
@@ -68,7 +68,7 @@ type Deal = RouterOutputs["deals"]["byId"];
 
 const CURRENCY_OPTIONS = CURRENCIES.map((entry) => ({
 	value: entry.code,
-	label: `${entry.code} · ${entry.name}`,
+	label: entry.code,
 }));
 
 function dealCurrency(currency: string) {
@@ -99,6 +99,7 @@ function ReportedValue({
 	deal: Deal;
 	t: (key: string, values?: Record<string, string | number | Date>) => string;
 }) {
+	const locale = useLocale();
 	const currency = dealCurrency(deal.currency);
 
 	if (currency === deal.reportingCurrency) return null;
@@ -114,7 +115,7 @@ function ReportedValue({
 				</span>
 			) : (
 				<span className="tabular-nums text-muted-foreground">
-					≈ {formatMoney(deal.baseAmountCents, deal.reportingCurrency)}
+					≈ {formatMoney(deal.baseAmountCents, deal.reportingCurrency, locale)}
 				</span>
 			)}
 		</DetailSheetProperty>
@@ -143,6 +144,7 @@ const DATE_OPTIONS: Intl.DateTimeFormatOptions = {
 };
 
 export function DealSheet({ dealId }: { dealId: string }) {
+	const locale = useLocale();
 	const trpc = useTRPC();
 	const openRecord = useOpenRecord();
 	const t = useTranslations("recordSheet");
@@ -245,7 +247,11 @@ export function DealSheet({ dealId }: { dealId: string }) {
 								<EmptyCellValue />
 							) : (
 								<span className="tabular-nums">
-									{formatMoney(deal.amountCents, dealCurrency(deal.currency))}
+									{formatMoney(
+										deal.amountCents,
+										dealCurrency(deal.currency),
+										locale,
+									)}
 								</span>
 							)}
 						</DetailSheetStat>
@@ -273,6 +279,7 @@ export function DealSheet({ dealId }: { dealId: string }) {
 }
 
 function DealOverview({ deal }: { deal: Deal }) {
+	const locale = useLocale();
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const t = useTranslations("recordSheet");
@@ -347,7 +354,7 @@ function DealOverview({ deal }: { deal: Deal }) {
 							save({ amountCents: Math.round(parsed * 100) });
 						}}
 						render={(value) =>
-							formatMoney(Math.round(Number(value) * 100), currency)
+							formatMoney(Math.round(Number(value) * 100), currency, locale)
 						}
 					/>
 					<InlineSelectField

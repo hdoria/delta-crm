@@ -15,7 +15,7 @@ import {
 	formatPercent,
 } from "@crm/ui/lib/format";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { AreaTrend, DonutStat } from "@/components/dashboard-charts";
 import { dealStageColor } from "@/lib/deal-stage";
@@ -39,6 +39,7 @@ function changeDelta(
 }
 
 export function SalesDashboard({ summary }: { summary: Summary }) {
+	const locale = useLocale();
 	const t = useTranslations("overview");
 	const stageLabel = useTranslations("dealStage");
 	const workspaceUrl = useWorkspaceUrl();
@@ -59,9 +60,10 @@ export function SalesDashboard({ summary }: { summary: Summary }) {
 		unconverted,
 	} = summary;
 
-	const money = (cents: number) => formatMoneyCompact(cents, reportingCurrency);
+	const money = (cents: number) =>
+		formatMoneyCompact(cents, reportingCurrency, locale);
 	const exact = (value: number | string) =>
-		formatMoney(Number(value), reportingCurrency);
+		formatMoney(Number(value), reportingCurrency, locale);
 
 	const hasTrend = trend.some((point) => point.won > 0 || point.created > 0);
 

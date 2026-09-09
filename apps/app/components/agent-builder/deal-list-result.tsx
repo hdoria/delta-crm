@@ -8,7 +8,7 @@ import {
 } from "@crm/ui/components/simple-table";
 import { TableCell } from "@crm/ui/components/table";
 import { formatMoney } from "@crm/ui/lib/format";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { CompanyCell } from "@/components/crm/company-cell";
 import { DealStageIndicator } from "@/components/crm/deal-stage";
 import { OwnerCell } from "@/components/crm/owner-cell";
@@ -19,6 +19,7 @@ import type { DealListItem, DealListResult } from "@/lib/agent-transcript";
 import { DEAL_STAGES } from "@/lib/deal-stage";
 
 export function DealListResultTable({ result }: { result: DealListResult }) {
+	const locale = useLocale();
 	const t = useTranslations("agentBuilder.dealList");
 	const openRecord = useOpenRecord();
 	const prefetchRecord = usePrefetchRecord();
@@ -86,6 +87,7 @@ export function DealListResultTable({ result }: { result: DealListResult }) {
 											{formatMoney(
 												Math.round(deal.amount * 100),
 												deal.currency,
+												locale,
 											)}
 										</span>
 									)}
@@ -114,7 +116,7 @@ export function DealListResultTable({ result }: { result: DealListResult }) {
 				)}
 			</SimpleTable>
 			<div className="flex flex-wrap items-center justify-between gap-3 text-muted-foreground text-xs">
-				<span>{tableMeta(result, t)}</span>
+				<span>{tableMeta(result, t, locale)}</span>
 				<span>
 					{t.rich("asOf", {
 						date: () => <LocalDay date={result.asOf} />,
@@ -154,10 +156,11 @@ function tableTitle(
 function tableMeta(
 	result: DealListResult,
 	t: ReturnType<typeof useTranslations>,
+	locale: string,
 ): string {
 	const details = [
 		t("metaCount", { count: result.deals.length }),
-		pipelineTotal(result.deals, t),
+		pipelineTotal(locale, result.deals, t),
 		result.criteria.inactiveForDays === null
 			? null
 			: t("metaInactive", { days: result.criteria.inactiveForDays }),
@@ -176,6 +179,7 @@ function humaniseStage(stage: string): string {
 }
 
 function pipelineTotal(
+	locale: string,
 	deals: readonly DealListItem[],
 	t: ReturnType<typeof useTranslations>,
 ): string | null {
@@ -187,6 +191,6 @@ function pipelineTotal(
 
 	const amount = deals.reduce((sum, deal) => sum + (deal.amount ?? 0), 0);
 	return t("metaPipeline", {
-		amount: formatMoney(Math.round(amount * 100), currency),
+		amount: formatMoney(Math.round(amount * 100), currency, locale),
 	});
 }

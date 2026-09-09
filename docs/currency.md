@@ -44,10 +44,13 @@ inverts on ingest.
 - **Codes are validated against `isCurrencyCode` (`@crm/db/currency`), not a regex** —
   `z.string().length(3)` accepted `ZZZ`. `isWellFormedCurrency` is separate because
   `Intl` throws on non-three-letter input.
-- **`CURRENCIES` is eleven currencies and that is all this CRM supports** — USD, EUR,
-  JPY, GBP, CNY, AUD, CAD, CHF, HKD, SGD, ZAR, in array order. `isCurrencyCode` is the
-  single gate for the picker, the feed filter and the stored setting. A refresh
+- **`CURRENCIES` is twelve currencies and that is all this CRM supports** — USD, EUR,
+  JPY, GBP, CNY, AUD, CAD, CHF, HKD, SGD, ZAR, BRL, in array order. `isCurrencyCode` is
+  the single gate for the picker, the feed filter and the stored setting. A refresh
   **prunes** `FETCHED` rows outside the list and leaves `MANUAL` alone.
+- **The `name` on each entry is the English fallback, not what the UI shows.** The
+  picker reads `messages/*/currency.json`, keyed by code, so the list of codes and the
+  words a reader sees stay separate. A new currency needs both.
 - **`applyRate` rounds to the *reporting* currency's `minorUnitsOf`**, not to two. The
   ×100 cents transport cannot represent a three-decimal minor unit; nor can
   `Decimal(14, 2)`.

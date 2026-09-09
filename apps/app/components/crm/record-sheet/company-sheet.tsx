@@ -23,7 +23,7 @@ import {
 } from "@crm/ui/components/tooltip";
 import { formatMoney } from "@crm/ui/lib/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { AgentPanel } from "@/components/crm/agent-panel";
 import { EnrichmentActions } from "@/components/crm/enrichment-actions";
@@ -141,6 +141,7 @@ function nextClose(deals: CompanyDeal[]): string | null {
 }
 
 export function CompanySheet({ companyId }: { companyId: string }) {
+	const locale = useLocale();
 	const trpc = useTRPC();
 	const t = useTranslations("recordSheet");
 	const {
@@ -280,7 +281,7 @@ export function CompanySheet({ companyId }: { companyId: string }) {
 					<DetailSheetStats>
 						<DetailSheetStat label={t("companySheet.stats.openPipeline")}>
 							<span className="tabular-nums">
-								{formatMoney(openValueCents, company.reportingCurrency)}
+								{formatMoney(openValueCents, company.reportingCurrency, locale)}
 							</span>
 							{openUncounted > 0 ? (
 								<span className="text-muted-foreground">

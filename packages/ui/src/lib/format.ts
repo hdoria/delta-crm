@@ -47,12 +47,16 @@ function fractionDigits(code: string): number {
 	return digits;
 }
 
-export function formatMoney(cents: number, currency = "usd"): string {
+export function formatMoney(
+	cents: number,
+	currency = "usd",
+	locale?: string,
+): string {
 	const code = displayCurrencyCode(currency);
 	const whole = cents % 100 === 0;
 	const digits = fractionDigits(code);
 
-	return new Intl.NumberFormat(undefined, {
+	return new Intl.NumberFormat(locale, {
 		style: "currency",
 		currency: code,
 		minimumFractionDigits: whole ? 0 : Math.min(2, digits),
@@ -60,8 +64,12 @@ export function formatMoney(cents: number, currency = "usd"): string {
 	}).format(cents / 100);
 }
 
-export function formatMoneyCompact(cents: number, currency = "usd"): string {
-	return new Intl.NumberFormat(undefined, {
+export function formatMoneyCompact(
+	cents: number,
+	currency = "usd",
+	locale?: string,
+): string {
+	return new Intl.NumberFormat(locale, {
 		style: "currency",
 		currency: displayCurrencyCode(currency),
 		notation: "compact",

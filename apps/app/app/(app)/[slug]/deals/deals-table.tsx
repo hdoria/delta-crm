@@ -11,7 +11,7 @@ import { EmptyCellValue } from "@crm/ui/components/empty-cell";
 import { useTableSelection } from "@crm/ui/hooks/use-table-selection";
 import { formatMoney } from "@crm/ui/lib/format";
 import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
 import { CLOSING_WINDOWS } from "@/components/crm/closing-window";
 import { CompanyCell } from "@/components/crm/company-cell";
@@ -32,7 +32,10 @@ import { dealsSearchParams } from "./deals-search-params";
 
 type DealRow = RouterOutputs["deals"]["list"]["rows"][number];
 
-function buildColumns(t: (key: string) => string): DataTableColumn<DealRow>[] {
+function buildColumns(
+	t: (key: string) => string,
+	locale: string,
+): DataTableColumn<DealRow>[] {
 	return [
 		{
 			id: "name",
@@ -68,7 +71,7 @@ function buildColumns(t: (key: string) => string): DataTableColumn<DealRow>[] {
 					<EmptyCellValue />
 				) : (
 					<span className="tabular-nums">
-						{formatMoney(row.amountCents, row.currency)}
+						{formatMoney(row.amountCents, row.currency, locale)}
 					</span>
 				),
 		},
@@ -152,6 +155,7 @@ function buildArchivedColumn(
 }
 
 export function DealsTable() {
+	const locale = useLocale();
 	const t = useTranslations("deals");
 	const stageLabel = useTranslations("dealStage");
 	const openRecord = useOpenRecord();
@@ -233,8 +237,8 @@ export function DealsTable() {
 	const columns = useMemo(
 		() =>
 			input.archived
-				? [...buildColumns(t), buildArchivedColumn(t), ...fieldColumns]
-				: [...buildColumns(t), ...fieldColumns],
+				? [...buildColumns(t, locale), buildArchivedColumn(t), ...fieldColumns]
+				: [...buildColumns(t, locale), ...fieldColumns],
 		[fieldColumns, input.archived, t],
 	);
 
@@ -289,7 +293,7 @@ export function DealsTable() {
 					<span>
 						{t("table.meta.count", { count: deals.data?.total ?? 0 })} ·{" "}
 						<span className="tabular-nums">
-							{formatMoney(openPipelineCents, reportingCurrency)}
+							{formatMoney(openPipelineCents, reportingCurrency, locale)}
 						</span>{" "}
 						{t("table.meta.openPipeline")}
 						{unconverted && unconverted.count > 0 ? (

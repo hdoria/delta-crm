@@ -8,7 +8,7 @@ import { SimpleTableRow } from "@crm/ui/components/simple-table";
 import { Spinner } from "@crm/ui/components/spinner";
 import { TableCell } from "@crm/ui/components/table";
 import { formatMoney } from "@crm/ui/lib/format";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import {
 	DetailSheetHeader,
@@ -113,9 +113,13 @@ export function DealAmount({
 	amountCents: number | null;
 	currency: string;
 }) {
+	const locale = useLocale();
+
 	if (amountCents === null) return <EmptyCellValue />;
 	return (
-		<span className="tabular-nums">{formatMoney(amountCents, currency)}</span>
+		<span className="tabular-nums">
+			{formatMoney(amountCents, currency, locale)}
+		</span>
 	);
 }
 
