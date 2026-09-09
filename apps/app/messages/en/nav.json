@@ -12,5 +12,6 @@
 	"openNavigation": "Open navigation",
 	"homepage": "Homepage",
 	"accountMenu": "Account menu",
-	"signOutFailed": "Could not sign out."
+	"signOutFailed": "Could not sign out.",
+	"loadingHeader": "Loading workspace header…"
 }

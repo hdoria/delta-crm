@@ -13,5 +13,6 @@
 	"reorderNamed": "Reorder {name}",
 	"scrollToEnd": "Scroll to end",
 	"scrollToStart": "Scroll to start",
-	"loadedNamed": "{name} loaded"
+	"loadedNamed": "{name} loaded",
+	"back": "Back"
 }

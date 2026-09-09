@@ -1,0 +1,13 @@
+{
+	"enriching": "Pesquisando",
+	"enrichingCount": "Pesquisando {count}",
+	"enrichingNow": "Pesquisando agora",
+	"emptyTitle": "Nada no momento",
+	"emptyDescription": "Empresas e contatos novos aparecem aqui enquanto seus agentes pesquisam.",
+	"moreQueued": "mais {count} na fila",
+	"showAll": "Mostrar tudo",
+	"loadMore": "Carregar mais",
+	"scheduled": "{count, plural, one {# registro está agendado para depois} other {# registros estão agendados para depois}}",
+	"hide": "Ocultar",
+	"show": "Mostrar"
+}

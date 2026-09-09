@@ -12,5 +12,6 @@
 	"openNavigation": "Abrir navegação",
 	"homepage": "Início",
 	"accountMenu": "Menu da conta",
-	"signOutFailed": "Não foi possível sair."
+	"signOutFailed": "Não foi possível sair.",
+	"loadingHeader": "Carregando o cabeçalho do workspace…"
 }

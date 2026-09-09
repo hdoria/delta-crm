@@ -1,0 +1,16 @@
+{
+	"title": "Entrar",
+	"heading": "Entre no Base CRM",
+	"loading": "Carregando as opções de acesso.",
+	"description": "Suas empresas, contatos e negócios em um só lugar.",
+	"emailOnly": "Use e-mail e senha para entrar. O acesso pelo Google será habilitado depois.",
+	"notConfigured": "O acesso ainda está sendo configurado. Aguarde a liberação da sua conta.",
+	"failed": "Não foi possível entrar. Confira os dados da sua conta e tente novamente.",
+	"googleNote": "O Google é usado apenas para identificar sua conta. Não pedimos acesso ao Gmail nem ao Calendar.",
+	"google": "Continuar com Google",
+	"googleFailed": "Não foi possível conectar ao Google. Tente novamente.",
+	"email": "E-mail",
+	"password": "Senha",
+	"submit": "Entrar com e-mail e senha",
+	"submitting": "Entrando…"
+}

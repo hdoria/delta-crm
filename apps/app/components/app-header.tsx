@@ -77,6 +77,7 @@ export function AppHeader({ user }: { user: User }) {
 }
 
 export function AppHeaderFallback() {
+	const t = useTranslations("nav");
 	return (
 		<header
 			className="flex h-12 shrink-0 items-center gap-2 border-b px-3 [view-transition-name:app-header]"
@@ -96,7 +97,7 @@ export function AppHeaderFallback() {
 				</Avatar>
 			</div>
 			<span role="status" className="sr-only">
-				Loading workspace header…
+				{t("loadingHeader")}
 			</span>
 		</header>
 	);

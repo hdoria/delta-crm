@@ -1,0 +1,16 @@
+{
+	"title": "Sign in",
+	"heading": "Sign in to Base CRM",
+	"loading": "Loading the sign-in options.",
+	"description": "Your companies, contacts and deals in one place.",
+	"emailOnly": "Use email and password to sign in. Google access is enabled later.",
+	"notConfigured": "Access is still being set up. Wait for your account to be released.",
+	"failed": "We could not sign you in. Check your account details and try again.",
+	"googleNote": "Google is used only to identify your account. We do not ask for access to Gmail or Calendar.",
+	"google": "Continue with Google",
+	"googleFailed": "We could not reach Google. Try again.",
+	"email": "Email",
+	"password": "Password",
+	"submit": "Sign in with email and password",
+	"submitting": "Signing in…"
+}

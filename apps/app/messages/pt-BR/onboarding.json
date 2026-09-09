@@ -1,0 +1,15 @@
+{
+	"title": "Configuração",
+	"heading": "Conte sobre a sua empresa",
+	"description": "Duas coisas, uma vez só. O nome é como o CRM se refere a você. O site é como o agente aprende o que você vende.",
+	"companyName": "Nome da empresa",
+	"workspaceUrl": "URL do workspace",
+	"website": "Site",
+	"research": {
+		"title": "Chave de pesquisa",
+		"heading": "Melhore os dados do seu CRM",
+		"description": "Ligue o agente de pesquisa ao Context para pesquisar toda empresa adicionada ao CRM.",
+		"keyLabel": "Chave da API do Context",
+		"keyPlaceholder": "Cole a chave"
+	}
+}

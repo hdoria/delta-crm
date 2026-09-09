@@ -10,6 +10,7 @@ import GoogleLogo from "@crm/ui/components/brand-logos/google";
 import MicrosoftLogo from "@crm/ui/components/brand-logos/microsoft";
 import { Button } from "@crm/ui/components/button";
 import { Spinner } from "@crm/ui/components/spinner";
+import { useTranslations } from "next-intl";
 import type { FC, SVGProps } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -39,11 +40,12 @@ export function GrantAccess({
 }: {
 	providers: readonly MailboxProviderId[];
 }) {
+	const t = useTranslations("grantAccess");
 	const [pending, setPending] = useState<MailboxProviderId | null>(null);
 
 	function fail(message?: string) {
 		setPending(null);
-		toast.error(message ?? "Could not reach the provider.");
+		toast.error(message ?? t("providerFailed"));
 	}
 
 	async function handleGrant(provider: MailboxProviderId) {
@@ -83,7 +85,7 @@ export function GrantAccess({
 						) : (
 							<Logo data-icon="inline-start" className="size-4" />
 						)}
-						{single ? "Grant access" : label}
+						{single ? t("grant") : label}
 					</Button>
 				);
 			})}
@@ -91,12 +93,12 @@ export function GrantAccess({
 			<Button
 				className="w-full"
 				onClick={() => {
-					signOutAndRedirect().catch(() => toast.error("Could not sign out."));
+					signOutAndRedirect().catch(() => toast.error(t("signOutFailed")));
 				}}
 				type="button"
 				variant="ghost"
 			>
-				Sign out
+				{t("signOut")}
 			</Button>
 		</div>
 	);

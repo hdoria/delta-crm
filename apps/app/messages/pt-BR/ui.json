@@ -13,5 +13,6 @@
 	"reorderNamed": "Reordenar {name}",
 	"scrollToEnd": "Ir para o fim",
 	"scrollToStart": "Ir para o início",
-	"loadedNamed": "{name} carregou"
+	"loadedNamed": "{name} carregou",
+	"back": "Voltar"
 }

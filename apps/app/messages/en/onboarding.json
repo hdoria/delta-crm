@@ -1,0 +1,15 @@
+{
+	"title": "Set up",
+	"heading": "Tell us about your company",
+	"description": "Two things, once. The name is what the CRM calls you; the website is how the agent learns what you sell.",
+	"companyName": "Company name",
+	"workspaceUrl": "Workspace URL",
+	"website": "Website",
+	"research": {
+		"title": "Research key",
+		"heading": "Level up your CRM data",
+		"description": "Power your research agent with Context to research every company added to your CRM.",
+		"keyLabel": "Context API key",
+		"keyPlaceholder": "Paste the key"
+	}
+}

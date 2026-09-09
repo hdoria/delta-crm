@@ -1,0 +1,6 @@
+{
+	"grant": "Grant access",
+	"signOut": "Sign out",
+	"providerFailed": "Could not reach the provider.",
+	"signOutFailed": "Could not sign out."
+}

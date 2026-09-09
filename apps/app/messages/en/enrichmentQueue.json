@@ -1,0 +1,13 @@
+{
+	"enriching": "Enriching",
+	"enrichingCount": "Enriching {count}",
+	"enrichingNow": "Enriching now",
+	"emptyTitle": "Nothing right now",
+	"emptyDescription": "New companies and contacts show up here while your agents look them up.",
+	"moreQueued": "{count} more queued",
+	"showAll": "Show all",
+	"loadMore": "Load more",
+	"scheduled": "{count, plural, one {# record is booked for a later look} other {# records are booked for a later look}}",
+	"hide": "Hide",
+	"show": "Show"
+}

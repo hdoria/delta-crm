@@ -32,6 +32,8 @@ async function read(locale: Locale): Promise<MessageTree> {
 }
 
 function load(locale: Locale): Promise<MessageTree> {
+	if (process.env.NODE_ENV !== "production") return read(locale);
+
 	const hit = cache.get(locale);
 	if (hit) return hit;
 

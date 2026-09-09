@@ -12,11 +12,13 @@ import { Input } from "@crm/ui/components/input";
 import { Spinner } from "@crm/ui/components/spinner";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useId } from "react";
 import { toast } from "sonner";
 import { useTRPC } from "@/lib/trpc/client";
 
 export function ResearchForm() {
+	const t = useTranslations("onboarding.research");
 	const trpc = useTRPC();
 	const router = useRouter();
 
@@ -43,12 +45,12 @@ export function ResearchForm() {
 		>
 			<FieldGroup>
 				<Field>
-					<FieldLabel htmlFor={keyId}>Context API key</FieldLabel>
+					<FieldLabel htmlFor={keyId}>{t("keyLabel")}</FieldLabel>
 					<Input
 						id={keyId}
 						name="apiKey"
 						type="password"
-						placeholder="Paste the key"
+						placeholder={t("keyPlaceholder")}
 						autoComplete="off"
 						autoCapitalize="off"
 						autoCorrect="off"

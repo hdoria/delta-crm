@@ -5,9 +5,11 @@ import { Button } from "@crm/ui/components/button";
 import { Input } from "@crm/ui/components/input";
 import { Label } from "@crm/ui/components/label";
 import { Spinner } from "@crm/ui/components/spinner";
+import { useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 
 export function PasswordSignIn() {
+	const t = useTranslations("signIn");
 	const emailId = useId();
 	const passwordId = useId();
 	const errorId = useId();
@@ -29,7 +31,7 @@ export function PasswordSignIn() {
 					email,
 					password,
 				});
-			if (error || !data.session) throw new Error("Sign-in failed");
+			if (error || !data.session) throw new Error(t("failed"));
 			window.location.assign("/");
 		} catch {
 			setFailed(true);
@@ -45,7 +47,7 @@ export function PasswordSignIn() {
 			aria-busy={pending}
 		>
 			<div className="flex flex-col gap-2">
-				<Label htmlFor={emailId}>E-mail</Label>
+				<Label htmlFor={emailId}>{t("email")}</Label>
 				<Input
 					id={emailId}
 					name="email"
@@ -59,7 +61,7 @@ export function PasswordSignIn() {
 				/>
 			</div>
 			<div className="flex flex-col gap-2">
-				<Label htmlFor={passwordId}>Senha</Label>
+				<Label htmlFor={passwordId}>{t("password")}</Label>
 				<Input
 					id={passwordId}
 					name="password"
@@ -78,7 +80,7 @@ export function PasswordSignIn() {
 			)}
 			<Button type="submit" disabled={pending}>
 				{pending && <Spinner data-icon="inline-start" />}
-				{pending ? "Entrando..." : "Entrar com e-mail e senha"}
+				{pending ? t("submitting") : t("submit")}
 			</Button>
 		</form>
 	);

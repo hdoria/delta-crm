@@ -4,10 +4,12 @@ import { createBrowserSupabaseClient } from "@crm/auth/client";
 import GoogleLogo from "@crm/ui/components/brand-logos/google";
 import { Button } from "@crm/ui/components/button";
 import { Spinner } from "@crm/ui/components/spinner";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export function SocialSignIn({ disabled = false }: { disabled?: boolean }) {
+	const t = useTranslations("signIn");
 	const [pending, setPending] = useState(false);
 	async function handleClick() {
 		setPending(true);
@@ -23,7 +25,7 @@ export function SocialSignIn({ disabled = false }: { disabled?: boolean }) {
 			if (error) throw error;
 		} catch {
 			setPending(false);
-			toast.error("Não foi possível conectar ao Google. Tente novamente.");
+			toast.error(t("googleFailed"));
 		}
 	}
 	return (
@@ -39,7 +41,7 @@ export function SocialSignIn({ disabled = false }: { disabled?: boolean }) {
 			) : (
 				<GoogleLogo data-icon="inline-start" className="size-4" />
 			)}
-			Continuar com Google
+			{t("google")}
 		</Button>
 	);
 }
