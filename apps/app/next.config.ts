@@ -1,5 +1,6 @@
 import { loadRootEnv } from "@crm/env";
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 loadRootEnv();
 
@@ -39,9 +40,6 @@ const nextConfig: NextConfig = {
 			{ protocol: "https", hostname: "**.blob.vercel-storage.com" },
 		],
 	},
-
-	cacheComponents: true,
-	partialPrefetching: true,
 };
 
-export default nextConfig;
+export default createNextIntlPlugin()(nextConfig);

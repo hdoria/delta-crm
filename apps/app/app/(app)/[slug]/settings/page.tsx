@@ -14,6 +14,7 @@ import { HydrateClient } from "@/lib/trpc/hydrate";
 import { getServerQueryClient, getServerTrpc } from "@/lib/trpc/server";
 import { AgentModel } from "./agent-model";
 import { ArchiveRetention } from "./archive-retention";
+import { Language } from "./language";
 import { ResearchKey } from "./research-key";
 import { WorkspaceForm } from "./workspace-form";
 
@@ -60,6 +61,7 @@ async function Settings() {
 		<HydrateClient>
 			<div className="flex max-w-3xl flex-col gap-6">
 				<WorkspaceForm />
+				<Language />
 				<ResearchKey />
 				<ArchiveRetention />
 				<AgentModel />

@@ -4,6 +4,8 @@ import { TooltipProvider } from "@crm/ui/components/tooltip";
 import { cn } from "@crm/ui/lib/utils";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { LocalDateTimeHydrator } from "@/components/local-date-time";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -19,43 +21,51 @@ const fontMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-	title: {
-		default: "Base CRM",
-		template: "%s · Base CRM",
-	},
-	description: "Companies, contacts and deals in one place.",
-	icons: {
-		icon: [
-			{ url: "/favicon.svg", type: "image/svg+xml" },
-			{ url: "/favicon-96x96.png", type: "image/png", sizes: "96x96" },
-		],
-		apple: "/apple-touch-icon.png",
-	},
-	manifest: "/site.webmanifest",
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("app");
 
-export default function RootLayout({
+	return {
+		title: {
+			default: t("name"),
+			template: `%s · ${t("name")}`,
+		},
+		description: t("description"),
+		icons: {
+			icon: [
+				{ url: "/favicon.svg", type: "image/svg+xml" },
+				{ url: "/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+			],
+			apple: "/apple-touch-icon.png",
+		},
+		manifest: "/site.webmanifest",
+	};
+}
+
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const locale = await getLocale();
+
 	return (
 		<html
-			lang="en"
+			lang={locale}
 			suppressHydrationWarning
 			className={cn(fontSans.variable, fontMono.variable, "h-full antialiased")}
 		>
 			<body className="flex min-h-full flex-col font-sans">
-				<NuqsAdapter>
-					<TRPCReactProvider>
-						<ThemeProvider>
-							<TooltipProvider>{children}</TooltipProvider>
-							<Toaster richColors />
-						</ThemeProvider>
-					</TRPCReactProvider>
-				</NuqsAdapter>
-				<LocalDateTimeHydrator />
+				<NextIntlClientProvider>
+					<NuqsAdapter>
+						<TRPCReactProvider>
+							<ThemeProvider>
+								<TooltipProvider>{children}</TooltipProvider>
+								<Toaster richColors />
+							</ThemeProvider>
+						</TRPCReactProvider>
+					</NuqsAdapter>
+					<LocalDateTimeHydrator />
+				</NextIntlClientProvider>
 			</body>
 		</html>
 	);

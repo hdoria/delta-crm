@@ -1,0 +1,14 @@
+{
+	"app": {
+		"name": "Base CRM",
+		"description": "Empresas, contatos e negócios em um só lugar."
+	},
+	"settings": {
+		"language": {
+			"title": "Idioma",
+			"description": "Escolha o idioma em que este workspace aparece. Vale para este navegador.",
+			"label": "Idioma da interface",
+			"saved": "Idioma alterado."
+		}
+	}
+}

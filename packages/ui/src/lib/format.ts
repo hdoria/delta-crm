@@ -7,10 +7,23 @@ export function formatCount(
 }
 
 const WELL_FORMED_CURRENCY_CODE = /^[A-Za-z]{3}$/;
-const percentFormat = new Intl.NumberFormat("en-US", {
-	style: "percent",
-	maximumFractionDigits: 0,
-});
+
+const percentFormats = new Map<string, Intl.NumberFormat>();
+const dayFormats = new Map<string, Intl.DateTimeFormat>();
+
+function cached<T>(
+	store: Map<string, T>,
+	locale: string | undefined,
+	make: () => T,
+): T {
+	const key = locale ?? "";
+	const hit = store.get(key);
+	if (hit) return hit;
+
+	const made = make();
+	store.set(key, made);
+	return made;
+}
 
 function displayCurrencyCode(currency: string): string {
 	return WELL_FORMED_CURRENCY_CODE.test(currency)
@@ -56,15 +69,17 @@ export function formatMoneyCompact(cents: number, currency = "usd"): string {
 	}).format(cents / 100);
 }
 
-export function formatPercent(rate: number): string {
-	return percentFormat.format(rate);
+export function formatPercent(rate: number, locale?: string): string {
+	return cached(
+		percentFormats,
+		locale,
+		() =>
+			new Intl.NumberFormat(locale, {
+				style: "percent",
+				maximumFractionDigits: 0,
+			}),
+	).format(rate);
 }
-
-const dayFormat = new Intl.DateTimeFormat("en-US", {
-	month: "short",
-	day: "numeric",
-	year: "numeric",
-});
 
 function pad(value: number): string {
 	return String(value).padStart(2, "0");
@@ -82,9 +97,23 @@ export function fromDay(value: string | null | undefined): Date | undefined {
 	return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
-export function formatDay(value: string | null | undefined): string {
+export function formatDay(
+	value: string | null | undefined,
+	locale?: string,
+): string {
 	const date = fromDay(value);
-	return date ? dayFormat.format(date) : (value ?? "—");
+	if (!date) return value ?? "—";
+
+	return cached(
+		dayFormats,
+		locale,
+		() =>
+			new Intl.DateTimeFormat(locale, {
+				month: "short",
+				day: "numeric",
+				year: "numeric",
+			}),
+	).format(date);
 }
 
 export function initialsFromName(name: string | null | undefined): string {
