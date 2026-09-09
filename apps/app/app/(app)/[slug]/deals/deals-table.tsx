@@ -13,7 +13,7 @@ import { formatMoney } from "@crm/ui/lib/format";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
-import { CLOSING_OPTIONS } from "@/components/crm/closing-window";
+import { CLOSING_WINDOWS } from "@/components/crm/closing-window";
 import { CompanyCell } from "@/components/crm/company-cell";
 import { useFieldColumns } from "@/components/crm/fields/field-columns";
 import { useFieldFacets } from "@/components/crm/fields/field-facets";
@@ -214,9 +214,9 @@ export function DealsTable() {
 		{
 			id: "closing",
 			label: t("table.facets.closing"),
-			options: CLOSING_OPTIONS.flatMap((option) =>
-				(facetCounts?.closing?.[option.value] ?? 0) > 0
-					? [{ value: option.value, label: option.label }]
+			options: CLOSING_WINDOWS.flatMap((value) =>
+				(facetCounts?.closing?.[value] ?? 0) > 0
+					? [{ value, label: t(`table.closingWindow.${value}`) }]
 					: [],
 			),
 		},

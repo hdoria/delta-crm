@@ -19,7 +19,7 @@ import {
 	BulkActionsMenu,
 	BulkDeleteDialog,
 	BulkOwnerMenu,
-	reportBulk,
+	useBulkReporter,
 } from "@/components/crm/bulk-actions";
 import { CompanyMenuSearch } from "@/components/crm/company-picker";
 import { useCrmCache } from "@/lib/trpc/cache";
@@ -35,6 +35,7 @@ export function ContactsBulkActions({
 	archived: boolean;
 }) {
 	const t = useTranslations("contacts");
+	const report = useBulkReporter();
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const users = useQuery(trpc.users.list.queryOptions());
@@ -48,7 +49,7 @@ export function ContactsBulkActions({
 		trpc.contacts.bulkAssignOwner.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.contact();
-				reportBulk(result, (count) => t("bulk.reassigned", { count }));
+				report(result, (count) => t("bulk.reassigned", { count }));
 				onDone();
 			},
 			onError,
@@ -59,7 +60,7 @@ export function ContactsBulkActions({
 		trpc.contacts.bulkSetCompany.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.contact();
-				reportBulk(result, (count) => t("bulk.moved", { count }));
+				report(result, (count) => t("bulk.moved", { count }));
 				onDone();
 			},
 			onError,
@@ -70,7 +71,7 @@ export function ContactsBulkActions({
 		trpc.contacts.bulkEnrich.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.contact();
-				reportBulk(result, (count) => t("bulk.looking", { count }));
+				report(result, (count) => t("bulk.looking", { count }));
 				onDone();
 			},
 			onError,
@@ -81,7 +82,7 @@ export function ContactsBulkActions({
 		trpc.contacts.bulkArchive.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await cache.removedMany({ kind: "contact", ids: variables.ids });
-				reportBulk(result, (count) => t("bulk.archivedToast", { count }));
+				report(result, (count) => t("bulk.archivedToast", { count }));
 				onDone();
 			},
 			onError,
@@ -92,7 +93,7 @@ export function ContactsBulkActions({
 		trpc.contacts.bulkRestore.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.contact();
-				reportBulk(result, (count) => t("bulk.restored", { count }));
+				report(result, (count) => t("bulk.restored", { count }));
 				onDone();
 			},
 			onError,
@@ -103,7 +104,7 @@ export function ContactsBulkActions({
 		trpc.contacts.bulkPurge.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await cache.removedMany({ kind: "contact", ids: variables.ids });
-				reportBulk(result, (count) => t("bulk.deleted", { count }));
+				report(result, (count) => t("bulk.deleted", { count }));
 				setConfirming(false);
 				onDone();
 			},

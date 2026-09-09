@@ -19,7 +19,9 @@
 		"assignOwner": "Assign owner",
 		"nobodyElse": "Nobody else works here yet.",
 		"cancel": "Cancel",
-		"delete": "Delete"
+		"delete": "Delete",
+		"nothingChanged": "Nothing changed.",
+		"partial": "{done} {count, plural, one {# was left alone.} other {# were left alone.}}"
 	},
 	"companyPicker": {
 		"choose": "Choose a company",

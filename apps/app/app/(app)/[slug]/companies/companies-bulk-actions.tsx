@@ -16,7 +16,7 @@ import {
 	BulkActionsMenu,
 	BulkDeleteDialog,
 	BulkOwnerMenu,
-	reportBulk,
+	useBulkReporter,
 } from "@/components/crm/bulk-actions";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
@@ -31,6 +31,7 @@ export function CompaniesBulkActions({
 	archived: boolean;
 }) {
 	const t = useTranslations("companies");
+	const report = useBulkReporter();
 	const trpc = useTRPC();
 	const cache = useCrmCache();
 	const users = useQuery(trpc.users.list.queryOptions());
@@ -42,7 +43,7 @@ export function CompaniesBulkActions({
 		trpc.companies.bulkAssignOwner.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.company();
-				reportBulk(result, (count) => t("bulk.reassigned", { count }));
+				report(result, (count) => t("bulk.reassigned", { count }));
 				onDone();
 			},
 			onError,
@@ -53,7 +54,7 @@ export function CompaniesBulkActions({
 		trpc.companies.bulkEnrich.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.company();
-				reportBulk(result, (count) => t("bulk.looking", { count }));
+				report(result, (count) => t("bulk.looking", { count }));
 				onDone();
 			},
 			onError,
@@ -64,7 +65,7 @@ export function CompaniesBulkActions({
 		trpc.companies.bulkArchive.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await cache.removedMany({ kind: "company", ids: variables.ids });
-				reportBulk(result, (count) => t("bulk.archivedToast", { count }));
+				report(result, (count) => t("bulk.archivedToast", { count }));
 				onDone();
 			},
 			onError,
@@ -75,7 +76,7 @@ export function CompaniesBulkActions({
 		trpc.companies.bulkRestore.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.company();
-				reportBulk(result, (count) => t("bulk.restored", { count }));
+				report(result, (count) => t("bulk.restored", { count }));
 				onDone();
 			},
 			onError,
@@ -86,7 +87,7 @@ export function CompaniesBulkActions({
 		trpc.companies.bulkPurge.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await cache.removedMany({ kind: "company", ids: variables.ids });
-				reportBulk(result, (count) => t("bulk.deleted", { count }));
+				report(result, (count) => t("bulk.deleted", { count }));
 				setConfirming(false);
 				onDone();
 			},

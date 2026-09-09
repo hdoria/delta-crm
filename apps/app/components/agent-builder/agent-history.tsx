@@ -18,10 +18,11 @@ import {
 import { Button } from "@crm/ui/components/button";
 import { Icon } from "@crm/ui/components/icon";
 import { cn } from "@crm/ui/lib/utils";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { z } from "zod";
 import { runFailureReason } from "@/lib/agent-run-failure";
+import { dateFormatter } from "@/lib/date-format";
 import type { RouterOutputs } from "@/lib/trpc/types";
 
 type Runs = RouterOutputs["agents"]["history"];
@@ -48,7 +49,7 @@ const eventSummary = z
 
 const auditChange = z.object({ before: z.json(), after: z.json() });
 
-const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
+const DATE_OPTIONS = {
 	month: "short",
 	day: "numeric",
 	hour: "numeric",
@@ -56,14 +57,14 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
 	second: "2-digit",
 	timeZone: "UTC",
 	timeZoneName: "short",
-});
-const TIME_FORMATTER = new Intl.DateTimeFormat("en-US", {
+} as const;
+const TIME_OPTIONS = {
 	hour: "2-digit",
 	minute: "2-digit",
 	second: "2-digit",
 	hour12: false,
 	timeZone: "UTC",
-});
+} as const;
 
 export function AgentRuns({
 	runs,
@@ -79,6 +80,7 @@ export function AgentRuns({
 	retryingRunId?: string;
 }) {
 	const t = useTranslations("agentBuilder.history");
+	const locale = useLocale();
 	const [outcome, setOutcome] = useState("ALL");
 	const [expanded, setExpanded] = useState<string | null>(null);
 	const [confirming, setConfirming] = useState<string | null>(null);
@@ -140,7 +142,8 @@ export function AgentRuns({
 									</span>
 								</span>
 								<span className="mt-1 block wrap-break-word font-mono text-muted-foreground text-xs leading-5 sm:mt-0">
-									{humanStatus(run.triggerType)} · {formatDate(run.createdAt)} ·{" "}
+									{humanStatus(run.triggerType)} ·{" "}
+									{formatDate(locale, run.createdAt)} ·{" "}
 									{t("versionLabel", { number: run.version.number })}
 								</span>
 								{run.status === "FAILED" || run.status === "CANCELLED" ? (
@@ -236,6 +239,7 @@ export function AgentRuns({
 }
 
 function ExpandedRun({ run }: { run: RunRow }) {
+	const locale = useLocale();
 	const t = useTranslations("agentBuilder.history");
 	const events = runEvents.parse(run.events);
 	const timeline = [
@@ -281,7 +285,7 @@ function ExpandedRun({ run }: { run: RunRow }) {
 							className="grid min-h-8 min-w-0 grid-cols-[68px_minmax(0,1fr)] items-start gap-x-3 border-t px-4 py-2 first:border-t-0 sm:flex sm:items-center sm:gap-5 sm:px-5 sm:py-1.5"
 						>
 							<span className="shrink-0 font-mono text-muted-foreground text-xs sm:w-[78px]">
-								{formatTime(entry.at)}
+								{formatTime(locale, entry.at)}
 							</span>
 							<span className="min-w-0 flex-1 wrap-break-word text-sm">
 								{eventLabel(entry.event)}
@@ -296,7 +300,7 @@ function ExpandedRun({ run }: { run: RunRow }) {
 							className="grid min-h-12 min-w-0 grid-cols-[68px_minmax(0,1fr)] items-start gap-x-3 gap-y-1 border-t px-4 py-3 first:border-t-0 sm:flex sm:gap-5 sm:px-5"
 						>
 							<span className="shrink-0 font-mono text-muted-foreground text-xs sm:w-[78px]">
-								{formatTime(entry.at)}
+								{formatTime(locale, entry.at)}
 							</span>
 							<span className="min-w-0 flex-1">
 								<span className="block wrap-break-word text-sm">
@@ -351,6 +355,7 @@ function RunMeta({
 }
 
 export function AgentActivity({ activity }: { activity: Activity }) {
+	const locale = useLocale();
 	const t = useTranslations("agentBuilder.history");
 	const [kind, setKind] = useState("ALL");
 	const visible = activity.filter(
@@ -395,7 +400,7 @@ export function AgentActivity({ activity }: { activity: Activity }) {
 						className="flex min-h-11 min-w-0 flex-col items-start gap-2 border-t px-4 py-3 first:border-t-0 sm:flex-row sm:items-center sm:gap-0 sm:px-5"
 					>
 						<span className="shrink-0 font-mono text-muted-foreground text-xs sm:w-[166px]">
-							{formatDate(event.emittedAt)}
+							{formatDate(locale, event.emittedAt)}
 						</span>
 						<span className="min-w-0 flex-1">
 							<span className="block wrap-break-word text-sm">
@@ -436,12 +441,12 @@ function humanStatus(value: string): string {
 		.replace(/^./, (character) => character.toUpperCase());
 }
 
-function formatDate(value: string): string {
-	return DATE_FORMATTER.format(new Date(value));
+function formatDate(locale: string, value: string): string {
+	return dateFormatter(locale, DATE_OPTIONS).format(new Date(value));
 }
 
-function formatTime(value: string): string {
-	return TIME_FORMATTER.format(new Date(value));
+function formatTime(locale: string, value: string): string {
+	return dateFormatter(locale, TIME_OPTIONS).format(new Date(value));
 }
 
 function duration(

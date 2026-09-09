@@ -12,9 +12,10 @@ import { Spinner } from "@crm/ui/components/spinner";
 import { ToggleGroup, ToggleGroupItem } from "@crm/ui/components/toggle-group";
 import { cn } from "@crm/ui/lib/utils";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import { DetailSheetEmpty, SECTION_TITLE } from "@/components/detail-sheet";
+import { dateFormatter } from "@/lib/date-format";
 import { SEARCH_PARAM } from "@/lib/search-param-keys";
 import { useTRPC } from "@/lib/trpc/client";
 import { useHydrated } from "@/lib/use-hydrated";
@@ -41,18 +42,19 @@ const EMPTY_ICONS = {
 	done: Checkmark,
 } satisfies Record<TimelineTab, CarbonIcon>;
 
-const dayFormat = new Intl.DateTimeFormat("en-US", {
+const DAY_OPTIONS = {
 	weekday: "short",
 	month: "short",
 	day: "numeric",
 	year: "numeric",
-});
+} as const;
 
 function dayLabel(
 	day: string,
 	local: boolean,
 	todayLabel: string,
 	yesterdayLabel: string,
+	locale: string,
 ): string {
 	const now = new Date();
 	const today = dayKey(now.toISOString(), local);
@@ -63,7 +65,7 @@ function dayLabel(
 
 	if (day === today) return todayLabel;
 	if (day === yesterday) return yesterdayLabel;
-	return dayFormat.format(new Date(`${day}T00:00:00`));
+	return dateFormatter(locale, DAY_OPTIONS).format(new Date(`${day}T00:00:00`));
 }
 
 function byDay(
@@ -71,6 +73,7 @@ function byDay(
 	local: boolean,
 	todayLabel: string,
 	yesterdayLabel: string,
+	locale: string,
 ) {
 	const groups = new Map<
 		string,
@@ -86,7 +89,7 @@ function byDay(
 		} else {
 			groups.set(day, {
 				day,
-				label: dayLabel(day, local, todayLabel, yesterdayLabel),
+				label: dayLabel(day, local, todayLabel, yesterdayLabel, locale),
 				entries: [entry],
 			});
 		}
@@ -129,6 +132,7 @@ function TimelineDay({
 }
 
 export function Timeline({ anchor }: { anchor: TimelineAnchor }) {
+	const locale = useLocale();
 	const t = useTranslations("timeline");
 	const trpc = useTRPC();
 	const hydrated = useHydrated();
@@ -242,14 +246,16 @@ export function Timeline({ anchor }: { anchor: TimelineAnchor }) {
 						/>
 					) : null}
 
-					{byDay(entries, hydrated, t("today"), t("yesterday")).map((group) => (
-						<TimelineDay
-							key={group.day}
-							label={group.label}
-							entries={group.entries}
-							anchor={anchor}
-						/>
-					))}
+					{byDay(entries, hydrated, t("today"), t("yesterday"), locale).map(
+						(group) => (
+							<TimelineDay
+								key={group.day}
+								label={group.label}
+								entries={group.entries}
+								anchor={anchor}
+							/>
+						),
+					)}
 
 					{history.hasNextPage ? (
 						<Button

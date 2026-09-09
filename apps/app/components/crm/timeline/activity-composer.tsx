@@ -17,9 +17,10 @@ import {
 import { Spinner } from "@crm/ui/components/spinner";
 import { ToggleGroup, ToggleGroupItem } from "@crm/ui/components/toggle-group";
 import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
+import { dateFormatter } from "@/lib/date-format";
 import { useCrmCache } from "@/lib/trpc/cache";
 import { useTRPC } from "@/lib/trpc/client";
 import { ActivityIcon } from "./activity-icon";
@@ -29,12 +30,13 @@ const TYPES = ["NOTE", "CALL", "EMAIL", "MEETING", "TASK"] as const;
 
 type ComposableType = (typeof TYPES)[number];
 
-const dueFormat = new Intl.DateTimeFormat("en-US", {
+const DUE_OPTIONS = {
 	month: "short",
 	day: "numeric",
-});
+} as const;
 
 export function ActivityComposer({ anchor }: { anchor: TimelineAnchor }) {
+	const locale = useLocale();
 	const t = useTranslations("timeline");
 	const activityType = useTranslations("activityType");
 	const trpc = useTRPC();
@@ -128,7 +130,9 @@ export function ActivityComposer({ anchor }: { anchor: TimelineAnchor }) {
 							<PopoverTrigger asChild>
 								<InputGroupButton variant="ghost" size="xs">
 									<Icon icon={Calendar} data-icon="inline-start" />
-									{dueAt ? dueFormat.format(dueAt) : t("dueDate")}
+									{dueAt
+										? dateFormatter(locale, DUE_OPTIONS).format(dueAt)
+										: t("dueDate")}
 								</InputGroupButton>
 							</PopoverTrigger>
 							<PopoverContent size="fit" align="start">

@@ -19,7 +19,9 @@
 		"assignOwner": "Atribuir responsável",
 		"nobodyElse": "Ainda não há mais ninguém por aqui.",
 		"cancel": "Cancelar",
-		"delete": "Excluir"
+		"delete": "Excluir",
+		"nothingChanged": "Nada mudou.",
+		"partial": "{done} {count, plural, one {# ficou de fora.} other {# ficaram de fora.}}"
 	},
 	"companyPicker": {
 		"choose": "Escolha uma empresa",

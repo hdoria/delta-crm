@@ -35,25 +35,26 @@ export type BulkResult = {
 	message: string | null;
 };
 
-export function reportBulk(
-	result: BulkResult,
-	done: (count: number) => string,
-): void {
-	if (result.succeeded === 0) {
-		toast.error(result.message ?? "Nothing changed.");
-		return;
-	}
+export function useBulkReporter() {
+	const copy = useTranslations("crm.bulk");
 
-	if (result.failed > 0) {
-		toast.error(
-			`${done(result.succeeded)} ${result.failed} ${
-				result.failed === 1 ? "was" : "were"
-			} left alone${result.message ? ` — ${result.message}` : "."}`,
-		);
-		return;
-	}
+	return (result: BulkResult, done: (count: number) => string): void => {
+		if (result.succeeded === 0) {
+			toast.error(result.message ?? copy("nothingChanged"));
+			return;
+		}
 
-	toast.success(done(result.succeeded));
+		if (result.failed > 0) {
+			const partial = copy("partial", {
+				done: done(result.succeeded),
+				count: result.failed,
+			});
+			toast.error(result.message ? `${partial} ${result.message}` : partial);
+			return;
+		}
+
+		toast.success(done(result.succeeded));
+	};
 }
 
 export function BulkActionsMenu({

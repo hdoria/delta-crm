@@ -29,7 +29,7 @@ import { SaveBarViewport } from "@crm/ui/components/save-bar";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { type ReactNode, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -41,6 +41,7 @@ import {
 	PageShellHeading,
 	PageShellTitle,
 } from "@/components/page-shell";
+import { dateFormatter } from "@/lib/date-format";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
 import { useWorkspaceUrl } from "@/lib/use-workspace-url";
@@ -52,7 +53,7 @@ type AgentDetail = RouterOutputs["agents"]["byId"];
 type ReviewVersion = AgentDetail["reviewVersion"];
 type Runs = RouterOutputs["agents"]["history"];
 type Activity = RouterOutputs["agents"]["activity"];
-const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
+const DATE_OPTIONS = {
 	month: "short",
 	day: "numeric",
 	hour: "numeric",
@@ -60,14 +61,7 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
 	second: "2-digit",
 	timeZone: "UTC",
 	timeZoneName: "short",
-});
-const _TIME_FORMATTER = new Intl.DateTimeFormat("en-US", {
-	hour: "2-digit",
-	minute: "2-digit",
-	second: "2-digit",
-	hour12: false,
-	timeZone: "UTC",
-});
+} as const;
 
 export function TeamAgentDetail({
 	agentId,
@@ -81,6 +75,7 @@ export function TeamAgentDetail({
 	initialActivity: Activity;
 }) {
 	const t = useTranslations("agentBuilder.teamAgentDetail");
+	const locale = useLocale();
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
 	const workspaceUrl = useWorkspaceUrl();
@@ -234,7 +229,7 @@ export function TeamAgentDetail({
 							{isDraft
 								? t("kindPrivateDraft")
 								: nextRun
-									? formatDate(nextRun)
+									? formatDate(locale, nextRun)
 									: triggerSummary}
 						</span>
 						<div className="mt-1 flex flex-wrap gap-2">
@@ -574,6 +569,6 @@ function textOf(value: string | undefined, fallback: string): string {
 	return value?.trim() ? value : fallback;
 }
 
-function formatDate(value: string): string {
-	return DATE_FORMATTER.format(new Date(value));
+function formatDate(locale: string, value: string): string {
+	return dateFormatter(locale, DATE_OPTIONS).format(new Date(value));
 }

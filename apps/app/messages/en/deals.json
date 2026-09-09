@@ -56,6 +56,13 @@
 			"count": "{count, plural, one {# deal} other {# deals}}",
 			"openPipeline": "open pipeline",
 			"notCounted": "{count, plural, one {# not counted} other {# not counted}} (no {currencies} rate)"
+		},
+		"closingWindow": {
+			"overdue": "Overdue",
+			"this-month": "Closing this month",
+			"next-month": "Closing next month",
+			"later": "Later",
+			"none": "No close date"
 		}
 	},
 	"bulkActions": {

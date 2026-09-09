@@ -1,7 +1,9 @@
-export const CLOSING_OPTIONS = [
-	{ value: "overdue", label: "Overdue" },
-	{ value: "this-month", label: "Closing this month" },
-	{ value: "next-month", label: "Closing next month" },
-	{ value: "later", label: "Later" },
-	{ value: "none", label: "No close date" },
+export const CLOSING_WINDOWS = [
+	"overdue",
+	"this-month",
+	"next-month",
+	"later",
+	"none",
 ] as const;
+
+export type ClosingWindow = (typeof CLOSING_WINDOWS)[number];

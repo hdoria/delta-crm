@@ -56,6 +56,13 @@
 			"count": "{count, plural, one {# negócio} other {# negócios}}",
 			"openPipeline": "no funil aberto",
 			"notCounted": "{count, plural, one {# não contabilizado} other {# não contabilizados}} (sem cotação de {currencies})"
+		},
+		"closingWindow": {
+			"overdue": "Atrasado",
+			"this-month": "Fecha este mês",
+			"next-month": "Fecha no mês que vem",
+			"later": "Mais adiante",
+			"none": "Sem data de fechamento"
 		}
 	},
 	"bulkActions": {

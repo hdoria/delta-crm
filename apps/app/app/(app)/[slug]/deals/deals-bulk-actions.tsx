@@ -31,7 +31,7 @@ import {
 	BulkActionsMenu,
 	BulkDeleteDialog,
 	BulkOwnerMenu,
-	reportBulk,
+	useBulkReporter,
 } from "@/components/crm/bulk-actions";
 import { DEAL_STAGES, LOSING_STAGES } from "@/lib/deal-stage";
 import { useCrmCache } from "@/lib/trpc/cache";
@@ -47,6 +47,7 @@ export function DealsBulkActions({
 	archived: boolean;
 }) {
 	const t = useTranslations("deals");
+	const report = useBulkReporter();
 	const stageLabel = useTranslations("dealStage");
 	const trpc = useTRPC();
 	const cache = useCrmCache();
@@ -62,7 +63,7 @@ export function DealsBulkActions({
 		trpc.deals.bulkAssignOwner.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.deal();
-				reportBulk(result, (count) => t("bulkActions.reassigned", { count }));
+				report(result, (count) => t("bulkActions.reassigned", { count }));
 				onDone();
 			},
 			onError,
@@ -73,7 +74,7 @@ export function DealsBulkActions({
 		trpc.deals.bulkSetStage.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.deal();
-				reportBulk(result, (count) => t("bulkActions.moved", { count }));
+				report(result, (count) => t("bulkActions.moved", { count }));
 				setClosing(null);
 				setReason("");
 				onDone();
@@ -86,7 +87,7 @@ export function DealsBulkActions({
 		trpc.deals.bulkArchive.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await cache.removedMany({ kind: "deal", ids: variables.ids });
-				reportBulk(result, (count) => t("bulkActions.archived", { count }));
+				report(result, (count) => t("bulkActions.archived", { count }));
 				onDone();
 			},
 			onError,
@@ -97,7 +98,7 @@ export function DealsBulkActions({
 		trpc.deals.bulkRestore.mutationOptions({
 			onSuccess: async (result) => {
 				await cache.deal();
-				reportBulk(result, (count) => t("bulkActions.restored", { count }));
+				report(result, (count) => t("bulkActions.restored", { count }));
 				onDone();
 			},
 			onError,
@@ -108,9 +109,7 @@ export function DealsBulkActions({
 		trpc.deals.bulkPurge.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await cache.removedMany({ kind: "deal", ids: variables.ids });
-				reportBulk(result, (count) =>
-					t("bulkActions.deletedForever", { count }),
-				);
+				report(result, (count) => t("bulkActions.deletedForever", { count }));
 				setConfirming(false);
 				onDone();
 			},
