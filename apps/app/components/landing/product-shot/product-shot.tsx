@@ -5,24 +5,26 @@ import Partnership from "@carbon/icons-react/es/Partnership";
 import Settings from "@carbon/icons-react/es/Settings";
 import Logo from "@crm/ui/components/logo";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { BuiltWith } from "../built-with";
 import { CompaniesList, CompaniesPage } from "./companies-page";
 import { CompanyDrawer, CompanySheet } from "./company-sheet";
 
 const RAIL = [
-	{ icon: Dashboard, label: "Overview", active: false },
-	{ icon: Building, label: "Companies", active: true },
-	{ icon: Group, label: "Contacts", active: false },
-	{ icon: Partnership, label: "Deals", active: false },
-	{ icon: Settings, label: "Settings", active: false },
+	{ icon: Dashboard, key: "overview", active: false },
+	{ icon: Building, key: "companies", active: true },
+	{ icon: Group, key: "contacts", active: false },
+	{ icon: Partnership, key: "deals", active: false },
+	{ icon: Settings, key: "settings", active: false },
 ];
 
 export function ProductShot() {
+	const t = useTranslations("landing.productShot");
 	return (
 		<section className="relative flex w-full shrink-0 flex-col items-center px-6 pt-20">
 			<div
 				role="img"
-				aria-label="The companies list with an account open on its Agent tab"
+				aria-label={t("aria")}
 				className="w-[1183px] max-w-full select-none overflow-clip rounded-xl border border-border bg-background"
 			>
 				<div className="relative hidden h-[690px] w-[1182px] shrink-0 flex-col overflow-clip lg:flex">
@@ -79,14 +81,15 @@ function AppHeader() {
 }
 
 function AppRail() {
+	const navLabel = useTranslations("nav");
 	return (
 		<div className="flex w-14 shrink-0 flex-col items-center gap-1 border-border border-r py-3">
-			{RAIL.map(({ icon: Icon, label, active }) => (
+			{RAIL.map(({ icon: Icon, key, active }) => (
 				<span
-					key={label}
+					key={key}
 					className={`flex size-8 shrink-0 items-center justify-center rounded-md ${active ? "bg-muted text-foreground" : "text-muted-foreground"}`}
 				>
-					<Icon size={16} aria-label={label} />
+					<Icon size={16} aria-label={navLabel(key)} />
 				</span>
 			))}
 		</div>

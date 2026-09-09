@@ -6,28 +6,25 @@ import Send from "@carbon/icons-react/es/Send";
 import Logo from "@crm/ui/components/logo";
 import { cn } from "@crm/ui/lib/utils";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { OWNER } from "./companies";
 import { CompanyMark } from "./company-mark";
 
 const TABS = [
-	{ label: "Overview" },
-	{ label: "Contacts", count: "1" },
-	{ label: "Deals" },
-	{ label: "Activity" },
-	{ label: "Agent", active: true },
+	{ key: "overview" },
+	{ key: "contacts", count: "1" },
+	{ key: "deals" },
+	{ key: "activity" },
+	{ key: "agent", active: true },
 ];
 
 const STATS = [
-	{ label: "Open pipeline", value: "$0" },
-	{ label: "Open deals", value: "0" },
-	{ label: "Next close", value: "—", muted: true },
+	{ key: "openPipeline", value: "$0" },
+	{ key: "openDeals", value: "0" },
+	{ key: "nextClose", value: "—", muted: true },
 ];
 
-const QUESTIONS = [
-	"What do they do?",
-	"Who do we know here?",
-	"What has changed recently?",
-];
+const QUESTIONS = ["whatDo", "whoKnow", "whatChanged"];
 
 /**
  * The record panel, as the app draws it on a wide screen: a sheet pinned to the
@@ -94,11 +91,12 @@ function SheetHeader({ compact }: { compact?: boolean }) {
 }
 
 function SheetStats({ compact }: { compact?: boolean }) {
+	const t = useTranslations("landing.productShot");
 	if (compact) {
 		return (
 			<div className="grid shrink-0 grid-cols-2 border-border border-b bg-muted/40">
 				<Stat label="Open pipeline" value="$0" className="border-r" />
-				<Stat label="Open deals" value="0" />
+				<Stat label={t("stat.openDeals")} value="0" />
 			</div>
 		);
 	}
@@ -107,8 +105,8 @@ function SheetStats({ compact }: { compact?: boolean }) {
 		<div className="flex shrink-0 border-border border-b bg-muted/40">
 			{STATS.map((stat) => (
 				<Stat
-					key={stat.label}
-					label={stat.label}
+					key={stat.key}
+					label={t(`stat.${stat.key}`)}
 					value={stat.value}
 					muted={stat.muted}
 					className="grow basis-0 border-r px-5"
@@ -166,6 +164,7 @@ function Stat({
 }
 
 function SheetTabs({ compact }: { compact?: boolean }) {
+	const t = useTranslations("landing.productShot");
 	return (
 		<div
 			className={cn(
@@ -175,13 +174,13 @@ function SheetTabs({ compact }: { compact?: boolean }) {
 		>
 			{TABS.map((tab) => (
 				<span
-					key={tab.label}
+					key={tab.key}
 					className={cn(
 						"relative flex h-[calc(100%-1px)] shrink-0 items-center gap-1.5 rounded-sm py-0.5 font-medium text-xs/[133%]",
 						tab.active ? "text-foreground" : "text-muted-foreground",
 					)}
 				>
-					{tab.label}
+					{t(`tab.${tab.key}`)}
 					{tab.count ? <span className="tabular-nums">{tab.count}</span> : null}
 					{tab.active ? (
 						<span className="-bottom-[5px] absolute inset-x-0 h-0.5 bg-foreground" />
@@ -193,6 +192,7 @@ function SheetTabs({ compact }: { compact?: boolean }) {
 }
 
 function AgentEmptyState({ compact }: { compact?: boolean }) {
+	const t = useTranslations("landing.productShot");
 	return (
 		<div
 			className={cn(
@@ -223,7 +223,7 @@ function AgentEmptyState({ compact }: { compact?: boolean }) {
 						key={question}
 						className="flex h-7 shrink-0 items-center rounded-md border border-border bg-muted px-2.5 font-medium text-xs"
 					>
-						{question}
+						{t(`question.${question}`)}
 					</span>
 				))}
 			</div>

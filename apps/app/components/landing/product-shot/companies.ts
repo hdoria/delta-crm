@@ -62,11 +62,11 @@ export const MOCK_COMPANIES: MockCompany[] = [
 ];
 
 export const COMPANY_COLUMNS = [
-	{ label: "Company", width: "26%" },
-	{ label: "Domain", width: "16%" },
-	{ label: "Industry", width: "16%" },
-	{ label: "Owner", width: "16%" },
-	{ label: "Contacts", width: "9%" },
-	{ label: "Deals", width: "9%" },
-	{ label: "Last activity", width: "12%" },
+	{ key: "company", width: "26%" },
+	{ key: "domain", width: "16%" },
+	{ key: "industry", width: "16%" },
+	{ key: "owner", width: "16%" },
+	{ key: "contacts", width: "9%" },
+	{ key: "deals", width: "9%" },
+	{ key: "lastActivity", width: "12%" },
 ] as const;

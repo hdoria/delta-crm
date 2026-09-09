@@ -37,5 +37,50 @@
 			"title": "Pergunte qualquer coisa a um registro",
 			"body": "Ele lê o site da empresa e o histórico que vocês têm com ela, e mostra o raciocínio."
 		}
+	},
+	"meta": {
+		"title": "O CRM feito para agentes",
+		"description": "A primeira experiência de CRM com agentes, que leem a sua caixa de entrada, mantêm cada registro em dia e agendam o próprio retorno."
+	},
+	"productShot": {
+		"aria": "A lista de empresas com uma conta aberta na aba do agente",
+		"companies": "Empresas",
+		"companiesLede": "Todas as contas do funil.",
+		"newCompany": "Nova empresa",
+		"searchShort": "Buscar empresas…",
+		"searchCompanies": "Buscar empresas por nome ou domínio…",
+		"sort": "Ordenar",
+		"columns": "Colunas",
+		"column": {
+			"company": "Empresa",
+			"domain": "Domínio",
+			"industry": "Setor",
+			"owner": "Responsável",
+			"contacts": "Contatos",
+			"deals": "Negócios",
+			"lastActivity": "Última atividade"
+		},
+		"facet": {
+			"owner": "Responsável",
+			"industry": "Setor",
+			"enrichment": "Pesquisa"
+		},
+		"tab": {
+			"overview": "Visão geral",
+			"contacts": "Contatos",
+			"deals": "Negócios",
+			"activity": "Atividade",
+			"agent": "Agente"
+		},
+		"stat": {
+			"openPipeline": "Funil aberto",
+			"openDeals": "Negócios abertos",
+			"nextClose": "Próximo fechamento"
+		},
+		"question": {
+			"whatDo": "O que eles fazem?",
+			"whoKnow": "Quem a gente conhece lá?",
+			"whatChanged": "O que mudou recentemente?"
+		}
 	}
 }

@@ -37,5 +37,50 @@
 			"title": "Ask any record a question",
 			"body": "It reads their site and our own history with them, and shows its working."
 		}
+	},
+	"meta": {
+		"title": "The CRM for agents",
+		"description": "The first agentic CRM experience, with durable research agents that read your inbox, keep every record current and book their own follow-ups."
+	},
+	"productShot": {
+		"aria": "The companies list with an account open on its Agent tab",
+		"companies": "Companies",
+		"companiesLede": "Every account in the pipeline.",
+		"newCompany": "New company",
+		"searchShort": "Search companies…",
+		"searchCompanies": "Search companies by name or domain…",
+		"sort": "Sort",
+		"columns": "Columns",
+		"column": {
+			"company": "Company",
+			"domain": "Domain",
+			"industry": "Industry",
+			"owner": "Owner",
+			"contacts": "Contacts",
+			"deals": "Deals",
+			"lastActivity": "Last activity"
+		},
+		"facet": {
+			"owner": "Owner",
+			"industry": "Industry",
+			"enrichment": "Enrichment"
+		},
+		"tab": {
+			"overview": "Overview",
+			"contacts": "Contacts",
+			"deals": "Deals",
+			"activity": "Activity",
+			"agent": "Agent"
+		},
+		"stat": {
+			"openPipeline": "Open pipeline",
+			"openDeals": "Open deals",
+			"nextClose": "Next close"
+		},
+		"question": {
+			"whatDo": "What do they do?",
+			"whoKnow": "Who do we know here?",
+			"whatChanged": "What has changed recently?"
+		}
 	}
 }
