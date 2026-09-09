@@ -1,0 +1,59 @@
+{
+	"title": "Companies",
+	"description": "Every account in the pipeline.",
+	"create": {
+		"trigger": "New company",
+		"sheetTitle": "New company",
+		"sheetDescription": "Give it a name and a domain. The agent fills in the logo, description, industry, address and socials.",
+		"name": "Name",
+		"domain": "Domain",
+		"domainHint": "A full URL is fine — it is reduced to the bare host, which has to be unique.",
+		"owner": "Owner",
+		"unassigned": "Unassigned",
+		"submit": "Add company",
+		"cancel": "Cancel",
+		"added": "{name} added."
+	},
+	"table": {
+		"searchPlaceholder": "Search companies by name or domain…",
+		"archived": "Archived",
+		"emptyDefault": "No companies match this view.",
+		"emptyArchived": "No archived companies.",
+		"column": {
+			"name": "Company",
+			"domain": "Domain",
+			"industry": "Industry",
+			"owner": "Owner",
+			"contacts": "Contacts",
+			"deals": "Open deals",
+			"created": "Created",
+			"createdLabel": "Created date",
+			"lastActivity": "Last activity",
+			"enrichment": "Enrichment",
+			"enrichmentLabel": "Enrichment status",
+			"archivedAt": "Archived",
+			"archivedAtLabel": "Archived date"
+		},
+		"facet": {
+			"owner": "Owner",
+			"unassigned": "Unassigned",
+			"industry": "Industry",
+			"enrichment": "Enrichment",
+			"activity": "Activity"
+		}
+	},
+	"bulk": {
+		"unassignedOwner": "Nobody",
+		"reenrich": "Re-enrich",
+		"archive": "Archive",
+		"restore": "Restore",
+		"deleteForever": "Delete forever",
+		"deleteTitle": "{count, plural, one {Delete # company forever?} other {Delete # companies forever?}}",
+		"deleteDescription": "This cannot be undone.",
+		"reassigned": "{count, plural, one {# company reassigned.} other {# companies reassigned.}}",
+		"looking": "{count, plural, one {Looking up # company — the table will update.} other {Looking up # companies — the table will update.}}",
+		"archivedToast": "{count, plural, one {# company archived.} other {# companies archived.}}",
+		"restored": "{count, plural, one {# company restored.} other {# companies restored.}}",
+		"deleted": "{count, plural, one {# company deleted forever.} other {# companies deleted forever.}}"
+	}
+}

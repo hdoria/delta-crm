@@ -46,6 +46,7 @@ import { ROW_ACCENT, ROW_ACCENT_EXPANDABLE } from "@crm/ui/lib/row-accent";
 import type { TableQueryState } from "@crm/ui/lib/table-query";
 import { cn } from "@crm/ui/lib/utils";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+import { useUiLabel } from "@crm/ui/components/labels";
 import {
 	Fragment,
 	type ReactNode,
@@ -185,6 +186,10 @@ function FacetSubmenu({
 	selected: string[];
 	onChange: (values: string[]) => void;
 }) {
+	const searchLabel = useUiLabel("searchNamed", {
+		name: facet.label.toLowerCase(),
+	});
+	const clearLabel = useUiLabel("clear");
 	return (
 		<DropdownMenuSub>
 			<DropdownMenuSubTrigger>
@@ -200,7 +205,7 @@ function FacetSubmenu({
 						className="max-h-72"
 					>
 						<CommandInput
-							placeholder={`Search ${facet.label.toLowerCase()}…`}
+							placeholder={searchLabel}
 							value={facet.search}
 							onValueChange={facet.onSearchChange}
 							onKeyDown={(event) => event.stopPropagation()}
@@ -236,7 +241,7 @@ function FacetSubmenu({
 						{selected.length > 0 && (
 							<>
 								<DropdownMenuItem onSelect={() => onChange([])}>
-									Clear
+									{clearLabel}
 								</DropdownMenuItem>
 								<DropdownMenuSeparator />
 							</>
@@ -285,6 +290,15 @@ export function DataTable<TRow, TSub = unknown>({
 	className,
 	tableClassName,
 }: DataTableProps<TRow, TSub>) {
+	const clearLabel = useUiLabel("clear");
+	const sortByLabel = useUiLabel("sortBy");
+	const ascendingLabel = useUiLabel("ascending");
+	const descendingLabel = useUiLabel("descending");
+	const toggleColumnsLabel = useUiLabel("toggleColumns");
+	const noResultsLabel = useUiLabel("noResults");
+	const selectAllLabel = useUiLabel("selectAllRows");
+	const selectRowLabel = useUiLabel("selectRow");
+	const detailLabel = useUiLabel("detail");
 	const [expandedIds, setExpandedIds] = useQueryState(
 		"expand",
 		parseAsArrayOf(parseAsString).withDefault([]),
@@ -367,7 +381,7 @@ export function DataTable<TRow, TSub = unknown>({
 							size="sm"
 							onClick={() => selection.state.clear()}
 						>
-							Clear
+							{clearLabel}
 						</Button>
 					</div>
 				</div>
@@ -498,7 +512,7 @@ export function DataTable<TRow, TSub = unknown>({
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="end" className="min-w-48">
-									<DropdownMenuLabel>Sort by</DropdownMenuLabel>
+									<DropdownMenuLabel>{sortByLabel}</DropdownMenuLabel>
 									<DropdownMenuRadioGroup
 										value={query.sort}
 										onValueChange={query.setSort}
@@ -522,10 +536,10 @@ export function DataTable<TRow, TSub = unknown>({
 										}
 									>
 										<DropdownMenuRadioItem value="asc">
-											Ascending
+											{ascendingLabel}
 										</DropdownMenuRadioItem>
 										<DropdownMenuRadioItem value="desc">
-											Descending
+											{descendingLabel}
 										</DropdownMenuRadioItem>
 									</DropdownMenuRadioGroup>
 								</DropdownMenuContent>
@@ -547,7 +561,7 @@ export function DataTable<TRow, TSub = unknown>({
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="end" className="min-w-48">
-									<DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+									<DropdownMenuLabel>{toggleColumnsLabel}</DropdownMenuLabel>
 									{hideable.map((column) => (
 										<DropdownMenuCheckboxItem
 											key={column.id}
@@ -581,7 +595,7 @@ export function DataTable<TRow, TSub = unknown>({
 				overlay={
 					deferredRows.length === 0 ? (
 						<div className="absolute inset-x-0 top-11 bottom-0 flex items-center justify-center px-4 py-8 text-center text-muted-foreground">
-							{loading ? <Spinner /> : (empty ?? "No results found.")}
+							{loading ? <Spinner /> : (empty ?? noResultsLabel)}
 						</div>
 					) : null
 				}
@@ -602,13 +616,13 @@ export function DataTable<TRow, TSub = unknown>({
 										selection.state.toggleAll(checked === true)
 									}
 									disabled={deferredRows.length === 0}
-									aria-label="Select every row on this page"
+									aria-label={selectAllLabel}
 								/>
 							</TableHead>
 						)}
 						{anyExpandable && (
 							<TableHead className="h-11 w-10 px-3">
-								<span className="sr-only">Detail</span>
+								<span className="sr-only">{detailLabel}</span>
 							</TableHead>
 						)}
 						{visibleColumns.map((column) => {
@@ -701,7 +715,7 @@ export function DataTable<TRow, TSub = unknown>({
 												aria-label={
 													selection.rowLabel
 														? `Select ${selection.rowLabel(row)}`
-														: "Select row"
+														: selectRowLabel
 												}
 											/>
 										</TableCell>

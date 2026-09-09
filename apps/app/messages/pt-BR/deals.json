@@ -1,0 +1,81 @@
+{
+	"page": {
+		"title": "Negócios",
+		"heading": "Negócios",
+		"description": "O funil e tudo que já fechou."
+	},
+	"createSheet": {
+		"trigger": "Adicionar negócio",
+		"title": "Novo negócio",
+		"description": "Todo negócio pertence a uma empresa e tem um responsável.",
+		"nameLabel": "Nome",
+		"companyLabel": "Empresa",
+		"ownerLabel": "Responsável",
+		"ownerPlaceholder": "Escolha um responsável",
+		"stageLabel": "Etapa",
+		"stageDescription": "Um negócio novo é um negócio aberto. Feche-o pelo funil quando houver um resultado para registrar.",
+		"amountLabel": "Valor",
+		"currencyLabel": "Moeda",
+		"closeDateLabel": "Data de fechamento prevista",
+		"closeDatePlaceholder": "Ainda sem data",
+		"submit": "Adicionar negócio",
+		"cancel": "Cancelar",
+		"toastSuccess": "{name} adicionado."
+	},
+	"table": {
+		"search": "Busque negócios por nome ou empresa…",
+		"archivedFilter": "Arquivados",
+		"columns": {
+			"deal": "Negócio",
+			"company": "Empresa",
+			"stage": "Etapa",
+			"amount": "Valor",
+			"owner": "Responsável",
+			"closeDate": "Data de fechamento",
+			"created": "Criado",
+			"createdLabel": "Data de criação",
+			"lastActivity": "Última atividade",
+			"archived": "Arquivado",
+			"archivedLabel": "Data de arquivamento"
+		},
+		"facets": {
+			"owner": "Responsável",
+			"stage": "Etapa",
+			"closing": "Fechamento"
+		},
+		"tabs": {
+			"all": "Todos os negócios",
+			"open": "Abertos",
+			"closed": "Fechados"
+		},
+		"empty": {
+			"archived": "Nenhum negócio arquivado.",
+			"default": "Nenhum negócio corresponde a esta visão."
+		},
+		"meta": {
+			"count": "{count, plural, one {# negócio} other {# negócios}}",
+			"openPipeline": "no funil aberto",
+			"notCounted": "{count, plural, one {# não contabilizado} other {# não contabilizados}} (sem cotação de {currencies})"
+		}
+	},
+	"bulkActions": {
+		"restore": "Restaurar",
+		"deleteForever": "Excluir para sempre",
+		"deleteForeverTitle": "{count, plural, one {Excluir # negócio para sempre?} other {Excluir # negócios para sempre?}}",
+		"deleteForeverDescription": "Tudo o que está registrado neles também é excluído: atividade, notas, os valores no funil. Isso não pode ser desfeito.",
+		"reassigned": "{count, plural, one {# negócio reatribuído.} other {# negócios reatribuídos.}}",
+		"changeStage": "Mudar etapa",
+		"moved": "{count, plural, one {# negócio movido.} other {# negócios movidos.}}",
+		"archive": "Arquivar",
+		"archived": "{count, plural, one {# negócio arquivado.} other {# negócios arquivados.}}",
+		"restored": "{count, plural, one {# negócio restaurado.} other {# negócios restaurados.}}",
+		"deletedForever": "{count, plural, one {# negócio excluído para sempre.} other {# negócios excluídos para sempre.}}",
+		"closeLostTitle": "{count, plural, one {Fechar # negócio como perdido} other {Fechar # negócios como perdidos}}",
+		"markUnqualifiedTitle": "{count, plural, one {Marcar # negócio como desqualificado} other {Marcar # negócios como desqualificados}}",
+		"closeDescription": "O mesmo motivo vale para todos eles. Escreva o que eles têm em comum.",
+		"reasonLabel": "Motivo",
+		"save": "Salvar",
+		"cancel": "Cancelar",
+		"reasonPlaceholder": "Orçamento cortado no trimestre"
+	}
+}

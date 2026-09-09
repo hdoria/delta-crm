@@ -1,0 +1,7 @@
+{
+	"title": "Search",
+	"description": "Jump to a company, contact or deal",
+	"placeholder": "Search companies, contacts and deals…",
+	"tooShort": "Type at least two characters.",
+	"noMatch": "Nothing matches."
+}

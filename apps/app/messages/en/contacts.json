@@ -1,0 +1,68 @@
+{
+	"title": "Contacts",
+	"description": "Everyone in the pipeline.",
+	"create": {
+		"trigger": "New contact",
+		"sheetTitle": "New contact",
+		"sheetDescription": "Email addresses are unique, so importing the same person twice updates them rather than duplicating them.",
+		"firstName": "First name",
+		"lastName": "Last name",
+		"email": "Email",
+		"title": "Title",
+		"company": "Company",
+		"noCompany": "No company",
+		"owner": "Owner",
+		"unassigned": "Unassigned",
+		"submit": "Add contact",
+		"cancel": "Cancel",
+		"added": "{name} added.",
+		"titlePlaceholder": "Head of Security"
+	},
+	"table": {
+		"searchPlaceholder": "Search by name, email or company…",
+		"archived": "Archived",
+		"emptyDefault": "No contacts match this view.",
+		"emptyArchived": "No archived contacts.",
+		"column": {
+			"name": "Name",
+			"title": "Title",
+			"email": "Email",
+			"company": "Company",
+			"owner": "Owner",
+			"created": "Created",
+			"createdLabel": "Created date",
+			"lastActivity": "Last activity",
+			"archivedAt": "Archived",
+			"archivedAtLabel": "Archived date"
+		},
+		"facet": {
+			"owner": "Owner",
+			"unassigned": "Unassigned",
+			"company": "Company",
+			"noCompany": "No company",
+			"searching": "Searching…",
+			"noCompanyMatch": "No company matches.",
+			"title": "Title",
+			"seniority": "Seniority",
+			"persona": "Persona",
+			"activity": "Activity"
+		}
+	},
+	"bulk": {
+		"unassignedOwner": "Nobody",
+		"moveToCompany": "Move to company",
+		"noCompany": "No company",
+		"reenrich": "Re-enrich",
+		"archive": "Archive",
+		"restore": "Restore",
+		"deleteForever": "Delete forever",
+		"deleteTitle": "{count, plural, one {Delete # contact forever?} other {Delete # contacts forever?}}",
+		"deleteDescription": "Their email addresses are suppressed, so the inbox sync will not file them again. This cannot be undone.",
+		"reassigned": "{count, plural, one {# contact reassigned.} other {# contacts reassigned.}}",
+		"moved": "{count, plural, one {# contact moved.} other {# contacts moved.}}",
+		"looking": "{count, plural, one {Looking up # contact — the table will update.} other {Looking up # contacts — the table will update.}}",
+		"archivedToast": "{count, plural, one {# contact archived.} other {# contacts archived.}}",
+		"restored": "{count, plural, one {# contact restored.} other {# contacts restored.}}",
+		"deleted": "{count, plural, one {# contact deleted forever.} other {# contacts deleted forever.}}"
+	}
+}

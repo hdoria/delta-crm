@@ -12,6 +12,7 @@ import { PersonAvatar } from "@crm/ui/components/person-avatar";
 import { useSearchInput } from "@crm/ui/hooks/use-search-input";
 import { useTableSelection } from "@crm/ui/hooks/use-table-selection";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { CompanyCell } from "@/components/crm/company-cell";
 import { contactName } from "@/components/crm/contact-name";
@@ -24,7 +25,7 @@ import { ListSearch } from "@/components/data-table/list-search";
 import { SavedViewsMenu } from "@/components/data-table/saved-views-menu";
 import { useTableQuery } from "@/components/data-table/use-table-query";
 import { LocalRelativeTime } from "@/components/local-date-time";
-import { ACTIVITY_FACET_OPTIONS } from "@/lib/activity-recency";
+import { ACTIVITY_RECENCY_DAYS } from "@/lib/activity-recency";
 import { useTRPC } from "@/lib/trpc/client";
 import type { RouterOutputs } from "@/lib/trpc/types";
 import { ContactsBulkActions } from "./contacts-bulk-actions";
@@ -32,118 +33,129 @@ import { contactsSearchParams } from "./contacts-search-params";
 
 type ContactRow = RouterOutputs["contacts"]["list"]["rows"][number];
 
-const COLUMNS: DataTableColumn<ContactRow>[] = [
-	{
-		id: "name",
-		header: "Name",
-		sortable: true,
-		hideable: false,
-		width: "w-[22%]",
-		cell: (row) => (
-			<span className="flex min-w-0 items-center gap-2">
-				<PersonAvatar
-					src={row.imageUrl}
-					name={contactName(row)}
-					email={row.email}
-					size="sm"
-				/>
-				<span className="truncate font-medium">{contactName(row)}</span>
-			</span>
-		),
-	},
-	{
-		id: "title",
-		header: "Title",
-		sortable: true,
-		width: "w-[20%]",
-		hideBelow: "lg",
-		cell: (row) =>
-			row.title ? (
-				<span className="truncate">{row.title}</span>
-			) : (
-				<EmptyCellValue />
+type Translate = (
+	key: string,
+	values?: Record<string, string | number | Date>,
+) => string;
+
+function getColumns(t: Translate): DataTableColumn<ContactRow>[] {
+	return [
+		{
+			id: "name",
+			header: t("table.column.name"),
+			sortable: true,
+			hideable: false,
+			width: "w-[22%]",
+			cell: (row) => (
+				<span className="flex min-w-0 items-center gap-2">
+					<PersonAvatar
+						src={row.imageUrl}
+						name={contactName(row)}
+						email={row.email}
+						size="sm"
+					/>
+					<span className="truncate font-medium">{contactName(row)}</span>
+				</span>
 			),
-	},
-	{
-		id: "email",
-		header: "Email",
-		sortable: true,
-		width: "w-[24%]",
-		hideBelow: "md",
-		cell: (row) =>
-			row.email ? (
-				<span className="truncate text-muted-foreground">{row.email}</span>
-			) : (
-				<EmptyCellValue />
+		},
+		{
+			id: "title",
+			header: t("table.column.title"),
+			sortable: true,
+			width: "w-[20%]",
+			hideBelow: "lg",
+			cell: (row) =>
+				row.title ? (
+					<span className="truncate">{row.title}</span>
+				) : (
+					<EmptyCellValue />
+				),
+		},
+		{
+			id: "email",
+			header: t("table.column.email"),
+			sortable: true,
+			width: "w-[24%]",
+			hideBelow: "md",
+			cell: (row) =>
+				row.email ? (
+					<span className="truncate text-muted-foreground">{row.email}</span>
+				) : (
+					<EmptyCellValue />
+				),
+		},
+		{
+			id: "company",
+			header: t("table.column.company"),
+			sortable: true,
+			width: "w-[18%]",
+			cell: (row) => <CompanyCell company={row.company} />,
+		},
+		{
+			id: "owner",
+			header: t("table.column.owner"),
+			sortable: true,
+			width: "w-[16%]",
+			hideBelow: "md",
+			cell: (row) => <OwnerCell owner={row.owner} />,
+		},
+		{
+			id: "createdAt",
+			header: t("table.column.created"),
+			label: t("table.column.createdLabel"),
+			sortable: true,
+			align: "right",
+			width: "w-[10%]",
+			defaultHidden: true,
+			cell: (row) => (
+				<span className="text-muted-foreground">
+					<LocalRelativeTime date={row.createdAt} />
+				</span>
 			),
-	},
-	{
-		id: "company",
-		header: "Company",
-		sortable: true,
-		width: "w-[18%]",
-		cell: (row) => <CompanyCell company={row.company} />,
-	},
-	{
-		id: "owner",
-		header: "Owner",
-		sortable: true,
-		width: "w-[16%]",
-		hideBelow: "md",
-		cell: (row) => <OwnerCell owner={row.owner} />,
-	},
-	{
-		id: "createdAt",
-		header: "Created",
-		label: "Created date",
-		sortable: true,
-		align: "right",
-		width: "w-[10%]",
-		defaultHidden: true,
-		cell: (row) => (
-			<span className="text-muted-foreground">
-				<LocalRelativeTime date={row.createdAt} />
-			</span>
-		),
-	},
-	{
-		id: "lastActivity",
-		header: "Last activity",
+		},
+		{
+			id: "lastActivity",
+			header: t("table.column.lastActivity"),
+			sortable: true,
+			align: "right",
+			width: "w-[12%]",
+			hideBelow: "sm",
+			cell: (row) => (
+				<span className="text-muted-foreground">
+					{row.lastActivityAt ? (
+						<LocalRelativeTime date={row.lastActivityAt} />
+					) : (
+						<EmptyCellValue />
+					)}
+				</span>
+			),
+		},
+	];
+}
+
+function getArchivedColumn(t: Translate): DataTableColumn<ContactRow> {
+	return {
+		id: "archivedAt",
+		header: t("table.column.archivedAt"),
+		label: t("table.column.archivedAtLabel"),
 		sortable: true,
 		align: "right",
 		width: "w-[12%]",
-		hideBelow: "sm",
 		cell: (row) => (
 			<span className="text-muted-foreground">
-				{row.lastActivityAt ? (
-					<LocalRelativeTime date={row.lastActivityAt} />
+				{row.archivedAt ? (
+					<LocalRelativeTime date={row.archivedAt} />
 				) : (
 					<EmptyCellValue />
 				)}
 			</span>
 		),
-	},
-];
-
-const ARCHIVED_COLUMN: DataTableColumn<ContactRow> = {
-	id: "archivedAt",
-	header: "Archived",
-	label: "Archived date",
-	sortable: true,
-	align: "right",
-	width: "w-[12%]",
-	cell: (row) => (
-		<span className="text-muted-foreground">
-			{row.archivedAt ? (
-				<LocalRelativeTime date={row.archivedAt} />
-			) : (
-				<EmptyCellValue />
-			)}
-		</span>
-	),
-};
+	};
+}
 
 export function ContactsTable() {
+	const t = useTranslations("contacts");
+	const recency = useTranslations("activityRecency");
 	const openRecord = useOpenRecord();
 	const trpc = useTRPC();
 	const prefetchRecord = usePrefetchRecord();
@@ -196,9 +208,9 @@ export function ContactsTable() {
 	const facets: DataTableFacet[] = [
 		{
 			id: "owner",
-			label: "Owner",
+			label: t("table.facet.owner"),
 			options: [
-				{ value: "unassigned", label: "Unassigned" },
+				{ value: "unassigned", label: t("table.facet.unassigned") },
 				...(users.data ?? []).map((user) => ({
 					value: user.id,
 					label: user.name,
@@ -207,16 +219,18 @@ export function ContactsTable() {
 		},
 		{
 			id: "company",
-			label: "Company",
+			label: t("table.facet.company"),
 			searchable: true,
 			search: companyText,
 			onSearchChange: setCompanyText,
 			stale: companies.isFetching || companyText.trim() !== companyQuery.trim(),
-			empty: companies.isFetching ? "Searching…" : "No company matches.",
+			empty: companies.isFetching
+				? t("table.facet.searching")
+				: t("table.facet.noCompanyMatch"),
 			options: [
 				...(companyQuery.trim()
 					? []
-					: [{ value: "none", label: "No company" }]),
+					: [{ value: "none", label: t("table.facet.noCompany") }]),
 				...(companies.data ?? []).map((company) => ({
 					value: company.id,
 					label: company.name,
@@ -225,48 +239,49 @@ export function ContactsTable() {
 		},
 		{
 			id: "title",
-			label: "Title",
+			label: t("table.facet.title"),
 			options: Object.keys(facetCounts?.title ?? {})
 				.sort()
 				.map((value) => ({ value, label: value })),
 		},
 		{
 			id: "seniority",
-			label: "Seniority",
+			label: t("table.facet.seniority"),
 			options: Object.keys(facetCounts?.seniority ?? {})
 				.sort()
 				.map((value) => ({ value, label: value })),
 		},
 		{
 			id: "persona",
-			label: "Persona",
+			label: t("table.facet.persona"),
 			options: Object.keys(facetCounts?.persona ?? {})
 				.sort()
 				.map((value) => ({ value, label: value })),
 		},
 		{
 			id: "activity",
-			label: "Activity",
-			options: ACTIVITY_FACET_OPTIONS.filter(
-				(option) => (facetCounts?.activity?.[option.value] ?? 0) > 0,
+			label: t("table.facet.activity"),
+			options: ACTIVITY_RECENCY_DAYS.flatMap((value) =>
+				(facetCounts?.activity?.[value] ?? 0) > 0
+					? [{ value, label: recency("option", { days: value }) }]
+					: [],
 			),
 		},
 		...fieldFacets,
 	];
 
 	const fieldColumns = useFieldColumns<ContactRow>("CONTACT");
-	const columns = useMemo(
-		() =>
-			input.archived
-				? [...COLUMNS, ARCHIVED_COLUMN, ...fieldColumns]
-				: [...COLUMNS, ...fieldColumns],
-		[fieldColumns, input.archived],
-	);
+	const columns = useMemo(() => {
+		const base = getColumns(t);
+		return input.archived
+			? [...base, getArchivedColumn(t), ...fieldColumns]
+			: [...base, ...fieldColumns];
+	}, [fieldColumns, input.archived, t]);
 
 	return (
 		<DataTable
 			query={query}
-			search={<ListSearch placeholder="Search by name, email or company…" />}
+			search={<ListSearch placeholder={t("table.searchPlaceholder")} />}
 			actions={
 				<>
 					<SavedViewsMenu entity="CONTACT" table={table} />
@@ -277,7 +292,7 @@ export function ContactsTable() {
 						onClick={() => toggleArchived(!input.archived)}
 					>
 						<Archive data-icon="inline-start" />
-						Archived
+						{t("table.archived")}
 					</Button>
 				</>
 			}
@@ -302,9 +317,7 @@ export function ContactsTable() {
 			onRowHover={(row) => prefetchRecord({ kind: "contact", id: row.id })}
 			onRowClick={(row) => openRecord({ kind: "contact", id: row.id })}
 			empty={
-				input.archived
-					? "No archived contacts."
-					: "No contacts match this view."
+				input.archived ? t("table.emptyArchived") : t("table.emptyDefault")
 			}
 		/>
 	);

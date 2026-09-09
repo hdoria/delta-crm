@@ -1,0 +1,8 @@
+{
+	"PENDING": "Sem pesquisa",
+	"RUNNING": "Pesquisando",
+	"COMPLETE": "Pesquisado",
+	"FAILED": "A pesquisa falhou",
+	"SKIPPED": "Nada encontrado",
+	"QUEUED": "Na fila"
+}

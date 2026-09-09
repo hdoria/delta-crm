@@ -28,6 +28,7 @@
 		"api": "workspace:*",
 		"eve": "^0.29.4",
 		"next": "16.3.0",
+		"next-intl": "^4.14.2",
 		"next-themes": "^0.4.6",
 		"nuqs": "^2.8.9",
 		"posthog-js": "^1.413.2",

@@ -20,6 +20,7 @@ import { Separator } from "@crm/ui/components/separator";
 import { Skeleton } from "@crm/ui/components/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { EnrichmentQueue } from "@/components/enrichment-queue";
@@ -32,6 +33,7 @@ import { workspaceLabel } from "@/lib/workspace-label";
 type User = { name: string; email: string; image: string | null };
 
 export function AppHeader({ user }: { user: User }) {
+	const t = useTranslations("nav");
 	const { setOpen: setMobileNavOpen } = useMobileNav();
 	const trpc = useTRPC();
 	const workspaceUrl = useWorkspaceUrl();
@@ -45,17 +47,17 @@ export function AppHeader({ user }: { user: User }) {
 					variant="ghost"
 					size="icon"
 					className="md:hidden"
-					aria-label="Open navigation"
+					aria-label={t("openNavigation")}
 					onClick={() => setMobileNavOpen(true)}
 				>
 					<Menu />
 				</Button>
 				<Link
 					href={workspaceUrl()}
-					aria-label="Homepage"
+					aria-label={t("homepage")}
 					className="hidden size-8 items-center justify-center text-foreground md:flex"
 				>
-					<Logo className="size-5" />
+					<Logo className="w-7" />
 				</Link>
 				<Separator orientation="vertical" className="mx-1 h-5 bg-transparent" />
 				<span className="min-w-0 truncate font-medium text-sm">{label}</span>
@@ -66,9 +68,7 @@ export function AppHeader({ user }: { user: User }) {
 				<UserMenu
 					user={user}
 					onSignOut={() => {
-						signOutAndRedirect().catch(() =>
-							toast.error("Could not sign out."),
-						);
+						signOutAndRedirect().catch(() => toast.error(t("signOutFailed")));
 					}}
 				/>
 			</div>
@@ -84,7 +84,7 @@ export function AppHeaderFallback() {
 		>
 			<div className="flex shrink-0 items-center gap-1">
 				<span className="hidden size-8 items-center justify-center text-foreground md:flex">
-					<Logo className="size-5" />
+					<Logo className="w-7" />
 				</span>
 				<Separator orientation="vertical" className="mx-1 h-5 bg-transparent" />
 				<Skeleton className="h-4 w-24" />
@@ -103,6 +103,7 @@ export function AppHeaderFallback() {
 }
 
 function UserMenu({ user, onSignOut }: { user: User; onSignOut: () => void }) {
+	const t = useTranslations("nav");
 	const { resolvedTheme, setTheme } = useTheme();
 	const isDark = resolvedTheme === "dark";
 
@@ -112,7 +113,7 @@ function UserMenu({ user, onSignOut }: { user: User; onSignOut: () => void }) {
 				<Button
 					variant="ghost"
 					size="icon"
-					aria-label="Account menu"
+					aria-label={t("accountMenu")}
 					className="hover:bg-transparent aria-expanded:bg-transparent dark:hover:bg-transparent"
 				>
 					<Avatar className="size-7">

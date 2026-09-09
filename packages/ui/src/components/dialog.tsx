@@ -5,6 +5,7 @@ import { cn } from "@crm/ui/lib/utils";
 import { XIcon } from "lucide-react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import type * as React from "react";
+import { useUiLabel } from "@crm/ui/components/labels";
 
 function Dialog({
 	...props
@@ -54,6 +55,7 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
 	showCloseButton?: boolean;
 }) {
+	const closeLabel = useUiLabel("close");
 	return (
 		<DialogPortal>
 			<DialogOverlay />
@@ -74,7 +76,7 @@ function DialogContent({
 							size="icon-sm"
 						>
 							<XIcon />
-							<span className="sr-only">Close</span>
+							<span className="sr-only">{closeLabel}</span>
 						</Button>
 					</DialogPrimitive.Close>
 				)}

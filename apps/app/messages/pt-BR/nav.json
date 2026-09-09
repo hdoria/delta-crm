@@ -1,0 +1,16 @@
+{
+	"overview": "Visão geral",
+	"chat": "Chat",
+	"companies": "Empresas",
+	"contacts": "Contatos",
+	"deals": "Negócios",
+	"settings": "Configurações",
+	"primary": "Principal",
+	"navigation": "Navegação",
+	"navigationAndChats": "Navegação e chats dos agentes",
+	"closeNavigation": "Fechar navegação",
+	"openNavigation": "Abrir navegação",
+	"homepage": "Início",
+	"accountMenu": "Menu da conta",
+	"signOutFailed": "Não foi possível sair."
+}

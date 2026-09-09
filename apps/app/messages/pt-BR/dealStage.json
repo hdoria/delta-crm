@@ -1,0 +1,9 @@
+{
+	"DEMO_BOOKED": "Demo agendada",
+	"QUALIFIED_TO_BUY": "Qualificado",
+	"DECISION_MAKER_BOUGHT_IN": "Decisor convencido",
+	"CONTRACT_SENT": "Contrato enviado",
+	"CLOSED_WON": "Ganho",
+	"CLOSED_LOST": "Perdido",
+	"UNQUALIFIED_TO_BUY": "Desqualificado"
+}

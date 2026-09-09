@@ -1,0 +1,7 @@
+{
+	"title": "Buscar",
+	"description": "Vá direto a uma empresa, contato ou negócio",
+	"placeholder": "Buscar empresas, contatos e negócios…",
+	"tooShort": "Digite ao menos dois caracteres.",
+	"noMatch": "Nada corresponde."
+}

@@ -22,6 +22,7 @@ import { cn } from "@crm/ui/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import { BRAND } from "@/lib/brand";
 import { useTRPC } from "@/lib/trpc/client";
 import { useWorkspaceUrl } from "@/lib/use-workspace-url";
 
@@ -173,7 +174,7 @@ export function ShareChatDialog({
 							/>
 							<ShareChoice
 								selected={shared === true}
-								label="Anyone in Comp AI with the link"
+								label={`Anyone in ${BRAND.appName} with the link`}
 								detail="Read-only"
 								disabled={createAction.pending || revokeAction.pending}
 								onSelect={() => {

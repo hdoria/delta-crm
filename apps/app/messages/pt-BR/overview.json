@@ -1,0 +1,77 @@
+{
+	"stats": {
+		"closedWonThisMonth": {
+			"label": "Ganho no mês",
+			"deltaLabel": "vs. mês passado",
+			"description": "{count, plural, one {# negócio} other {# negócios}} · {amount} no mês passado"
+		},
+		"openPipeline": {
+			"label": "Funil aberto",
+			"description": "{count, plural, one {# negócio} other {# negócios}} em andamento · {amount} vence este mês"
+		},
+		"winRate": {
+			"label": "Taxa de ganho ({days}d)",
+			"empty": "Nada foi fechado ainda",
+			"record": "{wins} ganhos · {losses} perdidos"
+		},
+		"averageDeal": {
+			"label": "Negócio médio ({days}d)",
+			"empty": "Nenhum ganho para medir",
+			"cycle": "Ciclo médio de {days} dias"
+		}
+	},
+	"unconvertedNotice": "Todos os valores acima estão em {currency}. {count, plural, one {# negócio} other {# negócios}} em {currencies} {count, plural, one {não está incluído} other {não estão incluídos}} porque não há taxa de conversão. <link>Defina uma</link>.",
+	"trend": {
+		"wonLabel": "Ganho",
+		"createdLabel": "Novo funil",
+		"panelTitle": "Ganho vs. novo funil",
+		"panelDescription": "Últimos seis meses, pelo mês em que o negócio foi fechado ou criado",
+		"empty": "Nenhum negócio fechado ou criado ainda"
+	},
+	"pipelineByStage": {
+		"panelTitle": "Funil aberto por etapa",
+		"panelDescription": "Onde o valor está agora",
+		"centerLabel": "aberto",
+		"empty": "Nada em aberto"
+	},
+	"dealsInProgress": {
+		"title": "Negócios em andamento",
+		"description": "Os maiores negócios abertos e há quanto tempo cada um está na etapa",
+		"openDeals": "Abrir negócios",
+		"empty": "Nada em aberto. Hora de preencher o funil.",
+		"columns": {
+			"deal": "Negócio",
+			"stage": "Etapa",
+			"share": "Proporção em relação ao maior",
+			"value": "Valor"
+		}
+	},
+	"overdueTasks": {
+		"title": "Tarefas atrasadas",
+		"emptyDescription": "Toda tarefa que você registrou já foi concluída ou ainda está por vir",
+		"pastDue": "{count, plural, one {# tarefa atrasada} other {# tarefas atrasadas}}",
+		"empty": "Nada atrasado. Ótimo.",
+		"markDone": "Marcar como concluída",
+		"noDueDate": "Sem data de vencimento",
+		"columns": {
+			"done": "Concluída",
+			"task": "Tarefa",
+			"overdue": "Atraso"
+		}
+	},
+	"recentActivity": {
+		"title": "Atividade recente",
+		"titleMine": "Sua atividade recente",
+		"description": "Toda nota, tarefa e mudança de etapa do workspace",
+		"descriptionMine": "Toda nota, tarefa e mudança de etapa que você registrou",
+		"allCompanies": "Todas as empresas",
+		"empty": "Nada aconteceu ainda.",
+		"columns": {
+			"activity": "Atividade",
+			"company": "Empresa",
+			"deal": "Negócio",
+			"who": "Quem",
+			"when": "Quando"
+		}
+	}
+}

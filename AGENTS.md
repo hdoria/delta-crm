@@ -10,6 +10,7 @@ context until you read them, and the rules in them are not optional.
 | `apps/agent` — the eve research agent, tools, tasks, dispatch | `docs/agent.md` |
 | `.env`, configuration, which variables exist and why | `docs/environment.md` |
 | UI in `apps/app` or `packages/ui` | `docs/design.md` (below) |
+| Any string a person reads, a new locale, dates and plurals | `docs/i18n.md` |
 | Deal amounts, totals, charts, exchange rates | `docs/currency.md` |
 | The record sheet's Agent tab | `docs/agent-panel.md` |
 | `/settings/connections`, integrations, the intake endpoint | `docs/connections.md` |

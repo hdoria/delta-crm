@@ -3,6 +3,7 @@
 import { Skeleton } from "@crm/ui/components/skeleton";
 import { cn } from "@crm/ui/lib/utils";
 import { domAnimation, LazyMotion, m, useReducedMotion } from "motion/react";
+import { useUiLabel } from "@crm/ui/components/labels";
 import {
 	type ReactNode,
 	useCallback,
@@ -39,6 +40,7 @@ export function SkeletonSwap({
 	label,
 	className,
 }: SkeletonSwapProps) {
+	const loadedLabel = useUiLabel("loadedNamed", { name: label ?? "" });
 	const [showSkeleton, setShowSkeleton] = useState(false);
 	const shownAt = useRef(0);
 	const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -117,7 +119,7 @@ export function SkeletonSwap({
 				</m.div>
 				{label ? (
 					<span role="status" aria-live="polite" className="sr-only">
-						{loading ? "" : `${label} loaded`}
+						{loading ? "" : loadedLabel}
 					</span>
 				) : null}
 			</div>

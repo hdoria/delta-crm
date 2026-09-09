@@ -1,0 +1,16 @@
+{
+	"overview": "Overview",
+	"chat": "Chat",
+	"companies": "Companies",
+	"contacts": "Contacts",
+	"deals": "Deals",
+	"settings": "Settings",
+	"primary": "Primary",
+	"navigation": "Navigation",
+	"navigationAndChats": "Navigation and agent chats",
+	"closeNavigation": "Close navigation",
+	"openNavigation": "Open navigation",
+	"homepage": "Homepage",
+	"accountMenu": "Account menu",
+	"signOutFailed": "Could not sign out."
+}

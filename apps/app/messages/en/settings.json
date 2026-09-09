@@ -1,0 +1,8 @@
+{
+	"language": {
+		"title": "Language",
+		"description": "Choose the language this workspace is shown in. It applies to this browser.",
+		"label": "Interface language",
+		"saved": "Language changed."
+	}
+}

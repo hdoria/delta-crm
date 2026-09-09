@@ -20,6 +20,7 @@ import { Icon } from "@crm/ui/components/icon";
 import Link from "next/link";
 import { Suspense } from "react";
 import { NewAgentDialog } from "@/components/agent-builder/new-agent-dialog";
+import { BRAND } from "@/lib/brand";
 import { requireSession } from "@/lib/session";
 import { getServerQueryClient, getServerTrpc } from "@/lib/trpc/server";
 import { ConnectionPage, ConnectionPageLoading } from "../connection-page";
@@ -296,7 +297,7 @@ function MissingGrant({
 				<Icon icon={Warning} />
 				<AlertTitle>
 					{privateChannels
-						? "Comp AI cannot reach private channels"
+						? `${BRAND.appName} cannot reach private channels`
 						: `Slack held back ${missing.length} permission${missing.length === 1 ? "" : "s"}`}
 				</AlertTitle>
 				<AlertDescription>
