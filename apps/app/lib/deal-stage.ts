@@ -11,7 +11,7 @@ const ORDER = [
 	DealStage.UNQUALIFIED_TO_BUY,
 ] as const;
 
-const TONES: Record<DealStage, StatusTone> = {
+const TONES = {
 	DEMO_BOOKED: "neutral",
 	QUALIFIED_TO_BUY: "info",
 	DECISION_MAKER_BOUGHT_IN: "info",
@@ -19,7 +19,7 @@ const TONES: Record<DealStage, StatusTone> = {
 	CLOSED_WON: "success",
 	CLOSED_LOST: "error",
 	UNQUALIFIED_TO_BUY: "neutral",
-};
+} satisfies Record<DealStage, StatusTone>;
 
 export const DEAL_STAGES: readonly DealStage[] = ORDER;
 

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "bun:test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
+import {
+	type MessageTree,
+	messageBranch,
+	parseMessageTree,
+} from "@crm/validation/messages";
 import { I18N } from "@/i18n/config";
 
 const ROOT = path.join(import.meta.dir, "..");
@@ -17,14 +22,15 @@ function walk(dir: string): string[] {
 	});
 }
 
-function flatten(value: unknown, prefix = ""): Set<string> {
+function flatten(tree: MessageTree, prefix = ""): Set<string> {
 	const keys = new Set<string>();
-	if (typeof value !== "object" || value === null) return keys;
 
-	for (const [key, child] of Object.entries(value)) {
+	for (const [key, child] of Object.entries(tree)) {
 		const full = prefix ? `${prefix}.${key}` : key;
-		if (typeof child === "object" && child !== null) {
-			for (const nested of flatten(child, full)) keys.add(nested);
+		const branch = messageBranch(child);
+
+		if (branch) {
+			for (const nested of flatten(branch, full)) keys.add(nested);
 		} else {
 			keys.add(full);
 		}
@@ -41,7 +47,10 @@ function catalog(locale: string): Set<string> {
 		name.endsWith(".json"),
 	)) {
 		const namespace = path.basename(file, ".json");
-		const body = JSON.parse(readFileSync(path.join(dir, file), "utf8"));
+		const body = parseMessageTree(
+			JSON.parse(readFileSync(path.join(dir, file), "utf8")),
+			`${locale}/${file}`,
+		);
 		for (const key of flatten(body)) keys.add(`${namespace}.${key}`);
 	}
 

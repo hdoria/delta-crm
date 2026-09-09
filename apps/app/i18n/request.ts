@@ -1,52 +1,43 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import {
+	type MessageTree,
+	mergeMessageTrees,
+	parseMessageTree,
+} from "@crm/validation/messages";
 import { cookies } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
 import { I18N, isLocale, type Locale } from "./config";
 
-type Messages = Record<string, unknown>;
-
 const DIR = path.join(process.cwd(), "messages");
 
-const cache = new Map<Locale, Promise<Messages>>();
+const cache = new Map<Locale, Promise<MessageTree>>();
 
-async function read(locale: Locale): Promise<Messages> {
+async function read(locale: Locale): Promise<MessageTree> {
 	const dir = path.join(DIR, locale);
 	const files = (await readdir(dir)).filter((name) => name.endsWith(".json"));
 
 	const namespaces = await Promise.all(
 		files.map(async (name) => {
+			const source = path.join(locale, name);
 			const body = await readFile(path.join(dir, name), "utf8");
-			return [path.basename(name, ".json"), JSON.parse(body)] as const;
+			return [
+				path.basename(name, ".json"),
+				parseMessageTree(JSON.parse(body), source),
+			] as const;
 		}),
 	);
 
 	return Object.fromEntries(namespaces);
 }
 
-function load(locale: Locale): Promise<Messages> {
+function load(locale: Locale): Promise<MessageTree> {
 	const hit = cache.get(locale);
 	if (hit) return hit;
 
 	const pending = read(locale);
 	cache.set(locale, pending);
 	return pending;
-}
-
-function merge(fallback: Messages, active: Messages): Messages {
-	const out: Messages = { ...fallback };
-
-	for (const [key, value] of Object.entries(active)) {
-		const base = out[key];
-		out[key] =
-			isRecord(base) && isRecord(value) ? merge(base, value) : (value ?? base);
-	}
-
-	return out;
-}
-
-function isRecord(value: unknown): value is Messages {
-	return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 export default getRequestConfig(async () => {
@@ -58,7 +49,7 @@ export default getRequestConfig(async () => {
 	const messages =
 		locale === I18N.fallbackLocale
 			? fallback
-			: merge(fallback, await load(locale));
+			: mergeMessageTrees(fallback, await load(locale));
 
 	return { locale, messages };
 });

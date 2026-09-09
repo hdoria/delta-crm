@@ -3,16 +3,13 @@ import type { StatusTone } from "@crm/ui/components/status-indicator";
 
 export type EnrichmentKey = EnrichmentStatus | "QUEUED";
 
-const PRESENTATION: Record<
-	EnrichmentStatus,
-	{ tone: StatusTone; busy?: boolean }
-> = {
+const PRESENTATION = {
 	PENDING: { tone: "neutral" },
 	RUNNING: { tone: "info", busy: true },
 	COMPLETE: { tone: "success" },
 	FAILED: { tone: "error" },
 	SKIPPED: { tone: "neutral" },
-};
+} satisfies Record<EnrichmentStatus, { tone: StatusTone; busy?: boolean }>;
 
 const QUEUED = { tone: "neutral" as StatusTone, busy: false };
 

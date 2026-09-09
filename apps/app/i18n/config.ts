@@ -9,14 +9,11 @@ export const I18N = {
 
 export type Locale = (typeof I18N.locales)[number];
 
-export const LOCALE_LABELS: Record<Locale, string> = {
+export const LOCALE_LABELS = {
 	"pt-BR": "Português (Brasil)",
 	en: "English",
-};
+} satisfies Record<Locale, string>;
 
-export function isLocale(value: unknown): value is Locale {
-	return (
-		typeof value === "string" &&
-		(I18N.locales as readonly string[]).includes(value)
-	);
+export function isLocale(value: string | undefined): value is Locale {
+	return I18N.locales.some((locale) => locale === value);
 }

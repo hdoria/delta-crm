@@ -8,7 +8,7 @@ import Task from "@carbon/icons-react/es/Task";
 import type { ActivityType } from "@crm/db/enums";
 import type { CarbonIcon } from "@crm/ui/components/icon";
 
-const ICONS: Record<ActivityType, CarbonIcon> = {
+const ICONS = {
 	NOTE: Chat,
 	CALL: Phone,
 	EMAIL: Email,
@@ -16,7 +16,7 @@ const ICONS: Record<ActivityType, CarbonIcon> = {
 	TASK: Task,
 	STAGE_CHANGE: ArrowRight,
 	ENRICHMENT: MagicWand,
-};
+} satisfies Record<ActivityType, CarbonIcon>;
 
 export function activityIcon(type: ActivityType): CarbonIcon {
 	return ICONS[type];
