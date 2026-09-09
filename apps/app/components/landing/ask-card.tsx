@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@crm/ui/lib/utils";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { BentoCard, CardHeading } from "./bento-card";
 import { SendArrow } from "./send-arrow";
@@ -19,14 +20,12 @@ const PLACEHOLDER = "What do they sell?";
  * the homepage does not send anybody to a sign-in form to see one.
  */
 export function AskCard() {
+	const t = useTranslations("landing.capabilities");
 	const [asked, setAsked] = useState<string | null>(null);
 
 	return (
 		<BentoCard className="grow gap-6">
-			<CardHeading
-				title="Ask any record a question"
-				body="It reads their site and our own history with them, and shows its working."
-			/>
+			<CardHeading title={t("ask.title")} body={t("ask.body")} />
 
 			<div className="flex grow flex-col justify-end gap-2.5">
 				<p className="select-none font-medium text-[#5A5A5A] text-[11px]/4">

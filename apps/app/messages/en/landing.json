@@ -1,0 +1,41 @@
+{
+	"builtWith": "BUILT WITH",
+	"star": "Star on GitHub",
+	"copyPrompt": "Copy the setup prompt",
+	"copied": "Copied to clipboard",
+	"hero": {
+		"title": "The CRM built for Agents",
+		"lede": "Humans should not be moving pipeline by hand. The first agentic CRM experience, with durable research agents that read your team's inbox, enrich companies and contacts, and create agentic workflows."
+	},
+	"agent": {
+		"title": "Agents that automate your CRM.",
+		"lede": "Describe how your CRM should act. Create agents to automate every process.",
+		"prompt": "What should we get done, Lewis?",
+		"command": "/Create agent",
+		"suggested": "Suggested actions",
+		"composer": "<text>Send a new message to</text><slack></slack><text>and ping</text><person></person><text>when a company misses their invoice deadline</text>",
+		"actionChannel": "<text>Create a</text><slack></slack><text>channel and invite the owner when a deal hits</text><stage></stage>",
+		"actionPing": "<lead>Ping</lead><person></person><text>when a contract has been out five days unsigned</text>",
+		"actionRecheck": "<text>Every Monday,</text><task>re-enrich contacts</task><text>that have not been contacted in</text><when>4 weeks</when>"
+	},
+	"capabilities": {
+		"heading": "What it actually does",
+		"enrichment": {
+			"title": "Records fill themselves in",
+			"body": "A new person on a thread becomes a contact, and their company arrives with its logo, industry and last activity already on it."
+		},
+		"builder": {
+			"title": "Agents that build agents",
+			"label": "SUGGESTED AGENTS"
+		},
+		"followUp": {
+			"title": "It books its own follow-ups",
+			"label": "WHY",
+			"why": "An agent that cannot say why it will be back in fourteen days does not have a reason, it has a default."
+		},
+		"ask": {
+			"title": "Ask any record a question",
+			"body": "It reads their site and our own history with them, and shows its working."
+		}
+	}
+}

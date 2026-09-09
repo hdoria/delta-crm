@@ -1,13 +1,15 @@
 import EveLogo from "@crm/ui/components/brand-logos/eve";
 import NextjsLogo from "@crm/ui/components/brand-logos/nextjs";
 import VercelLogo from "@crm/ui/components/brand-logos/vercel";
+import { useTranslations } from "next-intl";
 
 export function BuiltWith() {
+	const t = useTranslations("landing");
 	return (
 		<div className="flex w-full max-w-6xl select-none flex-col items-center gap-[14px] pt-10">
 			<div className="flex flex-col items-center gap-5">
 				<p className="font-mono text-[13px]/4 tracking-widest text-[#6E6E6E]">
-					BUILT WITH
+					{t("builtWith")}
 				</p>
 
 				<ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5 font-medium text-2xl/[30px] text-white tracking-[-0.01em]">

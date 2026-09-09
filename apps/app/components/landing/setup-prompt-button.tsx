@@ -4,6 +4,7 @@ import Checkmark from "@carbon/icons-react/es/Checkmark";
 import Copy from "@carbon/icons-react/es/Copy";
 import ClaudeLogo from "@crm/ui/components/brand-logos/claude";
 import { Button } from "@crm/ui/components/button";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { type CtaLocation, captureLanding } from "./analytics";
 
@@ -16,6 +17,7 @@ const SETUP_PROMPT =
  * for, taking the prompt is what getting started means.
  */
 export function SetupPromptButton({ location }: { location: CtaLocation }) {
+	const t = useTranslations("landing");
 	const [copied, setCopied] = useState(false);
 
 	async function copy() {
@@ -30,10 +32,10 @@ export function SetupPromptButton({ location }: { location: CtaLocation }) {
 			variant="outline"
 			size="xl"
 			onClick={copy}
-			aria-label="Copy the setup prompt"
+			aria-label={t("copyPrompt")}
 		>
 			<ClaudeLogo data-icon="inline-start" className="size-4" />
-			{copied ? "Copied to clipboard" : "Copy the setup prompt"}
+			{copied ? t("copied") : t("copyPrompt")}
 			{copied ? (
 				<Checkmark
 					data-icon="inline-end"

@@ -1,0 +1,41 @@
+{
+	"builtWith": "FEITO COM",
+	"star": "Dar estrela no GitHub",
+	"copyPrompt": "Copiar o prompt de instalação",
+	"copied": "Copiado",
+	"hero": {
+		"title": "O CRM feito para agentes",
+		"lede": "Ninguém deveria mover funil na mão. A primeira experiência de CRM com agentes, que leem a caixa de entrada do time, pesquisam empresas e contatos e criam fluxos de trabalho."
+	},
+	"agent": {
+		"title": "Agentes que automatizam o seu CRM.",
+		"lede": "Descreva como o seu CRM deve agir. Crie agentes para automatizar cada processo.",
+		"prompt": "O que a gente resolve hoje, Lewis?",
+		"command": "/Criar agente",
+		"suggested": "Ações sugeridas",
+		"composer": "<text>Mande uma mensagem no</text><slack></slack><text>e avise o</text><person></person><text>quando uma empresa perder o prazo da fatura</text>",
+		"actionChannel": "<text>Crie um canal no</text><slack></slack><text>e convide o responsável quando um negócio virar</text><stage></stage>",
+		"actionPing": "<lead>Avise o</lead><person></person><text>quando um contrato ficar cinco dias sem assinatura</text>",
+		"actionRecheck": "<text>Toda segunda,</text><task>pesquise de novo os contatos</task><text>sem contato há</text><when>4 semanas</when>"
+	},
+	"capabilities": {
+		"heading": "O que ele faz de verdade",
+		"enrichment": {
+			"title": "Os registros se preenchem sozinhos",
+			"body": "Uma pessoa nova em uma conversa vira contato, e a empresa dela chega com logo, setor e última atividade já preenchidos."
+		},
+		"builder": {
+			"title": "Agentes que criam agentes",
+			"label": "AGENTES SUGERIDOS"
+		},
+		"followUp": {
+			"title": "Ele agenda o próprio retorno",
+			"label": "POR QUÊ",
+			"why": "Um agente que não sabe dizer por que volta em catorze dias não tem um motivo, tem um padrão."
+		},
+		"ask": {
+			"title": "Pergunte qualquer coisa a um registro",
+			"body": "Ele lê o site da empresa e o histórico que vocês têm com ela, e mostra o raciocínio."
+		}
+	}
+}

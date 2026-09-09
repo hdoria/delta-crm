@@ -3,6 +3,7 @@ import GitHubLogo from "@crm/ui/components/brand-logos/github";
 import StripeLogo from "@crm/ui/components/brand-logos/stripe";
 import VercelLogo from "@crm/ui/components/brand-logos/vercel";
 import { cn } from "@crm/ui/lib/utils";
+import { useTranslations } from "next-intl";
 import type * as React from "react";
 import { AskCard } from "./ask-card";
 import {
@@ -48,10 +49,11 @@ const FOLLOW_UPS = [
 ];
 
 export function CapabilitiesSection() {
+	const t = useTranslations("landing.capabilities");
 	return (
 		<section className="relative flex w-full shrink-0 flex-col items-center px-6 pt-20 pb-20 md:pb-30">
 			<div className="flex w-full max-w-6xl flex-col gap-12 md:gap-[72px]">
-				<SectionHeading title="What it actually does" />
+				<SectionHeading title={t("heading")} />
 
 				<div className="flex flex-col gap-4 lg:flex-row">
 					<div className="flex min-w-0 grow flex-col gap-4">
@@ -72,12 +74,10 @@ export function CapabilitiesSection() {
 }
 
 function EnrichmentCard() {
+	const t = useTranslations("landing.capabilities");
 	return (
 		<BentoCard className="gap-6">
-			<CardHeading
-				title="Records fill themselves in"
-				body="A new person on a thread becomes a contact, and their company arrives with its logo, industry and last activity already on it."
-			/>
+			<CardHeading title={t("enrichment.title")} body={t("enrichment.body")} />
 
 			<div className="flex select-none flex-col">
 				{ENRICHMENT_ROWS.map((row) => (
@@ -112,16 +112,19 @@ function EnrichmentCard() {
 }
 
 function AgentBuilderCard() {
+	const t = useTranslations("landing.capabilities");
 	return (
 		<BentoCard className="min-w-0 grow gap-5">
-			<CardTitle>Agents that build agents</CardTitle>
+			<CardTitle>{t("builder.title")}</CardTitle>
 			<CardBody>
 				Describe a process in a sentence and the agent writes another agent to
 				run it — on its own queue, on its own schedule.
 			</CardBody>
 
 			<div className="flex select-none flex-col">
-				<MonoLabel className="h-[26px] shrink-0">SUGGESTED AGENTS</MonoLabel>
+				<MonoLabel className="h-[26px] shrink-0">
+					{t("builder.label")}
+				</MonoLabel>
 				{SUGGESTED_AGENTS.map((agent) => (
 					<div
 						key={agent}
@@ -139,9 +142,10 @@ function AgentBuilderCard() {
 }
 
 function FollowUpCard() {
+	const t = useTranslations("landing.capabilities");
 	return (
 		<BentoCard className="min-w-0 grow gap-5">
-			<CardTitle>It books its own follow-ups</CardTitle>
+			<CardTitle>{t("followUp.title")}</CardTitle>
 
 			<ul className="flex select-none flex-col gap-[14px]">
 				{FOLLOW_UPS.map((item) => (
@@ -168,10 +172,9 @@ function FollowUpCard() {
 			</ul>
 
 			<div className="flex flex-col gap-2 pt-1">
-				<MonoLabel>WHY</MonoLabel>
+				<MonoLabel>{t("followUp.label")}</MonoLabel>
 				<p className="text-[13px]/[21px] text-muted-foreground">
-					An agent that cannot say why it will be back in fourteen days does not
-					have a reason, it has a default.
+					{t("followUp.why")}
 				</p>
 			</div>
 		</BentoCard>

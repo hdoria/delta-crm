@@ -2,10 +2,12 @@
 
 import GitHubLogo from "@crm/ui/components/brand-logos/github";
 import { Button } from "@crm/ui/components/button";
+import { useTranslations } from "next-intl";
 import { type CtaLocation, captureLanding } from "./analytics";
 import { REPO_URL } from "./links";
 
 export function GitHubStarButton({ location }: { location: CtaLocation }) {
+	const t = useTranslations("landing");
 	return (
 		<Button variant="outline-ghost" size="xl" asChild>
 			<a
@@ -15,7 +17,7 @@ export function GitHubStarButton({ location }: { location: CtaLocation }) {
 				onClick={() => captureLanding("github_star_clicked", location)}
 			>
 				<GitHubLogo data-icon="inline-start" className="size-[15px]" />
-				Star on GitHub
+				{t("star")}
 				<StarIcon
 					data-icon="inline-end"
 					className="size-[13px] shrink-0 text-[#E3B341]"
